@@ -7,8 +7,8 @@
 Robot::Robot(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a):
 	Agent(SceneManager, name, filename, height, scale, a)
 {
-	Ogre::AnimationStateSet* aSet = mBodyEntity->getAllAnimationStates();
-	Ogre::AnimationStateIterator iter = mBodyEntity->getAllAnimationStates()->getAnimationStateIterator();
+	Ogre::AnimationStateSet* aSet = mModelEntity->getAllAnimationStates();
+	Ogre::AnimationStateIterator iter = mModelEntity->getAllAnimationStates()->getAnimationStateIterator();
 	while (iter.hasMoreElements())
 	{
 		Ogre::AnimationState *a = iter.getNext();
@@ -16,18 +16,18 @@ Robot::Robot(Ogre::SceneManager* SceneManager, std::string name, std::string fil
 
 	//mBodyNode->yaw(Ogre::Degree(180)); //fish goes this way
 	//mBodyNode->pitch(Ogre::Degree(180));
-	Ogre::AxisAlignedBox uhh = mBodyEntity->getBoundingBox();
+	Ogre::AxisAlignedBox uhh = mModelEntity->getBoundingBox();
 	//mSceneMgr->showBoundingBoxes(true);                        //for robots
 	//mBodyNode->showBoundingBox(false);
 	counter = 0;
 	testing = 0;
 	mDirection = Ogre::Vector3(-.05,0,0);//Ogre::Vector3::ZERO;
 	setupAnimations();
-	int count = mBodyEntity->getNumSubEntities();
+	int count = mModelEntity->getNumSubEntities();
 	for (int i = 0; i < count; i++){
-		mBodyEntity->getSubEntity(i)->getMaterial()->setColourWriteEnabled(true);
-		mBodyEntity->getSubEntity(i)->getMaterial()->setDiffuse(1,.6,1,1);
-		mBodyEntity->getSubEntity(i)->getMaterial()->setAmbient(1,.6,1);
+		mModelEntity->getSubEntity(i)->getMaterial()->setColourWriteEnabled(true);
+		mModelEntity->getSubEntity(i)->getMaterial()->setDiffuse(1,.6,1,1);
+		mModelEntity->getSubEntity(i)->getMaterial()->setAmbient(1,.6,1);
 	}
 	state = NORMAL;
 	flying = false;
@@ -225,7 +225,7 @@ void Robot::setupAnimations(){
 	this->mVerticalVelocity = 0;	// Not jumping
 
 	// this is very important due to the nature of the exported animations
-	mBodyEntity->getSkeleton()->setBlendMode(Ogre::ANIMBLEND_CUMULATIVE);
+	mModelEntity->getSkeleton()->setBlendMode(Ogre::ANIMBLEND_CUMULATIVE);
 
 	// Name of the animations for this character
 	Ogre::String animNames[] =
@@ -234,7 +234,7 @@ void Robot::setupAnimations(){
 	// populate our animation list
 	for (int i = 0; i < 5; i++)
 	{
-		mAnims[i] = mBodyEntity->getAnimationState(animNames[i]);
+		mAnims[i] = mModelEntity->getAnimationState(animNames[i]);
 		if(i == 0 || i==3){
 			mAnims[i]->setLoop(false);
 		}

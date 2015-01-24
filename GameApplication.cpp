@@ -1,7 +1,9 @@
 #include "GameApplication.h"
 #include <fstream>
 #include <sstream>
-#include <map> 
+#include <map>
+
+#include <math.h>
 
 //-------------------------------------------------------------------------------------
 GameApplication::GameApplication(void): 
@@ -181,8 +183,8 @@ GameApplication::loadEnv()
 				{
 					// Use subclasses instead!
 					if (c == 'n') {
-						agent = new Yoshimi(this->mSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, this);
-						yoshPointer = (Yoshimi*) agent;  //you are a yoshimi
+						agent = new Player(this->mSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, this);
+						yoshPointer = (Player*) agent;  //you are a yoshimi
 						agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						yoshPointer->setInitPos(yoshPointer->getPosition());
 					}else {
@@ -523,17 +525,38 @@ bool GameApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButto
 
 bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 
-	std::cout << "I hear you" << std::endl;
+	std::cout << "button Pressed: " << button << "\n" << std::endl;
 	return true;
 }
 
 bool GameApplication::buttonReleased( const OIS::JoyStickEvent &arg, int button ){
-	std::cout << "I hear you" << std::endl;
+	std::cout << "button Released: " << button << "\n" << std::endl;
 	return true;
 }
 
 bool GameApplication::axisMoved( const OIS::JoyStickEvent &arg, int axis){
-	std::cout << "I HEAR YO" << std::endl;
+	std::cout << "Axis being Used: " << axis << " State: "  << "\n" << std::endl;
+	if (axis == 0 || axis == 1){
+		
+		//first normalize
+		double xVal =  ((double)(arg.state.mAxes[1].abs)) / 33000.0; //x
+		double yVal =  ((double)(arg.state.mAxes[0].abs)) / 33000.0; //y
+
+		//Now trig
+		double rad = std::atan2(-yVal, xVal);
+
+		if (startGame) yoshPointer->rotationCode(rad);
+		
+		std::cout << arg.state.mAxes[0].abs << std::endl;
+		std::cout << arg.state.mAxes[1].abs << std::endl;
+
+		(arg.state.mAxes[0].abs > 10000) ? yoshPointer->setMovement('f', true) :
+			(arg.state.mAxes[0].abs < -10000) ? yoshPointer->setMovement('f', true) :
+			(arg.state.mAxes[1].abs > 10000) ? yoshPointer->setMovement('f', true) :
+			(arg.state.mAxes[1].abs < -10000) ? yoshPointer->setMovement('f', true) :
+			yoshPointer->setMovement('f', false);
+	}
+	//arg.state.
 	return true;
 }
 

@@ -21,8 +21,9 @@ Agent::Agent(Ogre::SceneManager* SceneManager, std::string name, std::string fil
 	this->app = a;  //this is the game app
 
 	mBodyNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(); // create a new scene node
-	mBodyEntity = mSceneMgr->createEntity(name, filename); // load the model
-	mBodyNode->attachObject(mBodyEntity);	// attach the model to the scene node
+	mModelNode = mBodyNode->createChildSceneNode();
+	mModelEntity = mSceneMgr->createEntity(name, filename); // load the model
+	mModelNode->attachObject(mModelEntity);	// attach the model to the scene node
 
 	mBodyNode->translate(0,height,0); // make the Ogre stand on the plane (almost)
 	mBodyNode->scale(scale,scale,scale); // Scale the figure

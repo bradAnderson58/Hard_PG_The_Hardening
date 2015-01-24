@@ -3,7 +3,7 @@
 
 #include "BaseApplication.h"
 #include "Agent.h"
-#include "Yoshimi.h"
+#include "Player.h"
 #include "Robot.h"
 #include "Grid.h"
 
@@ -16,7 +16,7 @@ private:
 	std::list<Robot*> RobotList; //now a list of robots
 	Ogre::Vector3 houseInitPos;
 
-	Yoshimi* yoshPointer;	//This is our heroic savior, Yoshimi!
+	Player* yoshPointer;	//This is our heroic savior, Yoshimi!
 	Ogre::SceneNode* housePointer;		//point to the location of the house COM
 	float houseHealth;					//when health gets to zero, much sad
 	bool gameOver;
@@ -76,7 +76,7 @@ public:
 	Ogre::AxisAlignedBox getBox() { return boundBox; }  //return the bounding box of barrel
 
 	Ogre::Camera* getCamera() { return mCamera; }  //why u no like?
-	Yoshimi* getYoshimiPointer(){return yoshPointer;}
+	Player* getYoshimiPointer(){return yoshPointer;}
 	std::list<Ogre::SceneNode*> getWallList(){return wallList;}
 	std::list<Robot*> getRobotList(){return RobotList;}
 	Ogre::SceneNode* getHousePointer(){return housePointer;}

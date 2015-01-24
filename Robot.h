@@ -20,7 +20,7 @@ public:
 	void setMovement(char dir, bool on); //set the movemnt
 	Ogre::Vector3 getPosition(){return mBodyNode->getPosition();}
 
-	Ogre::AxisAlignedBox getBoundingBox() { return mBodyEntity->getWorldBoundingBox(); }   //Yoshimi checks this to see if hit
+	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }   //Yoshimi checks this to see if hit
 	void getHit(char attack, Ogre::Vector3 dir);		//Here will be code to react to being hit by Yoshimi
 	void setFlyback(int velocity,  Ogre::Vector3 dir);		//Here we will knock a robot back
 	void setDeath();

@@ -12,7 +12,7 @@ r robot.mesh 0.0 0.08
 World
 bbbbbbbbbbbbbbbbbbbbbbb
 booooooooooooooooooooob
-bootooonoooooooooooooob
+bootoooooooooooooooooob
 booooooooooooooooooooob
 booooooooooooooooooooob
 booooooooooooooooooooob
@@ -21,7 +21,7 @@ booooooooooooooooooooob
 booooooooooooooooooooob
 booooooooooooooooooooob
 booooooooooooooooooooob
-booooooooooooooooooooob
+booooooooonooooooooooob
 booooooooooooooooooooob
 booooooooooooooooooooob
 booooooooooooooooooooob

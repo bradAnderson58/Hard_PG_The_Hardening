@@ -1,21 +1,22 @@
-#ifndef __Yoshimi_h_
-#define __Yoshimi_h_
+#ifndef __Player_h_
+#define __Player_h_
 
 #include "Agent.h"
 
 class GameApplication;
 
-class Yoshimi : public Agent{
+class Player : public Agent{
 
 public:
 
-	Yoshimi(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a);
-	~Yoshimi();
+	Player(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a);
+	~Player();
 
 	void update(Ogre::Real deltaTime);		// update hero!
 	void updateLocomote(Ogre::Real deltaTime);
 	void setMovement(char dir, bool on); //set the movemnt
 	void rotationCode(OIS::MouseEvent arg);  //Rotate the hero when we move the mouse
+	void rotationCode(double arg);			//Rotate the hero when we move joystick
 	void buttonAnimation(char pressed);		//tell me what animation to do
 	
 

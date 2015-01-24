@@ -8,8 +8,9 @@ class Agent
 {
 protected:
 	Ogre::SceneManager* mSceneMgr;		// pointer to scene graph
-	Ogre::SceneNode* mBodyNode;			
-	Ogre::Entity* mBodyEntity;
+	Ogre::SceneNode* mBodyNode;			// Root node for class
+	Ogre::SceneNode* mModelNode;		// Node for model
+	Ogre::Entity* mModelEntity;
 	float height;						// height the character should be moved up
 	float scale;						// scale of character from original model
 
