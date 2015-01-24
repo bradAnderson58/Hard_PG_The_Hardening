@@ -279,36 +279,12 @@ void Player::checkHits(char attack){
 	Ogre::AxisAlignedBox aRange = mAttackEntity->getWorldBoundingBox();
 	Ogre::AxisAlignedBox rRange;
 
-	for (Robot *robot : app->getRobotList()){
-		rRange = robot->getBoundingBox();
-
-		if (aRange.intersects(rRange)){
-			robot->getHit(attack, mDirection);	//hit em
-		}
-	}
-
 }
 
 //check collisions with robots
 //robots will push yoshimi out of the way
 void Player::collisionRobots(){
-	std::list<Robot*> robots = app->getRobotList();
 
-	Ogre::Vector3 temp(0,0,0);
-	Ogre::Vector3 pos = mBodyNode->getPosition();
-	Ogre::Vector3 rPos;
-	//loop through all robots
-	for(Robot* r : robots){
-		rPos = r->getPosition();
-		//checking distance between robot and yoshimi. 2 is the magic number between robot and yoshimi
-		if (pos.distance(rPos) < 2){
-			temp = pos - rPos;
-			temp.normalise();
-			temp = rPos + (temp * 2);
-			temp[1] = 0;
-			setPosition(temp[0], 0, temp[2]);
-		}
-	}
 }
 //moved into updatelocomote
 void Player::collisionWalls(){
