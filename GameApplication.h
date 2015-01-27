@@ -4,7 +4,6 @@
 #include "BaseApplication.h"
 #include "Agent.h"
 #include "Player.h"
-#include "Robot.h"
 #include "Grid.h"
 
 class Grid;  //okay whatever
@@ -13,7 +12,6 @@ class GameApplication : public BaseApplication
 {
 private:
 	Agent* agent; // store a pointer to the character
-	std::list<Robot*> RobotList; //now a list of robots
 	Ogre::Vector3 houseInitPos;
 
 	Player* yoshPointer;	//This is our heroic savior, Yoshimi!
@@ -78,7 +76,6 @@ public:
 	Ogre::Camera* getCamera() { return mCamera; }  //why u no like?
 	Player* getYoshimiPointer(){return yoshPointer;}
 	std::list<Ogre::SceneNode*> getWallList(){return wallList;}
-	std::list<Robot*> getRobotList(){return RobotList;}
 	Ogre::SceneNode* getHousePointer(){return housePointer;}
 
 	void endGame(char condition);		//End the game in either victory or crushing defeat

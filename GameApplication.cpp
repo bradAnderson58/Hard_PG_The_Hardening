@@ -189,10 +189,7 @@ GameApplication::loadEnv()
 						agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						yoshPointer->setInitPos(yoshPointer->getPosition());
 					}else {
-						Robot* robot = new Robot(this->mSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, this);
-						robot->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
-						robot->setInitPos(robot->getPosition());
-						RobotList.push_back(robot);
+						
 					}
 					//agent->setApp(this);  //in constructor
 					
@@ -321,24 +318,13 @@ GameApplication::addTime(Ogre::Real deltaTime)
 		int dead = 0;  //see how many robots are dead
 		std::string comment = "Safe";
 		// Iterate over the list of agents (robots)
-		std::list<Robot*>::iterator iter;
-		for (iter = RobotList.begin(); iter != RobotList.end(); iter++){
-			if (*iter != NULL){
-				(*iter)->update(deltaTime);
-				if (!(*iter)->notAtLocation() && !gameOver){
-					houseHealth -= .001;
-					houseHUD->setProgress(houseHUD->getProgress() - .001);
-					comment = "Under Attack!";
-				}
-			}
-			if (!(*iter)->notDead()) dead++;
-		}
+		
 		if (!gameOver) houseHUD->setComment(comment);  //warn if house is under attack
 
 		if (startGame) yoshPointer->update(deltaTime); //Yoshimi has a different update function
 	
 		if (houseHealth <= 0 && !gameOver) endGame('l');
-		if (dead != 0 && dead == RobotList.size() && !gameOver) endGame('w'); 
+		if (dead != 0 && !gameOver) endGame('w'); 
 	}
 }
 
@@ -736,9 +722,7 @@ void GameApplication::destroyallChildren(Ogre::SceneNode* p){
 }
 
 void GameApplication::restartLevel(){
-	for(Robot* r : RobotList){
-		r->restart();
-	}
+	
 	housePointer->setPosition(houseInitPos);
 	yoshPointer->restart();
 	houseHealth = 1.0;
@@ -777,14 +761,7 @@ void GameApplication::nextLevel(){
 		yoshPointer->setPosition(yoshPos[0], 0, yoshPos[2]);
 	}
 	Ogre::Vector3 robPos;
-	for(Robot* rob:RobotList){
-		do {
-			rob->restart();
-			robPos = grid->getPosition(rand()%20+1, rand()%20+1);
-		} while(housePointer->getPosition().distance(robPos) < 80);
-		//rob->setInitPos(robPos);
-		rob->setPosition(robPos[0], 0, robPos[2]);
-	}
+	
 	houseHealth = 1.0;
 	startGame = true;
 	houseHealth = 1.0f;
