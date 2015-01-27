@@ -18,11 +18,12 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	cam->setPosition(temp1);
 
 	//attaching camera code here
-	Ogre::SceneNode* camNode = mBodyNode->createChildSceneNode();
+	mNullCamera = mBodyNode->createChildSceneNode();
+	Ogre::SceneNode* camNode = mNullCamera->createChildSceneNode();
 	camNode->attachObject(cam);
 	
 
-	fForward = fBackward = fRight = fLeft = false;  //starts by not moving
+	fForward = fBackward = false;  //starts by not moving
 	doingStuff = false;  //starts not doing anything
 	speed = 2;	//Yoshimi a quick one 
 
@@ -38,6 +39,9 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	mAttackNode->setPosition(0.0f ,100.0f, -100.0f);
 	mAttackNode->setVisible(false);
 	//mAttackNode->showBoundingBox(true);					//for testing  Attack box
+
+	mRotator = 0;
+	fRot = false;
 	
 	setupAnimations();
 }
@@ -59,8 +63,9 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 
 	//mBodyNode->translate(mDirection); //for testing
 
+	if (fForward) rotationCode(mPlayerRot);
+
 	Ogre::Quaternion q;
-	double vel = 0.2;
 	Ogre::Vector3 translator = Ogre::Vector3::ZERO;
 
 	//use direction for forward and backward
@@ -70,15 +75,15 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 	Ogre::Vector3 side = q*mDirection;
 
 	//set translation based on which keys are currentl
-	if (!doingStuff || yoshAnim == JUMP){
-		if (fForward) translator += (side * -vel);
-		//if (fLeft) translator += (mDirection * -vel);
-		//if (fRight) translator += (mDirection * vel);
-		//if (fBackward) translator += (mDirection * vel);
-	}
+	//if (!doingStuff || yoshAnim == JUMP){
+	if (fForward) translator += (side * -mPlayerVel);
+	if (fRot) mNullCamera->yaw(Ogre::Degree(mRotator));
+	//if (fRight) translator += (mDirection * vel);
+	//if (fBackward) translator += (mDirection * vel);
+
 	//Set Yoshimi Animation based on movement (if not already doing stuff)
 	if (!doingStuff){
-		if (!fForward && !fLeft && !fRight && !fBackward){
+		if (!fForward && !fBackward){
 			if (yoshAnim != IDLE_THREE) setAnimation(IDLE_THREE);
 		}else{
 			if (yoshAnim != STEALTH) setAnimation(STEALTH);
@@ -140,8 +145,8 @@ void Player::setMovement(char dir, bool on){
 	//Set the correct flag to the new boolean value
 	if (dir == 'f') fForward = on;
 	else if (dir == 'b') fBackward = on;
-	else if (dir == 'r') fRight = on;
-	else if (dir == 'l') fLeft = on;
+	//else if (dir == 'r') fRight = on;
+	//else if (dir == 'l') fLeft = on;
 }
 
 void Player::rotationCode(OIS::MouseEvent arg){
@@ -151,10 +156,11 @@ void Player::rotationCode(OIS::MouseEvent arg){
 
 void Player::rotationCode(double rad){
 
-	mDirection = Ogre::Vector3(std::sin(rad), 0, std::cos(rad));
+	mDirection = mNullCamera->getOrientation() * Ogre::Vector3(std::sin(rad), 0, std::cos(rad));
 
 	//always rotating
 	Ogre::Vector3 src = mModelNode->getOrientation() * Ogre::Vector3::UNIT_X;//rotate for first location
+	//Ogre::Vector3 src = mNullCamera->getOrientation() * Ogre::Vector3::UNIT_X;
 	if ((1.0f + src.dotProduct(mDirection)) < 0.0001f) 
 	{
 		mModelNode->yaw(Ogre::Degree(180));
@@ -165,6 +171,22 @@ void Player::rotationCode(double rad){
 		mModelNode->rotate(quat);
 	}
 	
+}
+
+void Player::cameraRot(double rad){
+	std::cout << rad << std::endl;
+	fRot = true;
+	mRotator = rad;
+
+	//mDirection = Ogre::Vector3(std::sin(rad), 0, std::cos(rad)); //?
+}
+
+void Player::playerRot(double rad){
+	mPlayerRot = rad;
+}
+
+void Player::setVelocity(double vel){
+	mPlayerVel = vel;
 }
 
 void Player::updateAnimations(Ogre::Real deltaTime){
@@ -318,6 +340,6 @@ void Player::collisionWalls(){
 void Player::restart(){
 	mBodyNode->setPosition(initPos);
 	mBodyNode->yaw(Ogre::Radian(M_PI));
-	fForward = fBackward = fRight = fLeft = false;  //starts by not moving
+	fForward = fBackward = false;  //starts by not moving
 	doingStuff = false;  //starts not doing anything
 }

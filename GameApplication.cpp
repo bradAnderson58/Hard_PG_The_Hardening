@@ -3,6 +3,7 @@
 #include <sstream>
 #include <map>
 
+#define _USE_MATH_DEFINES 
 #include <math.h>
 
 //-------------------------------------------------------------------------------------
@@ -526,6 +527,22 @@ bool GameApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButto
 bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 
 	std::cout << "button Pressed: " << button << "\n" << std::endl;
+	if (button == 0) {
+		if(!yoshPointer->doingStuff){
+			yoshPointer->changeSpeed(.6);  //jump should be slower
+			yoshPointer->buttonAnimation('j');
+			yoshPointer->doingStuff = true;
+		}
+	}else if (button == 2){
+		if(!yoshPointer->doingStuff)
+		{
+			yoshPointer->changeSpeed(1);
+			yoshPointer->buttonAnimation('s');
+			yoshPointer->doingStuff = true;
+			yoshPointer->checkHits('s');
+		}
+
+	}
 	return true;
 }
 
@@ -536,25 +553,38 @@ bool GameApplication::buttonReleased( const OIS::JoyStickEvent &arg, int button 
 
 bool GameApplication::axisMoved( const OIS::JoyStickEvent &arg, int axis){
 	std::cout << "Axis being Used: " << axis << " State: "  << "\n" << std::endl;
-	if (axis == 0 || axis == 1){
-		
+	if (startGame){
+
+		//if (axis == 0 || axis == 1){
 		//first normalize
-		double xVal =  ((double)(arg.state.mAxes[1].abs)) / 33000.0; //x
-		double yVal =  ((double)(arg.state.mAxes[0].abs)) / 33000.0; //y
+		double xValLeft =  ((double)(arg.state.mAxes[1].abs)) / 33000.0; //x
+		double yValLeft =  ((double)(arg.state.mAxes[0].abs)) / 33000.0; //y
+
+		double xValRight =  ((double)(arg.state.mAxes[3].abs)) / 33000.0; //x
+		double yValRight =  ((double)(arg.state.mAxes[2].abs)) / 33000.0; //y
 
 		//Now trig
-		double rad = std::atan2(-yVal, xVal);
+		double radLeft = std::atan2(-yValLeft, xValLeft);
+		double hypotLeft =	std::sqrt(std::pow(xValLeft, 2) + std::pow(yValLeft, 2));	//a2 + b2 = c2
 
-		if (startGame) yoshPointer->rotationCode(rad);
-		
-		std::cout << arg.state.mAxes[0].abs << std::endl;
-		std::cout << arg.state.mAxes[1].abs << std::endl;
-
-		(arg.state.mAxes[0].abs > 10000) ? yoshPointer->setMovement('f', true) :
-			(arg.state.mAxes[0].abs < -10000) ? yoshPointer->setMovement('f', true) :
-			(arg.state.mAxes[1].abs > 10000) ? yoshPointer->setMovement('f', true) :
-			(arg.state.mAxes[1].abs < -10000) ? yoshPointer->setMovement('f', true) :
+		double radRight = std::atan2(-yValRight, xValRight);
+		double hypotRight =	std::sqrt(std::pow(xValRight, 2) + std::pow(yValRight, 2));	//a2 + b2 = c2
+			
+		//Rotate player to direction of pad
+		if (hypotLeft >= .3){
+			yoshPointer->playerRot(radLeft);
+			yoshPointer->setMovement('f', true);
+			yoshPointer->setVelocity(hypotLeft * .25);
+		}else{
 			yoshPointer->setMovement('f', false);
+		}
+			
+		if (hypotRight >= .3){
+			if (xValRight > 0) yoshPointer->cameraRot(hypotRight);
+			else if (xValRight < 0) yoshPointer->cameraRot(-hypotRight);
+		}else{
+			yoshPointer->cameraRot(0);
+		}
 	}
 	//arg.state.
 	return true;

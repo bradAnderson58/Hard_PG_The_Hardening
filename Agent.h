@@ -11,6 +11,8 @@ protected:
 	Ogre::SceneNode* mBodyNode;			// Root node for class
 	Ogre::SceneNode* mModelNode;		// Node for model
 	Ogre::Entity* mModelEntity;
+	Ogre::SceneNode* mNullCamera;		//For rotating just the camera
+
 	float height;						// height the character should be moved up
 	float scale;						// scale of character from original model
 

@@ -12,14 +12,19 @@ public:
 	Player(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a);
 	~Player();
 
-	void update(Ogre::Real deltaTime);		// update hero!
+	void update(Ogre::Real deltaTime);			// update hero!
 	void updateLocomote(Ogre::Real deltaTime);
-	void setMovement(char dir, bool on); //set the movemnt
+	void setMovement(char dir, bool on);		//set the movemnt
 	void rotationCode(OIS::MouseEvent arg);  //Rotate the hero when we move the mouse
-	void rotationCode(double arg);			//Rotate the hero when we move joystick
+
+	void rotationCode(double arg);			//Rotate the hero
+	void cameraRot(double arg);				//for rotating camera with RS joystick
+	void playerRot(double arg);				//for rotating player with LS joystick
+	void setVelocity(double arg);			//Set how fast to walk
 	void buttonAnimation(char pressed);		//tell me what animation to do
 	
-
+	double mPlayerRot;
+	double mPlayerVel;
 	bool doingStuff;		//if Yoshimi is currently doing a non-looping animation
 	void changeSpeed(double s) { speed = s; }	//change the speed for different animations
 
@@ -32,8 +37,9 @@ public:
 private:
 	bool fForward; //how am I moving? Each flag indicates a direction
 	bool fBackward;
-	bool fRight;
-	bool fLeft;
+
+	bool fRot;
+	double mRotator;
 	double speed;	//how fast to move
 
 	Ogre::SceneNode *mAttackNode;	//use this for bounding area for Yoshimi attacks
