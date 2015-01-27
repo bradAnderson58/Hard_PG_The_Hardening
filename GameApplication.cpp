@@ -566,8 +566,8 @@ bool GameApplication::axisMoved( const OIS::JoyStickEvent &arg, int axis){
 		}
 			
 		if (hypotRight >= .3){
-			if (xValRight > 0) yoshPointer->cameraRot(hypotRight);
-			else if (xValRight < 0) yoshPointer->cameraRot(-hypotRight);
+			if (xValRight > 0) yoshPointer->cameraRot(-hypotRight);
+			else if (xValRight < 0) yoshPointer->cameraRot(hypotRight);
 		}else{
 			yoshPointer->cameraRot(0);
 		}
