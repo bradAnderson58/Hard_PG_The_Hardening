@@ -1,5 +1,5 @@
 #include "GameApplication.h"
-#include "windows.h"
+//#include "windows.h"
 
 
 #ifdef __cplusplus
