@@ -11,7 +11,7 @@ protected:
 	Ogre::SceneNode* mBodyNode;			// Root node for class
 	Ogre::SceneNode* mModelNode;		// Node for model
 	Ogre::Entity* mModelEntity;
-	Ogre::SceneNode* mNullCamera;		//For rotating just the camera
+	
 
 	float height;						// height the character should be moved up
 	float scale;						// scale of character from original model
@@ -19,22 +19,20 @@ protected:
 	Ogre::Vector3 defaultPos;
 	Ogre::Quaternion defaultOrient;		//reset the position and orientation to these values
 
-	int successes;  //track the number of successful fish in barrels
-
-	// lecture on physics
+	// may be necessary for later physics implementation?
 	bool projectile; // is this agent going to be launched?
 	Ogre::Vector3 initPos; // initial position
 	Ogre::Vector3 vel; // velocity of agent
 	Ogre::Vector3 gravity; 
-	
 	//Ogre::ParticleSystem* ps;  //I like the particles, I will keep them
 
 	GameApplication *app;
 	
 	// all of the animations our character has, and a null ID
-	// some of these affect separate body parts and will be blended together
-	//Sinbad animations
-	virtual enum AnimID
+	// some of these affect separate body parts and will be blended together - possibly
+	virtual enum AnimID;
+	//Sinbad animations - in case we need them
+	/*virtual enum AnimID
 	{
 		ANIM_IDLE_BASE,
 		ANIM_IDLE_TOP,
@@ -50,31 +48,33 @@ protected:
 		ANIM_JUMP_LOOP,
 		ANIM_JUMP_END,
 		ANIM_NONE
-	};
+	};*/
 
-	Ogre::AnimationState* mAnims[21];		// master animation list
-	AnimID mBaseAnimID;						// current base (full- or lower-body) animation
+	Ogre::AnimationState* mAnims[21];		// master animation list - CHANGE if need more than 21 animations
+	AnimID mBaseAnimID;						// current base (full- or lower-body) animation - if needed
 	AnimID mTopAnimID;						// current top (upper-body) animation
 	bool mFadingIn[20];						// which animations are fading in
 	bool mFadingOut[20];					// which animations are fading out
 	Ogre::Real mTimer;						// general timer to see how long animations have been playing
 	Ogre::Real mVerticalVelocity;			// for jumping
 
-	virtual void setupAnimations();					// load this character's animations
+	virtual void setupAnimations();									// load this character's animations
 	virtual void fadeAnimations(Ogre::Real deltaTime);				// blend from one animation to another
 	virtual void updateAnimations(Ogre::Real deltaTime);			// update the animation frame
 
 	// for locomotion
-	Ogre::Real mDistance;					// The distance the agent has left to travel
-	Ogre::Vector3 mDirection;				// The direction the object is moving
+	Ogre::Real mDistance;					// The distance the agent has left to travel - possibly still needed?
 	Ogre::Vector3 mDestination;				// The destination the object is moving towards
-	std::deque<Ogre::Vector3> mWalkList;	// The list of points we are walking to
-	Ogre::Real mWalkSpeed;					// The speed at which the object is moving
+	std::deque<Ogre::Vector3> mWalkList;	// The list of points we are walking to (for A*)
 	bool nextLocation();					// Is there another destination?
+
+	Ogre::Vector3 mDirection;				// The direction the object is moving
+	Ogre::Real mWalkSpeed;					// The speed at which the object is moving
+
 	virtual void updateLocomote(Ogre::Real deltaTime);			// update the character's walking
 
 	//////////////////////////////////////////////
-	// Lecture 4
+	// DELETE?
 	bool procedural;						// Is this character performing a procedural animation
     //////////////////////////////////////////////
 public:

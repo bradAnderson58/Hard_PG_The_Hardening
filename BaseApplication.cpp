@@ -109,8 +109,11 @@ void BaseApplication::createFrameListener(void)
 
     mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, true ));
     mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, true ));
+
+	//If the controller is not plugged in, mJoy will be set to 0
 	try {
 		mJoy = static_cast<OIS::JoyStick*>(mInputManager->createInputObject( OIS::OISJoyStick, true ));
+		mJoy->setEventCallback(this);
 	}
 	catch(...) {
 		mJoy = 0;
@@ -119,11 +122,9 @@ void BaseApplication::createFrameListener(void)
 	//Fix for 1.9
 	mInputContext.mKeyboard = mKeyboard;
     mInputContext.mMouse = mMouse;
-	//mInputContext.mMultiTouch = mJoy;  //Do I need to do this?
 
     mMouse->setEventCallback(this);
     mKeyboard->setEventCallback(this);
-	mJoy->setEventCallback(this);
 
     //Set initial mouse clipping size
     windowResized(mWindow);
@@ -131,27 +132,11 @@ void BaseApplication::createFrameListener(void)
     //Register as a Window listener
     Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
 
-	//Fix for 1.9 - take this out:
-	/*OgreBites::InputContext inputContext;
-	inputContext.mMouse = mMouse; 
-	inputContext.mKeyboard = mKeyboard;
-	mTrayMgr = new OgreBites::SdkTrayManager("TrayMgr", mWindow, inputContext, this);*/
-
-	/*OgreBites::InputContext input;
-	input.mAccelerometer = NULL;
-	input.mKeyboard = mKeyboard;
-	input.mMouse = mMouse;
-	input.mMultiTouch = NULL;
-	mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, input, this);*/
-
 	//Fix for 1.9 - put this in:
-	mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);  //COMMENTED THIS OUT!!
-	//mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mMouse, this);
-    //mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);  //don't want this for final version
-    //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
-    //mTrayMgr->hideCursor();
-
+	mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);
+	
     // create a params panel for displaying sample details
+	//don't actually need?
     Ogre::StringVector items;
     items.push_back("cam.pX");
     items.push_back("cam.pY");
@@ -175,6 +160,7 @@ void BaseApplication::createFrameListener(void)
 //-------------------------------------------------------------------------------------
 void BaseApplication::destroyScene(void)
 {
+	//not implemented?
 }
 //-------------------------------------------------------------------------------------
 void BaseApplication::createViewports(void)
@@ -215,23 +201,15 @@ void BaseApplication::setupResources(void)
 //-------------------------------------------------------------------------------------
 void BaseApplication::createResourceListener(void)
 {
-
+	//This is no longer being used, listeners created elsewhere
+	//DELETE?
 }
 //-------------------------------------------------------------------------------------
 void BaseApplication::loadResources(void)
 {
 
-	//createFrameListener();
-	///mTrayMgr->showLoadingBar(); 
-	//loadResources();
-	//mTrayMgr->hideLoadingBar();
-	//createScene();
-	//m_loading_bar->start(mWindow, 1, 1, 0.75);
-    //OgreBites::SdkTrayManager::showLoadingBar;
-	// Initialise, parse scripts etc
-	//Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-    //OgreBites::SdkTrayManager::hideLoadingBar;
-	//m_loading_bar->finish();
+	//Actual loading done elsewhere
+	//move this line outside?
 
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 }
@@ -280,17 +258,22 @@ bool BaseApplication::setup(void)
     // Load resources
 	//mTrayMgr should be initialized in the Frame Listener
 	createFrameListener();
+
+	//soundcode - PlaySound sucks, to be replaced with a better alternative------------
+
 	/*std::string path = __FILE__; //gets the current cpp file's path with the cpp file
 	path = path.substr(0,1+path.find_last_of('\\')); //removes filename to leave path
 	path+= "\\Sounds\\YBPR_part1.wav"; //if txt file is in the same directory as cpp file
 	PlaySound(path.c_str(), NULL, SND_FILENAME|SND_ASYNC);    //Intro song plays immediately*/
-	
+
+	//----------------------------------------------------------------------------------
+
 	//loader bar for loading
 	mTrayMgr->showLoadingBar(1, 0); 
 	loadResources();
 	mTrayMgr->hideLoadingBar();
 
-	createGUI();  //my guis  - make these before creating scene?
+	createGUI();  //my guis  - make these before creating scene - This will need to be replaced with CEGUI stuff
 	// Create the scene
 	createScene();
 
@@ -309,7 +292,7 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	//Need to capture/update each device
     mKeyboard->capture();
     mMouse->capture();
-	mJoy->capture();
+	if (mJoy != 0) mJoy->capture();
 	//mInputContext.capture();
 
     mTrayMgr->frameRenderingQueued(evt);
@@ -332,127 +315,6 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     return true;
 }
-//-------------------------------------------------------------------------------------
-//bool BaseApplication::keyPressed( const OIS::KeyEvent &arg )
-//{
-//    if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
-//
-//    if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
-//    {
-//        mTrayMgr->toggleAdvancedFrameStats();
-//    }
-//    else if (arg.key == OIS::KC_G)   // toggle visibility of even rarer debugging details
-//    {
-//        if (mDetailsPanel->getTrayLocation() == OgreBites::TL_NONE)
-//        {
-//            mTrayMgr->moveWidgetToTray(mDetailsPanel, OgreBites::TL_TOPRIGHT, 0);
-//            mDetailsPanel->show();
-//        }
-//        else
-//        {
-//            mTrayMgr->removeWidgetFromTray(mDetailsPanel);
-//            mDetailsPanel->hide();
-//        }
-//    }
-//    else if (arg.key == OIS::KC_T)   // cycle polygon rendering mode
-//    {
-//        Ogre::String newVal;
-//        Ogre::TextureFilterOptions tfo;
-//        unsigned int aniso;
-//
-//        switch (mDetailsPanel->getParamValue(9).asUTF8()[0])
-//        {
-//        case 'B':
-//            newVal = "Trilinear";
-//            tfo = Ogre::TFO_TRILINEAR;
-//            aniso = 1;
-//            break;
-//        case 'T':
-//            newVal = "Anisotropic";
-//            tfo = Ogre::TFO_ANISOTROPIC;
-//            aniso = 8;
-//            break;
-//        case 'A':
-//            newVal = "None";
-//            tfo = Ogre::TFO_NONE;
-//            aniso = 1;
-//            break;
-//        default:
-//            newVal = "Bilinear";
-//            tfo = Ogre::TFO_BILINEAR;
-//            aniso = 1;
-//        }
-//
-//        Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(tfo);
-//        Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(aniso);
-//        mDetailsPanel->setParamValue(9, newVal);
-//    }
-//    else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
-//    {
-//        Ogre::String newVal;
-//        Ogre::PolygonMode pm;
-//
-//        switch (mCamera->getPolygonMode())
-//        {
-//        case Ogre::PM_SOLID:
-//            newVal = "Wireframe";
-//            pm = Ogre::PM_WIREFRAME;
-//            break;
-//        case Ogre::PM_WIREFRAME:
-//            newVal = "Points";
-//            pm = Ogre::PM_POINTS;
-//            break;
-//        default:
-//            newVal = "Solid";
-//            pm = Ogre::PM_SOLID;
-//        }
-//
-//        mCamera->setPolygonMode(pm);
-//        mDetailsPanel->setParamValue(10, newVal);
-//    }
-//    else if(arg.key == OIS::KC_F5)   // refresh all textures
-//    {
-//        Ogre::TextureManager::getSingleton().reloadAll();
-//    }
-//    else if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
-//    {
-//        mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
-//    }
-//    else if (arg.key == OIS::KC_ESCAPE)
-//    {
-//        mShutDown = true;
-//    }
-//
-//    mCameraMan->injectKeyDown(arg);
-//    return true;
-//}
-
-//bool BaseApplication::keyReleased( const OIS::KeyEvent &arg )
-//{
-//    mCameraMan->injectKeyUp(arg);
-//    return true;
-//}
-//
-//bool BaseApplication::mouseMoved( const OIS::MouseEvent &arg )
-//{
-//    if (mTrayMgr->injectMouseMove(arg)) return true;
-//    mCameraMan->injectMouseMove(arg);
-//    return true;
-//}
-//
-//bool BaseApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
-//{
-//    if (mTrayMgr->injectMouseDown(arg, id)) return true;
-//    mCameraMan->injectMouseDown(arg, id);
-//    return true;
-//}
-//
-//bool BaseApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
-//{
-//    if (mTrayMgr->injectMouseUp(arg, id)) return true;
-//    mCameraMan->injectMouseUp(arg, id);
-//    return true;
-//}
 
 //Adjust mouse clipping area
 void BaseApplication::windowResized(Ogre::RenderWindow* rw)

@@ -62,14 +62,6 @@ protected:
     // Ogre::FrameListener
     virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
-    // OIS::KeyListener
-    //virtual bool keyPressed( const OIS::KeyEvent &arg );
-    //virtual bool keyReleased( const OIS::KeyEvent &arg );
-    // OIS::MouseListener
-    //virtual bool mouseMoved( const OIS::MouseEvent &arg );
-   // virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
-    //virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
-
     // Ogre::WindowEventListener
     //Adjust mouse clipping area
     virtual void windowResized(Ogre::RenderWindow* rw);
@@ -103,8 +95,8 @@ protected:
     OIS::Keyboard* mKeyboard;
 	OIS::JoyStick* mJoy;
 
-	// Lecture 12
-	Ogre::RaySceneQuery* mRayScnQuery;	//pointer to our ray scene query
+	
+	Ogre::RaySceneQuery* mRayScnQuery;	//pointer to our ray scene query - not being used anymore, DELETE?
 };
 
 #endif // #ifndef __BaseApplication_h_

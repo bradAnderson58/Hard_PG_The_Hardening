@@ -6,13 +6,13 @@
 Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a):
 	Agent(SceneManager, name, filename, height, scale, a)
 {
-	//origin
+	//set player to origin to attach the camera
 	mBodyNode->setPosition(0.0,0.0,0.0);
 	mBodyNode->yaw(Ogre::Radian(M_PI));
 
 	//Camera set up here
 	Ogre::Vector3 temp(mBodyNode->getPosition());
-	Ogre::Vector3 temp1(temp[0], temp[1]+40, temp[2]+40);//move camera to location. temp[1] is height relative to yoshimi temp[2] is z distance
+	Ogre::Vector3 temp1(temp[0], temp[1]+40, temp[2]+40);//move camera to location. temp[1] is height relative to player temp[2] is z distance
 	Ogre::Camera* cam = app->getCamera();
 	cam->pitch(Ogre::Radian(-10 * M_PI /180));
 	cam->setPosition(temp1);
@@ -23,11 +23,11 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	camNode->attachObject(cam);
 	
 
-	fForward = fBackward = false;  //starts by not moving
+	fForward = false;  //starts by not moving
 	doingStuff = false;  //starts not doing anything
-	speed = 2;	//Yoshimi a quick one 
+	speed = 2;	//You're a quick one - DELETE?
 
-	//mBodyNode->showBoundingBox(true);										//for testing purposes Yoshimi box
+	//mBodyNode->showBoundingBox(true);				//for testing purposes Player box
 
 	//attack space
 	mAttackNode = mModelNode->createChildSceneNode();
@@ -38,8 +38,9 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	//set up the position of the attackNode
 	mAttackNode->setPosition(0.0f ,100.0f, -100.0f);
 	mAttackNode->setVisible(false);
-	//mAttackNode->showBoundingBox(true);					//for testing  Attack box
+	//mAttackNode->showBoundingBox(true);		//for testing  Attack box
 
+	//for constant rotation
 	mRotator = 0;
 	fRot = false;
 	
@@ -54,39 +55,31 @@ Player::~Player(void)
 void Player::update(Ogre::Real deltaTime){
 	this->updateAnimations(deltaTime);	// Update animation playback
 	this->updateLocomote(deltaTime);	// Update Locomotion
-	this->collisionRobots();
+	this->collisionRobots(); //DELETE or refurbish
 
 }
 
 void Player::updateLocomote(Ogre::Real deltaTime){
-	//Ogre::Vector3 translator = Ogre::Vector3::ZERO;
-
-	//mBodyNode->translate(mDirection); //for testing
-
+	//rotate the camera using joystick
 	if (fForward) rotationCode(mPlayerRot);
 
 	Ogre::Quaternion q;
 	Ogre::Vector3 translator = Ogre::Vector3::ZERO;
 
-	//use direction for forward and backward
-	//mDirection = mBodyNode->getOrientation() * Ogre::Vector3::UNIT_Z;
-	//90 degrees from mDirection for right and left
+	//rotate from current direction
 	q.FromAngleAxis(Ogre::Radian(M_PI) / 2, Ogre::Vector3(0,1,0));
 	Ogre::Vector3 side = q*mDirection;
 
-	//set translation based on which keys are currentl
-	//if (!doingStuff || yoshAnim == JUMP){
+	//set translation based on controller input
 	if (fForward) translator += (side * -mPlayerVel);
 	if (fRot) mNullCamera->yaw(Ogre::Degree(mRotator));
-	//if (fRight) translator += (mDirection * vel);
-	//if (fBackward) translator += (mDirection * vel);
 
 	//Set Yoshimi Animation based on movement (if not already doing stuff)
 	if (!doingStuff){
-		if (!fForward && !fBackward){
-			if (yoshAnim != IDLE_THREE) setAnimation(IDLE_THREE);
+		if (!fForward){
+			if (playerAnim != IDLE_THREE) setAnimation(IDLE_THREE);
 		}else{
-			if (yoshAnim != STEALTH) setAnimation(STEALTH);
+			if (playerAnim != STEALTH) setAnimation(STEALTH);
 		}
 	}
 	//border wall coordinates
@@ -94,7 +87,7 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 	float maxZ = app->getZmax() * 10 -5;
 
 	Ogre::Vector3 newPos = translator + getPosition();
-	//doing collisions with border walls
+	//doing collisions with border walls - this will need to be expanded for all walls and objects
 	if (newPos[0] > maxX -.5){
 		newPos[0] = maxX -.5;
 	}
@@ -108,7 +101,7 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 		newPos[2] = -maxZ + .5;
 	}
 
-	//doing collisions with the house
+	//doing collisions with the house - this is too specific, will need to be changed
 	//house xcoords -18 from center to 15
 	//house z coords -18 from center to 18
 	Ogre::Vector3 hp = app->getHousePointer()->getPosition();
@@ -136,31 +129,25 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 		}
 	}
 
-	mBodyNode->setPosition(newPos); //for testing
+	mBodyNode->setPosition(newPos);
 }
 
-//Set movement flags based on a char to represent direction and boolean on or not
-void Player::setMovement(char dir, bool on){
-	
+//Set movement flag
+void Player::setMovement(bool on){
 	//Set the correct flag to the new boolean value
-	if (dir == 'f') fForward = on;
-	else if (dir == 'b') fBackward = on;
-	//else if (dir == 'r') fRight = on;
-	//else if (dir == 'l') fLeft = on;
+	fForward = on;
 }
 
 void Player::rotationCode(OIS::MouseEvent arg){
-	mModelNode->yaw(Ogre::Degree(arg.state.X.rel * -0.5f));
-    //mBodyNode->pitch(Ogre::Degree(arg.state.Y.rel * -0.1f));
+	mNullCamera->yaw(Ogre::Degree(arg.state.X.rel * -0.5f));
 }
 
 void Player::rotationCode(double rad){
-
+	//update mDirection
 	mDirection = mNullCamera->getOrientation() * Ogre::Vector3(std::sin(rad), 0, std::cos(rad));
 
 	//always rotating
 	Ogre::Vector3 src = mModelNode->getOrientation() * Ogre::Vector3::UNIT_X;//rotate for first location
-	//Ogre::Vector3 src = mNullCamera->getOrientation() * Ogre::Vector3::UNIT_X;
 	if ((1.0f + src.dotProduct(mDirection)) < 0.0001f) 
 	{
 		mModelNode->yaw(Ogre::Degree(180));
@@ -174,27 +161,27 @@ void Player::rotationCode(double rad){
 }
 
 void Player::cameraRot(double rad){
-	std::cout << rad << std::endl;
+	//set rotation variables for update function
 	fRot = true;
 	mRotator = rad;
-
-	//mDirection = Ogre::Vector3(std::sin(rad), 0, std::cos(rad)); //?
 }
 
 void Player::playerRot(double rad){
+	//update player rotation
 	mPlayerRot = rad;
 }
 
 void Player::setVelocity(double vel){
+	//set velocity
 	mPlayerVel = vel;
 }
 
 void Player::updateAnimations(Ogre::Real deltaTime){
 
 	//If Yoshimi has an active animation, call the update method
-	if (yoshAnim != ANIM_NONE){
-		mAnims[yoshAnim]->addTime(deltaTime * speed);
-		if (mAnims[yoshAnim]->hasEnded()){
+	if (playerAnim != ANIM_NONE){
+		mAnims[playerAnim]->addTime(deltaTime * speed);
+		if (mAnims[playerAnim]->hasEnded()){
 			doingStuff = false;   //no longer doing stuff
 			speed = 2;
 		}
@@ -239,7 +226,7 @@ void Player::setupAnimations(){
 	// this is very important due to the nature of the exported animations
 	mModelEntity->getSkeleton()->setBlendMode(Ogre::ANIMBLEND_CUMULATIVE);
 
-	// Name of the animations for this character
+	// Name of the animations for this character - this will change with new assets
 	Ogre::String animNames[] =
 		{  "Attack1", "Attack2", "Attack3", "Backflip", "Block", "Climb", "Crouch", "Death1", "Death2", "HighJump", "Idle1", "Idle2",
 		"Idle3", "Jump", "JumpNoHeight", "Kick", "SideKick", "Spin", "Stealth", "Walk"};
@@ -263,14 +250,14 @@ void Player::setupAnimations(){
 }
 
 void Player::setAnimation(AnimID id, bool reset){
-	if (yoshAnim >= 0 && yoshAnim < 20)
+	if (playerAnim >= 0 && playerAnim < 20)
 	{
 		// if we have an old animation, fade it out
-		mFadingIn[yoshAnim] = false;
-		mFadingOut[yoshAnim] = true;
+		mFadingIn[playerAnim] = false;
+		mFadingOut[playerAnim] = true;
 	}
 
-	yoshAnim = id; 
+	playerAnim = id; 
 
 	if (id != ANIM_NONE)
 	{
@@ -292,30 +279,34 @@ void Player::buttonAnimation(char key){
 	else if (key == 'k') setAnimation(KICK, true);		  //judo-kick
 }
 
-//Yoshimi checks the robot list to see if any robots are close enough to hit
+//Player checks the robot list to see if any robots are close enough to hit
 //If so, they get hurted and such
-//TODO: Optimize so that Yoshimi only has to check a certain amount of robots?  Octree?
+//TODO: This will be updated as enemies are introduced
 void Player::checkHits(char attack){
 	
-	//get bounding boxes for Yoshimi and her adversaries
+	//get bounding boxes for Player and her adversaries
 	Ogre::AxisAlignedBox aRange = mAttackEntity->getWorldBoundingBox();
 	Ogre::AxisAlignedBox rRange;
 
+	//ADD MORE
+
 }
 
-//check collisions with robots
+//Expand to cover collisions with all NPCs
 //robots will push yoshimi out of the way
 void Player::collisionRobots(){
+	//Repurpose
+}
 
-}
-//moved into updatelocomote
+//moved into updatelocomote - will probably be added back in
 void Player::collisionWalls(){
-	
+	//Repurpose
 }
-//reset yoshimi to the initial position and reset initialize variables
+
+//reset player to the initial position and reset initialize variables - will need again eventually
 void Player::restart(){
 	mBodyNode->setPosition(initPos);
 	mBodyNode->yaw(Ogre::Radian(M_PI));
-	fForward = fBackward = false;  //starts by not moving
+	fForward = false;  //starts by not moving
 	doingStuff = false;  //starts not doing anything
 }

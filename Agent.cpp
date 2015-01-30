@@ -21,18 +21,22 @@ Agent::Agent(Ogre::SceneManager* SceneManager, std::string name, std::string fil
 	this->app = a;  //this is the game app
 
 	mBodyNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(); // create a new scene node
+
+	//mModelNode is used to rotate model intependant of root node
 	mModelNode = mBodyNode->createChildSceneNode();
 	mModelEntity = mSceneMgr->createEntity(name, filename); // load the model
 	mModelNode->attachObject(mModelEntity);	// attach the model to the scene node
 
-	mBodyNode->translate(0,height,0); // make the Ogre stand on the plane (almost)
+	mBodyNode->translate(0,height,0); // make the agent stand on the plane (almost)
 	mBodyNode->scale(scale,scale,scale); // Scale the figure
-	//mBodyNode->yaw(Ogre::Degree(-90)); //fish goes this way
 
-
-	//setupAnimations();  // load the animation for this character
+	//keep track of intial position - still needed?
 	initPos = mBodyNode->getPosition();
-	projectile = false; // lecture 12
+
+	//If this is a projectile - may need for later
+	projectile = false;
+
+	//Particle code - may be needed for magic spells or something?
 	ParticleSystem::setDefaultNonVisibleUpdateTimeout(5);  // set nonvisible timeout
 	//ps = mSceneMgr->createParticleSystem("Fountain1", "Examples/PurpleFountain");
 	Ogre::SceneNode* mnode = mBodyNode->createChildSceneNode();
@@ -40,11 +44,9 @@ Agent::Agent(Ogre::SceneManager* SceneManager, std::string name, std::string fil
 	//mnode->attachObject(ps);
 	//ps->setVisible(false);
 
-	// configure walking parameters
+	// configure walking parameters - still needed?
 	mWalkSpeed = 35.0f;	
 	mDirection = Ogre::Vector3::ZERO;
-
-	successes = 0;  //no successes yet!
 }
 
 Agent::~Agent(){
@@ -71,41 +73,42 @@ Agent::update(Ogre::Real deltaTime)
 void 
 Agent::setupAnimations()
 {
-	
+	//overwritten in subclasses
 }
 
 void 
 Agent::setBaseAnimation(AnimID id, bool reset)
 {
-	
+	//overwritten in subclasses as necessary
 }
 	
 void Agent::setTopAnimation(AnimID id, bool reset)
 {
-	
+	//overwritten in subclasses as necessary
 }
 
 void 
 Agent::updateAnimations(Ogre::Real deltaTime)
 {
-	
+	//DELETE?
 }
 
 void 
 Agent::fadeAnimations(Ogre::Real deltaTime)
 {
-	
+	//DELETE?
 }
 
 bool 
 Agent::nextLocation()
 {
-	return true;
+	return true; //Delete?
 }
 
 void 
 Agent::updateLocomote(Ogre::Real deltaTime)
 {
+	//DELETE?
 }
 
 

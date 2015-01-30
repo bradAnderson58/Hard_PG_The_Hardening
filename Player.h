@@ -14,7 +14,7 @@ public:
 
 	void update(Ogre::Real deltaTime);			// update hero!
 	void updateLocomote(Ogre::Real deltaTime);
-	void setMovement(char dir, bool on);		//set the movemnt
+	void setMovement(bool on);				//set the movemnt
 	void rotationCode(OIS::MouseEvent arg);  //Rotate the hero when we move the mouse
 
 	void rotationCode(double arg);			//Rotate the hero
@@ -44,6 +44,7 @@ private:
 
 	Ogre::SceneNode *mAttackNode;	//use this for bounding area for Yoshimi attacks
 	Ogre::Entity *mAttackEntity;
+	Ogre::SceneNode* mNullCamera;		//For rotating just the camera
 
 	enum AnimID
 	{
@@ -70,7 +71,7 @@ private:
 		ANIM_NONE
 	};
 
-	AnimID yoshAnim;
+	AnimID playerAnim;
 	void setupAnimations();									// load this character's animations
 	void fadeAnimations(Ogre::Real deltaTime);				// blend from one animation to another
 	void updateAnimations(Ogre::Real deltaTime);			// update the animation frame

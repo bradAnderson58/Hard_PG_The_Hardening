@@ -14,14 +14,13 @@ private:
 	Agent* agent; // store a pointer to the character
 	Ogre::Vector3 houseInitPos;
 
-	Player* yoshPointer;	//This is our heroic savior, Yoshimi!
+	Player* playerPointer;				//This is our heroic savior
 	Ogre::SceneNode* housePointer;		//point to the location of the house COM
-	float houseHealth;					//when health gets to zero, much sad
-	bool gameOver;
+	bool gameOver;						//game is over
 
 	std::list<Ogre::SceneNode*> wallList;
 	std::list<Ogre::SceneNode*> borderWalls;
-	Ogre::AxisAlignedBox boundBox;  //bounding box of the barrel
+	Ogre::AxisAlignedBox boundBox;  //bounding box of the barrel - DELETE?
 	int level;
 	//Boundaries of the world
 	Grid *grid;
@@ -47,7 +46,6 @@ public:
 	void addTime(Ogre::Real deltaTime);		// update the game state
 
 	//////////////////////////////////////////////////////////////////////////
-	// Lecture 4: keyboard interaction
 	// moved from base application
 	// OIS::KeyListener
     bool keyPressed( const OIS::KeyEvent &arg );
@@ -64,8 +62,6 @@ public:
     bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
 	////////////////////////////////////////////////////////////////////////////
 
-	//////////////////////////////////////////////////////////////////////////////////
-	// Lecture 12
 	bool bLMouseDown, bRMouseDown;		//true if mouse buttons are held down
 	Ogre::SceneNode *mCurrentObject;	//pointer to our currently selected object
 
@@ -74,7 +70,7 @@ public:
 	Ogre::AxisAlignedBox getBox() { return boundBox; }  //return the bounding box of barrel
 
 	Ogre::Camera* getCamera() { return mCamera; }  //why u no like?
-	Player* getYoshimiPointer(){return yoshPointer;}
+	Player* getPlayerPointer(){return playerPointer;}
 	std::list<Ogre::SceneNode*> getWallList(){return wallList;}
 	Ogre::SceneNode* getHousePointer(){return housePointer;}
 
@@ -92,18 +88,10 @@ protected:
 
 	//GUI buttons and such
 	OgreBites::Button *cont;
-	OgreBites::Button *inst;
-	OgreBites::Button *cred;
-	OgreBites::TextBox *texty;
-	OgreBites::Button *back;
-	OgreBites::ProgressBar *houseHUD;
 
 	//Strings for GUI
-	std::string instruction;
-	std::string credits;
 	
 	//Path files for sounds
-	std::string music;
 
 	OgreBites::ParamsPanel* mParamsPanel;
 

@@ -13,30 +13,9 @@ GameApplication::GameApplication(void):
 	bRMouseDown(false)
 {
 	agent = NULL; // Init member data
-	housePointer = NULL;
 	startGame = false;
-	houseHealth = 1.0f;
 	gameOver = false;
 	level = 0;
-	
-	//set up these strings for later usages
-	std::stringstream ins;	// a stream for outputing to a string (why no clear()?)
-	std::stringstream cre;
-	ins << "Your name is Yoshimi, you're a blackbelt in Karate";
-	ins << "\nMOVE: \nWASD moves Yoshimi as you would expect.  \nMouse movements rotate Yoshimi to face different directions.";
-	ins <<"\nATTACK: \nLeft mouse click executes Judo Sword Attack, right mouse click executes Epic Front Kick.";
-	ins <<"\nOBJECTIVE:  \nYou must protect your house from the evil natured Robots, who are programmed to destroy us!";
-	instruction = ins.str();
-	//out.clear();
-
-	cre << "Inspiration and music taken from \"Yoshimi Battles the Pink Robots\" by The Flaming Lips.";
-	cre << "\nGraphics made with assistance of the Ogre Rendering Engine API.";
-	cre << "\nLEAD DEVELOPERS:  \nBrad Anderson and Kevin Dec, \nDangling Pointers LLC";
-	credits = cre.str();
-
-	/*music = __FILE__; //gets the current cpp file's path with the cpp file
-	music = music.substr(0,1+music.find_last_of('\\')); //removes filename to leave path
-	music+= "\\Sounds\\YBPR_part2.wav"; //if txt file is in the same directory as cpp file*/
 
 }
 //-------------------------------------------------------------------------------------
@@ -49,14 +28,8 @@ GameApplication::~GameApplication(void)
 //-------------------------------------------------------------------------------------
 void GameApplication::createScene(void)
 {
-    /*loadEnv();
-	setupEnv();*/  //DO THIS ELSEWHERE?
-	//loadObjects();
-	//loadCharacters();
-	//////////////////////////////////////////////////////////////////////////////////
-	// Lecture 12
-	//but we also want to set up our raySceneQuery after everything has been initialized
-	mRayScnQuery = mSceneMgr->createRayQuery(Ogre::Ray());
+    //delete or repurpose this?
+	//mRayScnQuery = mSceneMgr->createRayQuery(Ogre::Ray());
 
 }
 //////////////////////////////////////////////////////////////////
@@ -90,21 +63,18 @@ GameApplication::loadEnv()
 		bool agent;
 	};
 
-	PlaySound(music.c_str(), NULL, SND_FILENAME|SND_ASYNC);  //Game sound
-	//mInputManager->destroyInputObject(mMouse);
-	//mMouse = NULL;								//How to hide the mouse?
-	//mMouse->getMouseState();
+	//PlaySound(music.c_str(), NULL, SND_FILENAME|SND_ASYNC);  //Game sound
 	
 	GridNode *temp;
 
 	ifstream inputfile;		// Holds a pointer into the file
 
-	string path = __FILE__; //gets the current cpp file's path with the cpp file
+	string path = __FILE__; //gets the current cpp file's path with the cpp file   --THIS NEEDS TO BE REDONE FOR RELEASE
 	path = path.substr(0,1+path.find_last_of('\\')); //removes filename to leave path
 	path+= "level001.txt"; //if txt file is in the same directory as cpp file
 	inputfile.open(path);
 
-	//inputfile.open("D:/CS425-2012/Lecture 8/GameEngine-loadLevel/level001.txt"); // bad explicit path!!!
+	//inputfile.open("D:/CS425-2012/Lecture 8/GameEngine-loadLevel/level001.txt"); //explicit path!!!
 	if (!inputfile.is_open()) // oops. there was a problem opening the file
 	{
 		cout << "ERROR, FILE COULD NOT BE OPENED" << std::endl;	// Hmm. No output?
@@ -185,16 +155,15 @@ GameApplication::loadEnv()
 					// Use subclasses instead!
 					if (c == 'n') {
 						agent = new Player(this->mSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, this);
-						yoshPointer = (Player*) agent;  //you are a yoshimi
+						playerPointer = (Player*) agent;  //you are a yoshimi
 						agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
-						yoshPointer->setInitPos(yoshPointer->getPosition());
+						playerPointer->setInitPos(playerPointer->getPosition());
 					}else {
-						
+						//enemy code will go here	
 					}
-					//agent->setApp(this);  //in constructor
 					
 				}
-				else	// Load objects
+				else	// Load objects - non-agents will go in here
 				{
 					if (rent->filename == "tudorhouse.mesh"){
 						String work = getNewName();
@@ -203,6 +172,7 @@ GameApplication::loadEnv()
 
 						Entity *ent = mSceneMgr->createEntity(work, rent->filename);
 						
+						//This house code is no longer needed, but will break stuff if taken out - DELETE
 						housePointer = mSceneMgr->getRootSceneNode()->createChildSceneNode(work,
 							grid->getPosition(i,j));
 						housePointer->attachObject(ent);
@@ -218,7 +188,7 @@ GameApplication::loadEnv()
 			}
 			else // not an object or agent
 			{
-				if (c == 'w') // create a wall
+				if (c == 'w') // create a wall - this stays
 				{
 					Entity* ent = mSceneMgr->createEntity(getNewName(), Ogre::SceneManager::PT_CUBE);
 					ent->setMaterialName("Examples/RustySteel");
@@ -275,13 +245,12 @@ GameApplication::loadEnv()
 	objs.clear(); // calls their destructors if there are any. (not good enough)
 	
 	inputfile.close();
-	//grid->printToFile(); // see what the initial grid looks like.
 
 	//set up world boundaries
 	xMax = (grid->getRows() - 1) / 2;
 	zMax = (grid->getCols() - 1) / 2;
 
-	agent = NULL;	//this gets deleted by yoshPointer or RobotList
+	agent = NULL;	//this gets deleted by agent destructor
 }
 
 void // Set up lights, shadows, etc
@@ -315,16 +284,8 @@ void
 GameApplication::addTime(Ogre::Real deltaTime)
 {
 	if (!gameOver){
-		int dead = 0;  //see how many robots are dead
-		std::string comment = "Safe";
-		// Iterate over the list of agents (robots)
-		
-		if (!gameOver) houseHUD->setComment(comment);  //warn if house is under attack
-
-		if (startGame) yoshPointer->update(deltaTime); //Yoshimi has a different update function
+		if (startGame) playerPointer->update(deltaTime); //Yoshimi has a different update function
 	
-		if (houseHealth <= 0 && !gameOver) endGame('l');
-		if (dead != 0 && !gameOver) endGame('w'); 
 	}
 }
 
@@ -333,11 +294,11 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 {
     if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
 
-    if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
+    if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats - leave for now
     {
         mTrayMgr->toggleAdvancedFrameStats();
     }
-    else if (arg.key == OIS::KC_G)   // toggle visibility of even rarer debugging details
+    else if (arg.key == OIS::KC_G)   // toggle visibility of even rarer debugging details - leave for now
     {
         if (mDetailsPanel->getTrayLocation() == OgreBites::TL_NONE)
         {
@@ -350,7 +311,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
             mDetailsPanel->hide();
         }
     }
-    else if (arg.key == OIS::KC_T)   // cycle polygon rendering mode
+    else if (arg.key == OIS::KC_T)   // cycle polygon rendering mode - DELETE?
     {
         Ogre::String newVal;
         Ogre::TextureFilterOptions tfo;
@@ -383,7 +344,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
         Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(aniso);
         mDetailsPanel->setParamValue(9, newVal);
     }
-    else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
+    else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode - DELETE?
     {
         Ogre::String newVal;
         Ogre::PolygonMode pm;
@@ -420,35 +381,50 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
     }
 	else if (arg.key == OIS::KC_SPACE)
 	{
-		if(!yoshPointer->doingStuff){
-			yoshPointer->changeSpeed(.6);  //jump should be slower
-			yoshPointer->buttonAnimation('j');
-			yoshPointer->doingStuff = true;
+		if(!playerPointer->doingStuff){
+			playerPointer->changeSpeed(.6);  //jump should be slower
+			playerPointer->buttonAnimation('j');
+			playerPointer->doingStuff = true;
 		}
 	}
 	else if (arg.key == OIS::KC_W) {
 		
-		if (startGame) yoshPointer->setMovement('f', true);
+		if (startGame){
+			playerPointer->playerRot(M_PI / 2);
+			playerPointer->setMovement(true);
+			playerPointer->setVelocity(.5);
+
+		}
 	}
 	else if (arg.key == OIS::KC_A) {
-		if (startGame) yoshPointer->setMovement('l', true);
+		if (startGame){
+			playerPointer->playerRot(M_PI);
+			playerPointer->setMovement(true);
+			playerPointer->setVelocity(.5);
+		}
 	}
 	else if (arg.key == OIS::KC_D) {
-		if (startGame) yoshPointer->setMovement('r', true);
+		if (startGame){
+			playerPointer->playerRot(0);
+			playerPointer->setMovement(true);
+			playerPointer->setVelocity(.5);
+		}
 	
 	}
 	else if (arg.key == OIS::KC_S) {
-		if (startGame) yoshPointer->setMovement('b', true);
-	}
-	//Some wicked attacks
-	else if (arg.key == OIS::KC_Q){
-		if(!yoshPointer->doingStuff){
-			yoshPointer->buttonAnimation('t');
-			yoshPointer->doingStuff = true;
+		if (startGame){
+			playerPointer->playerRot(4.712);
+			playerPointer->setMovement(true);
+			playerPointer->setVelocity(.5);
 		}
 	}
-   
-    //mCameraMan->injectKeyDown(arg);
+	//Some wicked attacks - template for spellcasting possibly
+	else if (arg.key == OIS::KC_Q){
+		if(!playerPointer->doingStuff){
+			playerPointer->buttonAnimation('t');
+			playerPointer->doingStuff = true;
+		}
+	}
     return true;
 }
 
@@ -456,76 +432,84 @@ bool GameApplication::keyReleased( const OIS::KeyEvent &arg )
 {
 	//Set the flag to false for whichever key is no longer pressed
 	if (startGame){
-		if (arg.key == OIS::KC_W) yoshPointer->setMovement('f', false);
-		else if (arg.key == OIS::KC_A) yoshPointer->setMovement('l', false);
-		else if (arg.key == OIS::KC_S) yoshPointer->setMovement('b', false);
-		else if (arg.key == OIS::KC_D) yoshPointer->setMovement('r', false);
+		if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || arg.key == OIS::KC_D){
+			playerPointer->setMovement(false);
+		}
 	}
-    //mCameraMan->injectKeyUp(arg);
     return true;
 }
 
 bool GameApplication::mouseMoved( const OIS::MouseEvent &arg )
 {
-
-	if (startGame) yoshPointer->rotationCode(arg);
+	if (startGame){
+		//rotate the camera
+		playerPointer->rotationCode(arg);
+	}
 	
-    if (mTrayMgr->injectMouseMove(arg)) return true;
-    //mCameraMan->injectMouseMove(arg);
+    if (mTrayMgr->injectMouseMove(arg)) return true; //DELETE?
     return true;
 }
 
 bool GameApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
-	/////////////////////////////////////////////////////////////////////////////////////
 	// attack using left and right mouse buttons once the game starts
 	if (startGame){
-		if(id == OIS::MB_Left && !yoshPointer->doingStuff)
+		if(id == OIS::MB_Left && !playerPointer->doingStuff)
 		{
-			yoshPointer->changeSpeed(1);
-			yoshPointer->buttonAnimation('s');
-			yoshPointer->doingStuff = true;
-			yoshPointer->checkHits('s');
+			playerPointer->changeSpeed(1);
+			playerPointer->buttonAnimation('s');
+			playerPointer->doingStuff = true;
+			playerPointer->checkHits('s'); //This may change
 		}
-		else if (id == OIS::MB_Right && !yoshPointer->doingStuff){
-			yoshPointer->buttonAnimation('k');
-			yoshPointer->doingStuff = true;
-			yoshPointer->checkHits('k');
+		else if (id == OIS::MB_Right && !playerPointer->doingStuff){
+			playerPointer->buttonAnimation('k');
+			playerPointer->doingStuff = true;
+			playerPointer->checkHits('k');
 		}
 	}
-	/////////////////////////////////////////////////////////////////////////////////////
-   
+	
+	//To prevent breakage
 	if (id == OIS::MB_Right) bRMouseDown = false;
 	else if (id == OIS::MB_Left) bLMouseDown = false;
     if (mTrayMgr->injectMouseDown(arg, id)) return true;
-    //mCameraMan->injectMouseDown(arg, id);
     return true;
 }
 
 bool GameApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
+	//To prevent breakage
 	if (id == OIS::MB_Right) bRMouseDown = false;
 	else if (id == OIS::MB_Left) bLMouseDown = false;
 	if (mTrayMgr->injectMouseUp(arg, id)) return true;
     return true;
 }
 
+//Xbox Controller button functions
 bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 
-	std::cout << "button Pressed: " << button << "\n" << std::endl;
+	//A button is 0
 	if (button == 0) {
-		if(!yoshPointer->doingStuff){
-			yoshPointer->changeSpeed(.6);  //jump should be slower
-			yoshPointer->buttonAnimation('j');
-			yoshPointer->doingStuff = true;
+		if (!startGame){	//This code may need to be refactored
+			mTrayMgr->hideCursor();
+			mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER); //going to remove
+			loadEnv();
+			setupEnv();
+			startGame = true;
 		}
+		else if(!playerPointer->doingStuff){
+			playerPointer->changeSpeed(.6);  //jump should be slower
+			playerPointer->buttonAnimation('j');
+			playerPointer->doingStuff = true;
+		}
+
+	//X button is 2
 	}else if (button == 2){
-		if(!yoshPointer->doingStuff)
+		if(!playerPointer->doingStuff)
 		{
-			yoshPointer->changeSpeed(1);
-			yoshPointer->buttonAnimation('s');
-			yoshPointer->doingStuff = true;
-			yoshPointer->checkHits('s');
+			playerPointer->changeSpeed(1);
+			playerPointer->buttonAnimation('s');
+			playerPointer->doingStuff = true;
+			playerPointer->checkHits('s');
 		}
 
 	}
@@ -533,82 +517,62 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 }
 
 bool GameApplication::buttonReleased( const OIS::JoyStickEvent &arg, int button ){
-	std::cout << "button Released: " << button << "\n" << std::endl;
+	//Some code will be here eventually
 	return true;
 }
 
 bool GameApplication::axisMoved( const OIS::JoyStickEvent &arg, int axis){
-	std::cout << "Axis being Used: " << axis << " State: "  << "\n" << std::endl;
 	if (startGame){
 
-		//if (axis == 0 || axis == 1){
 		//first normalize
-		double xValLeft =  ((double)(arg.state.mAxes[1].abs)) / 33000.0; //x
-		double yValLeft =  ((double)(arg.state.mAxes[0].abs)) / 33000.0; //y
+		//left joystick
+		double xValLeft =  ((double)(arg.state.mAxes[1].abs)) / 32800.0; //x axis
+		double yValLeft =  ((double)(arg.state.mAxes[0].abs)) / 32800.0; //y axis
 
-		double xValRight =  ((double)(arg.state.mAxes[3].abs)) / 33000.0; //x
-		double yValRight =  ((double)(arg.state.mAxes[2].abs)) / 33000.0; //y
+		//right joystick
+		double xValRight =  ((double)(arg.state.mAxes[3].abs)) / 32800.0; //x axis
+		double yValRight =  ((double)(arg.state.mAxes[2].abs)) / 32800.0; //y axis
 
 		//Now trig
-		double radLeft = std::atan2(-yValLeft, xValLeft);
-		double hypotLeft =	std::sqrt(std::pow(xValLeft, 2) + std::pow(yValLeft, 2));	//a2 + b2 = c2
+		double radLeft = std::atan2(-yValLeft, xValLeft);		//left angle in radians
+		double hypotLeft =	std::sqrt(std::pow(xValLeft, 2) + std::pow(yValLeft, 2));	//left hypotenuse
 
-		double radRight = std::atan2(-yValRight, xValRight);
-		double hypotRight =	std::sqrt(std::pow(xValRight, 2) + std::pow(yValRight, 2));	//a2 + b2 = c2
+		double radRight = std::atan2(-yValRight, xValRight);	//right angle in radians
+		double hypotRight =	std::sqrt(std::pow(xValRight, 2) + std::pow(yValRight, 2));	//right hypotenuse
 			
-		//Rotate player to direction of pad
-		if (hypotLeft >= .3){
-			yoshPointer->playerRot(radLeft);
-			yoshPointer->setMovement('f', true);
-			yoshPointer->setVelocity(hypotLeft * .25);
+		//Rotate player to direction of left stick
+		if (hypotLeft >= .2){ //avoid hypersensitivity
+			playerPointer->playerRot(radLeft);
+			playerPointer->setMovement(true);
+			playerPointer->setVelocity(hypotLeft * .23);
 		}else{
-			yoshPointer->setMovement('f', false);
+			playerPointer->setMovement(false);
 		}
-			
+		
+		//Rotate camera with right stick
 		if (hypotRight >= .3){
-			if (xValRight > 0) yoshPointer->cameraRot(-hypotRight);
-			else if (xValRight < 0) yoshPointer->cameraRot(hypotRight);
+			if (xValRight > 0) playerPointer->cameraRot(-hypotRight);
+			else if (xValRight < 0) playerPointer->cameraRot(hypotRight);
 		}else{
-			yoshPointer->cameraRot(0);
+			playerPointer->cameraRot(0);
 		}
 	}
-	//arg.state.
 	return true;
 }
 
 void GameApplication::createGUI(void)
 {
-	//////////////////////////////////////////////////////////////////////////////////
 	
 	if (mTrayMgr == NULL) return;
 	using namespace OgreBites; 
 	
-	//Set up our GUI buttons------------------------------------------------
+	//Set up our GUI buttons-- this will be replaced by CEGUI
 
-	OgreBites::Label *title = mTrayMgr->createLabel(TL_CENTER, "Title", "Yoshimi Battles The Pink Robots", 500.0f);
+	OgreBites::Label *title = mTrayMgr->createLabel(TL_CENTER, "Title", "Hard PG: The Hardening", 500.0f);
 	mTrayMgr->createSeparator(TL_CENTER,"sep", 500.0f);
 	
-	cont = mTrayMgr->createButton(TL_CENTER, "ClickMe", "Play", 200.0);
+	cont = mTrayMgr->createButton(TL_CENTER, "ClickMe", "Press A", 200.0);
 	mTrayMgr->buttonHit(cont);
-
-	inst = mTrayMgr->createButton(TL_CENTER, "instruct", "Instructions", 200.0);
-	mTrayMgr->buttonHit(inst);
-
-	cred = mTrayMgr->createButton(TL_CENTER, "credit", "Credits", 200.0);
-	mTrayMgr->buttonHit(cred);
-
-	texty = mTrayMgr->createTextBox(TL_CENTER, "text", "", 350.0, 200.0);
-	texty->hide();
-
-	back = mTrayMgr->createButton(TL_CENTER, "back", "Back", 200.0);
-	mTrayMgr->buttonHit(back);
-	back->hide();
-
-	//House HUD will not display until game starts - decrement health when robots attack
-	houseHUD = mTrayMgr->createProgressBar(TL_TOP, "househealth", "HOUSE", 350.0f, 200.0f);
-	houseHUD->setComment("Safe");
-	houseHUD->setProgress(1);
-	houseHUD->hide();
 
 	//////////////////////////////////////////////////////////////////////////////////
 }
@@ -620,91 +584,24 @@ void GameApplication::buttonHit(OgreBites::Button* b)
 		//Delete start GUI and start game
 		if (!startGame){
 			mTrayMgr->hideCursor();
-			PlaySound(NULL, NULL, SND_ASYNC);
 			mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER); //going to remove
 			loadEnv();
 			setupEnv();
 			startGame = true;
-			houseHUD->show();
 		}
-	}
-	else if (b->getName() == "instruct")
-	{
-		//hide what we dont need
-		cont->hide();
-		inst->hide();
-		cred->hide();
-
-		//set up text
-		texty->setCaption("Instructions");
-		texty->clearText();
-		texty->setText(instruction);
-			
-		texty->show();
-		back->show();
-	
-	}else if (b->getName() == "credit"){
-		//hide shit we dont need
-		cont->hide();
-		inst->hide();
-		cred->hide();
-
-		//set text box ups
-		texty->setCaption("Credits");
-		texty->clearText();
-		texty->setText(credits);
-
-		//show stuff we want
-		texty->show();
-		back->show();
-
-	}else if (b->getName() == "back"){
-		cont->show();
-		inst->show();
-		cred->show();
-		texty->hide();
-		back->hide();
-	}else if (b->getName() == "retry"){  //this code restarts after endGame deleted everything
-		restartLevel();
-
-		PlaySound(music.c_str(), NULL, SND_FILENAME|SND_ASYNC); 
-
-		//loadEnv();
-		//setupEnv();
-	}else if (b->getName() == "next"){  //this code restarts after endGame deleted everything
-		level++;
-		nextLevel();
-
-		PlaySound(music.c_str(), NULL, SND_FILENAME|SND_ASYNC); 
-
-		//loadEnv();
-		//setupEnv();
 	}
 }
 
 
 void GameApplication::endGame(char condition){
-
-	PlaySound(NULL, NULL, NULL);
-	gameOver = true;
-	startGame = false;
-	//Give mouse back
-	mTrayMgr->showCursor();
-
-	//Display is different based on if the player won or lost
-	if (condition == 'l'){
-		mTrayMgr->createLabel(OgreBites::TL_CENTER, "end", "YOU'RE A LOSE!!", 300.0f);
-		OgreBites::Button *retry = mTrayMgr->createButton(OgreBites::TL_CENTER, "retry", "Restart?", 200.0f);
-		mTrayMgr->buttonHit(retry);
-	}else if (condition == 'w'){
-		mTrayMgr->createLabel(OgreBites::TL_CENTER, "end2", "YOU ARE WINNER!!", 300.0f);
-		OgreBites::Button *next = mTrayMgr->createButton(OgreBites::TL_CENTER, "next", "Next Level?", 200.0f);
-		mTrayMgr->buttonHit(next);
-	}
+	//refurbish this
 
 }
 
 void GameApplication::destroyallChildren(Ogre::SceneNode* p){
+
+	//WHat the fuck does all this do?
+
 	Ogre::SceneNode::ObjectIterator it = p->getAttachedObjectIterator();
 	while (it.hasMoreElements()){
 		Ogre::MovableObject* o = static_cast<Ogre::MovableObject*>(it.getNext());
@@ -723,6 +620,8 @@ void GameApplication::destroyallChildren(Ogre::SceneNode* p){
 
 void GameApplication::restartLevel(){
 	
+	//Keep for reference
+	/*
 	housePointer->setPosition(houseInitPos);
 	yoshPointer->restart();
 	houseHealth = 1.0;
@@ -732,10 +631,14 @@ void GameApplication::restartLevel(){
 	mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER);
 	houseHUD->setProgress(houseHealth);
 	mTrayMgr->hideCursor();
-	
+	*/
 }
 
 void GameApplication::nextLevel(){
+
+	//keep for reference
+
+	/*
 	Ogre::Vector3 housePos;
 	if (level == 1){
 		housePos = grid->getPosition(3, 11);
@@ -769,4 +672,5 @@ void GameApplication::nextLevel(){
 	mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER);
 	houseHUD->setProgress(houseHealth);
 	mTrayMgr->hideCursor();
+	*/
 }
