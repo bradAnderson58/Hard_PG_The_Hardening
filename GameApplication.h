@@ -6,6 +6,8 @@
 #include "Player.h"
 #include "Grid.h"
 #include "UsableItems.h"
+#include "NPC.h"
+#include "Rat.h"
 
 class Grid;  //okay whatever
 
@@ -14,6 +16,8 @@ class GameApplication : public BaseApplication
 private:
 	Agent* agent; // store a pointer to the character
 	Ogre::Vector3 houseInitPos;
+
+	std::list<NPC*> NPClist;
 
 	Player* playerPointer;				//This is our heroic savior
 	Ogre::SceneNode* housePointer;		//point to the location of the house COM

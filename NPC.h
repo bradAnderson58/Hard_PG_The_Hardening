@@ -2,6 +2,7 @@
 #define __NPC_h_
 
 #include "Agent.h"
+#include "Player.h"
 
 class GameApplication;
 
@@ -20,14 +21,17 @@ public:
 	NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, goodBad t);
 	~NPC();
 
-	void update(Ogre::Real deltaTime);		// update hero!
-	void updateLocomote(Ogre::Real deltaTime);
-	void setMovement(char dir, bool on); //set the movemnt
+	virtual void update(Ogre::Real deltaTime) = 0;		// update hero!
+	virtual void updateLocomote(Ogre::Real deltaTime);
+	virtual void setMovement(char dir, bool on); //set the movemnt
 
 	void getHurt(int d);
 	
 
 protected:
+	enum AnimId{
+		ANIM_NONE
+	};
 
 	goodBad type;
 	//stats

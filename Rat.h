@@ -2,6 +2,7 @@
 #define __Rat_h_
 
 #include "NPC.h"
+#include "Player.h"
 
 class GameApplication;
 
