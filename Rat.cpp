@@ -5,6 +5,16 @@
 Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::goodBad t, Rat::RatStates s):
 	NPC(SceneManager, name, filename, height, scale, a, l, t)
 {
+
+	mVisionNode = mModelNode->createChildSceneNode();
+	mVisionEntity = mSceneMgr->createEntity("visionCube" + mBodyNode->getName(), Ogre::SceneManager::PT_CUBE);
+	mVisionEntity->setMaterialName("Examples/testing");
+	mVisionNode->setScale(.4,.02,.1);
+	mVisionNode->attachObject(mVisionEntity);
+
+	mVisionNode->setPosition(mBodyNode->getPosition()[0]-20, mBodyNode->getPosition()[1], mBodyNode->getPosition()[2]);
+	mVisionNode->setVisible(false);
+
 	state = s;
 	defense = level * 1;
 	setupAnimations();
@@ -94,7 +104,7 @@ void Rat::setupAnimations(){
 	}
 
 	// start off in the idle state (top and bottom together)
-	setAnimation(ANIM_NONE);
+	setAnimation(SWIM);
 }
 
 void Rat::setAnimation(AnimID id, bool reset){
