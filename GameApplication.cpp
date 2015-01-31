@@ -160,6 +160,7 @@ GameApplication::loadEnv()
 						playerPointer->setInitPos(playerPointer->getPosition());
 					}else if (c == 'f'){
 						Rat* rat = new Rat(this->mSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, this, 1, NPC::BAD, Rat::GUARD);
+						rat->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						NPClist.push_back(rat);
 						//enemy code will go here	
 					}
