@@ -158,7 +158,9 @@ GameApplication::loadEnv()
 						playerPointer = (Player*) agent;  //you are a yoshimi
 						agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						playerPointer->setInitPos(playerPointer->getPosition());
-					}else {
+					}else if (c == 'f'){
+						Rat* rat = new Rat(this->mSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, this, 1, NPC::BAD, Rat::GUARD);
+						NPClist.push_back(rat);
 						//enemy code will go here	
 					}
 					
@@ -284,8 +286,12 @@ void
 GameApplication::addTime(Ogre::Real deltaTime)
 {
 	if (!gameOver){
-		if (startGame) playerPointer->update(deltaTime); //Yoshimi has a different update function
-	
+		if (startGame) {
+			playerPointer->update(deltaTime); //Yoshimi has a different update function
+			for (NPC* guy : NPClist){
+				guy->update(deltaTime);
+			}
+		}
 	}
 }
 
