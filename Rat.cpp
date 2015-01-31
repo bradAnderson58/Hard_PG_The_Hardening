@@ -143,7 +143,7 @@ void Rat::checkHit(){
 }
 
 bool Rat::checkInFront(){
-	
+	return false;
 }
 
 void Rat::wander(){
