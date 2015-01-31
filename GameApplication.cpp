@@ -13,9 +13,10 @@ GameApplication::GameApplication(void):
 	bRMouseDown(false)
 {
 	agent = NULL; // Init member data
-	startGame = false;
+	startGame = MAINSCREEN;
 	gameOver = false;
 	level = 0;
+	ghettoSelect = 0; //probably take this out later
 
 }
 //-------------------------------------------------------------------------------------
@@ -287,7 +288,7 @@ void
 GameApplication::addTime(Ogre::Real deltaTime)
 {
 	if (!gameOver){
-		if (startGame) {
+		if (startGame == PLAYING) {
 			playerPointer->update(deltaTime); //Yoshimi has a different update function
 			for (NPC* guy : NPClist){
 				guy->update(deltaTime);
@@ -396,7 +397,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 	}
 	else if (arg.key == OIS::KC_W) {
 		
-		if (startGame){
+		if (startGame == PLAYING){
 			playerPointer->playerRot(M_PI / 2);
 			playerPointer->setMovement(true);
 			playerPointer->setVelocity(.5);
@@ -404,14 +405,14 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 		}
 	}
 	else if (arg.key == OIS::KC_A) {
-		if (startGame){
+		if (startGame == PLAYING){
 			playerPointer->playerRot(M_PI);
 			playerPointer->setMovement(true);
 			playerPointer->setVelocity(.5);
 		}
 	}
 	else if (arg.key == OIS::KC_D) {
-		if (startGame){
+		if (startGame == PLAYING){
 			playerPointer->playerRot(0);
 			playerPointer->setMovement(true);
 			playerPointer->setVelocity(.5);
@@ -419,7 +420,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 	
 	}
 	else if (arg.key == OIS::KC_S) {
-		if (startGame){
+		if (startGame == PLAYING){
 			playerPointer->playerRot(4.712);
 			playerPointer->setMovement(true);
 			playerPointer->setVelocity(.5);
@@ -438,7 +439,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 bool GameApplication::keyReleased( const OIS::KeyEvent &arg )
 {
 	//Set the flag to false for whichever key is no longer pressed
-	if (startGame){
+	if (startGame == PLAYING){
 		if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || arg.key == OIS::KC_D){
 			playerPointer->setMovement(false);
 		}
@@ -448,7 +449,7 @@ bool GameApplication::keyReleased( const OIS::KeyEvent &arg )
 
 bool GameApplication::mouseMoved( const OIS::MouseEvent &arg )
 {
-	if (startGame){
+	if (startGame == PLAYING){
 		//rotate the camera
 		playerPointer->rotationCode(arg);
 	}
@@ -460,9 +461,8 @@ bool GameApplication::mouseMoved( const OIS::MouseEvent &arg )
 bool GameApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
 	// attack using left and right mouse buttons once the game starts
-	if (startGame){
-		if(id == OIS::MB_Left && !playerPointer->doingStuff)
-		{
+	if (startGame == PLAYING){
+		if(id == OIS::MB_Left && !playerPointer->doingStuff){
 			playerPointer->changeSpeed(1);
 			playerPointer->buttonAnimation('s');
 			playerPointer->doingStuff = true;
@@ -493,32 +493,76 @@ bool GameApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButto
 
 //Xbox Controller button functions
 bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
+	std::cout << button << std::endl;
 
-	//A button is 0
-	if (button == 0) {
-		if (!startGame){	//This code may need to be refactored
+	if (startGame == PLAYING){
+		//A button is 0
+		if (button == 0){
+			if (!playerPointer->doingStuff){
+				playerPointer->changeSpeed(.8);
+				playerPointer->buttonAnimation('j');
+				playerPointer->doingStuff = true;
+			}
+		}
+		//X button is 2
+		else if (button == 2){
+			if(!playerPointer->doingStuff){
+				playerPointer->changeSpeed(1);
+				playerPointer->buttonAnimation('s');
+				playerPointer->doingStuff = true;
+				playerPointer->checkHits('s');
+			}
+		}
+		//Start button is 7
+		else if (button == 7){
+			startGame = MENUSCREEN;
+			openMenu();
+		}
+
+	}
+	//Pregame main menu screen
+	else if (startGame == MAINSCREEN) {
+		//A button
+		if (button == 0){	
 			mTrayMgr->hideCursor();
 			mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER); //going to remove
 			loadEnv();
 			setupEnv();
-			startGame = true;
+			startGame = PLAYING;
 		}
-		else if(!playerPointer->doingStuff){
-			playerPointer->changeSpeed(.6);  //jump should be slower
-			playerPointer->buttonAnimation('j');
-			playerPointer->doingStuff = true;
+	}
+	//in-game options menu
+	else if (startGame == MENUSCREEN){
+		//A button test
+		if (button == 0){
+			openInventory();
+			startGame = INVENTORY;
+		}
+		if (button == 2){
+			openCharRecord();
+			startGame = CHAR_RECORD;
+		}
+		//Select is 6
+		if (button == 6){
+			startGame = PLAYING;
 		}
 
-	//X button is 2
-	}else if (button == 2){
-		if(!playerPointer->doingStuff)
-		{
-			playerPointer->changeSpeed(1);
-			playerPointer->buttonAnimation('s');
-			playerPointer->doingStuff = true;
-			playerPointer->checkHits('s');
+	}
+	//inventory screen
+	else if (startGame == INVENTORY){
+		//Select
+		if (button == 6){
+			startGame = MENUSCREEN;
+			openMenu();
 		}
-
+	}
+	//Character record screen
+	else if (startGame == CHAR_RECORD){
+		//Select is 6
+		if (button == 6){
+			startGame = MENUSCREEN;
+			openMenu();
+		}
 	}
 	return true;
 }
@@ -529,7 +573,7 @@ bool GameApplication::buttonReleased( const OIS::JoyStickEvent &arg, int button 
 }
 
 bool GameApplication::axisMoved( const OIS::JoyStickEvent &arg, int axis){
-	if (startGame){
+	if (startGame == PLAYING){
 
 		//first normalize
 		//left joystick
@@ -589,16 +633,39 @@ void GameApplication::buttonHit(OgreBites::Button* b)
 	if (b->getName() == "ClickMe")
 	{
 		//Delete start GUI and start game
-		if (!startGame){
+		if (startGame == MAINSCREEN){
 			mTrayMgr->hideCursor();
 			mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER); //going to remove
 			loadEnv();
 			setupEnv();
-			startGame = true;
+			startGame = PLAYING;
 		}
 	}
 }
 
+//open in-game menu screen
+void GameApplication::openMenu(){
+	//This will be replaced by GUI code
+	std::cout << "This is the main Menu, do this things:" << std::endl;
+	std::cout << "Enter Inventory" << std::endl;
+	std::cout << "Enter Character Record" << std::endl;
+	std::cout << "Return to Game" << std::endl;
+}
+
+//open inventory menu
+void GameApplication::openInventory(){
+	std::cout << "Helm: " << playerPointer->getHelm()->getName() << std::endl;
+	std::cout << "Necklace: " << playerPointer->getNeck()->getName() << std::endl;
+	std::cout << "Breastplate: " << playerPointer->getBoobs()->getName() << std::endl;
+	std::cout << "Pants: " << playerPointer->getPants()->getName() << std::endl;
+	std::cout << "Main Hand: " << playerPointer->getWpn()->getName() << std::endl;
+	std::cout << "Off Hand: " << "NULL" << std::endl;
+}
+
+void GameApplication::openCharRecord(){
+	std::cout << "Player Name: Mat Cauthon" << std::endl;
+	std::cout << "stats: blah blah" << std::endl;
+}
 
 void GameApplication::endGame(char condition){
 	//refurbish this

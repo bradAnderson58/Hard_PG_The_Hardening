@@ -40,6 +40,13 @@ public:
 	void checkHits(char attack);  //for attacks - check if an enemy gets hit
 	void getHurt(int dam);		//code for when your getting hurt
 
+	UsableItems* getWpn(){ return equippedWpn; }	//The weapon you are using
+	UsableItems* getShield(){ return equippedShield; }
+	UsableItems* getHelm(){ return equippedHelm;}
+	UsableItems* getBoobs(){ return equippedBoobs; }
+	UsableItems* getPants(){ return equippedPants; }
+	UsableItems* getNeck(){ return equippedNeck; }
+
 private:
 	bool fForward; //how am I moving? Each flag indicates a direction
 

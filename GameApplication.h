@@ -33,6 +33,13 @@ private:
 	void restartLevel();
 	void nextLevel();
 
+	//menu code stuff
+	void openMenu();
+	void openInventory();
+	void openCharRecord();
+
+	int ghettoSelect;
+
 public:	
 
     GameApplication(void);
@@ -82,6 +89,16 @@ public:
 	void endGame(char condition);		//End the game in either victory or crushing defeat
 	void destroyallChildren(Ogre::SceneNode* p);
 
+	static enum gameState
+	{
+		MAINSCREEN,
+		PLAYING,
+		MENUSCREEN,
+		INVENTORY,
+		CHAR_RECORD
+			
+	};	//game states
+
 protected:
     virtual void createScene(void);
 
@@ -89,7 +106,7 @@ protected:
 
 	void buttonHit(OgreBites::Button *b);
 
-	bool startGame;	//start button
+	gameState startGame;
 
 	//GUI buttons and such
 	OgreBites::Button *cont;

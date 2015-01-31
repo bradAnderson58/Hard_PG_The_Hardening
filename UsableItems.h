@@ -32,6 +32,7 @@ public:
 	~UsableItems();
 
 	int getStat(statType getMe);
+	std::string getName(){ return name; };
 
 private:
 	itemType mType;  //enum
