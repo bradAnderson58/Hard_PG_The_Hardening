@@ -5,6 +5,7 @@
 #include "Agent.h"
 #include "Player.h"
 #include "Grid.h"
+#include "UsableItems.h"
 
 class Grid;  //okay whatever
 

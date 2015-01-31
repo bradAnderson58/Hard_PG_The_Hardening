@@ -4,6 +4,8 @@
 #include "Agent.h"
 
 class GameApplication;
+class NPC;
+class UsableItems;
 
 class Player : public Agent{
 
@@ -28,7 +30,35 @@ public:
 	bool doingStuff;		//if Yoshimi is currently doing a non-looping animation
 	void changeSpeed(double s) { speed = s; }	//change the speed for different animations
 
-	void checkHits(char attack);  //for attacks - check if a robot gets hit
+	//Stats for player
+	double criticalStat;	//chance to cause critical hit
+	double damageStat;		//base damage
+	double defenseStat;		//base defense
+	double healthStat;		//base health
+	double manaStat;		//base mana
+
+	int level;				//your level
+
+	//attributes for player
+	int evilAtt;		//affects crit, mana
+	int strengthAtt;	//affects dam, def
+	int dexterityAtt;	//affects heal, crit
+	int constitutionAtt;//affects def, heal
+	int intelligenceAtt;//affects mana, dam
+	
+	//equipment for player
+	UsableItems *equippedWpn;	//The weapon you are using
+	UsableItems *equippedShield;
+	UsableItems *equippedHelm;
+	UsableItems *equippedBoobs;
+	UsableItems *equippedPants;
+	UsableItems *equippedNeck;
+	
+	void checkHits(char attack);  //for attacks - check if an enemy gets hit
+	void dealDamage(NPC *enemy);
+
+	void updateStats();
+
 	void checkBump();
 	Ogre::Vector3 getPosition(){return mBodyNode->getPosition();}
 	void restart();

@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "GameApplication.h"
+#include "NPC.h"
 #define _USE_MATH_DEFINES   
 #include <math.h>
 
@@ -43,6 +44,26 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	//for constant rotation
 	mRotator = 0;
 	fRot = false;
+
+	level = 1;				//your level
+
+	//attributes for player
+	evilAtt = 1;		//affects crit, mana
+	strengthAtt = 1;	//affects dam, def
+	dexterityAtt = 1;	//affects heal, crit
+	constitutionAtt = 1;//affects def, heal
+	intelligenceAtt = 1;//affects mana, dam
+
+	equippedWpn = new UsableItems(UsableItems::WEAPON, 1, 0, 0, 0, 0, "Bandito Shiv", 1);	//The weapon you are using
+	equippedShield = NULL;
+	equippedHelm = new UsableItems(UsableItems::HELM, 0, 0, 0, 0, 0, "Skull Cap", 1);
+	equippedBoobs = new UsableItems(UsableItems::BOOBPLATE, 0, 0, 0, 0, 0, "Dark Hoodie", 2);
+	equippedPants = new UsableItems(UsableItems::PANTS, 0, 0, 0, 0, 0, "Pantaloons", 2);
+	equippedNeck = new UsableItems(UsableItems::NECKLACE, 0, 0, 0, 0, 0, "Dangling Pointer", 15);
+
+	//intialize stats with update stats function
+	updateStats();
+	
 	
 	setupAnimations();
 }
@@ -50,6 +71,15 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 Player::~Player(void)
 {
 	
+}
+
+void Player::updateStats(){
+	//call to quickly update them stats when needed
+	criticalStat = ((1.5 * (double) evilAtt) + (.5 * (double) dexterityAtt) ) / 200;	//initially 1% critical strike chance
+	damageStat = (1.5 * (double) strengthAtt) + (.5 * (double) intelligenceAtt);		//base damage initially 2
+	defenseStat = (1.5 * (double) constitutionAtt) + (.5 * (double) strengthAtt);		//base defense initially 2
+	healthStat = (15 * (double) dexterityAtt) + (10 * (double) constitutionAtt);		//base health intially 25
+	manaStat = (10 * (double) intelligenceAtt) + (5 * (double) evilAtt);				//base mana initially 15
 }
 
 void Player::update(Ogre::Real deltaTime){
@@ -289,6 +319,15 @@ void Player::checkHits(char attack){
 	Ogre::AxisAlignedBox rRange;
 
 	//ADD MORE
+
+}
+
+void Player::dealDamage(NPC *enemy){
+
+	int damage = (equippedWpn != NULL) ? damageStat + equippedWpn->getStat(UsableItems::DAMAGE) : damageStat;
+	int eDefence = enemy->getDefense();
+
+	enemy->getHurt(damage - eDefence);
 
 }
 
