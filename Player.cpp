@@ -44,6 +44,7 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	//for constant rotation
 	mRotator = 0;
 	fRot = false;
+	isBlocking = false;
 
 	level = 1;				//your level
 
@@ -60,6 +61,8 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	equippedBoobs = new UsableItems(UsableItems::BOOBPLATE, 0, 0, 0, 0, 0, "Dark Hoodie", 2);
 	equippedPants = new UsableItems(UsableItems::PANTS, 0, 0, 0, 0, 0, "Pantaloons", 2);
 	equippedNeck = new UsableItems(UsableItems::NECKLACE, 0, 0, 0, 0, 0, "Dangling Pointer", 15);
+
+	srand(time(NULL));  //seed for random number generation
 
 	//intialize stats with update stats function
 	updateStats();
@@ -325,10 +328,24 @@ void Player::checkHits(char attack){
 void Player::dealDamage(NPC *enemy){
 
 	int damage = (equippedWpn != NULL) ? damageStat + equippedWpn->getStat(UsableItems::DAMAGE) : damageStat;
-	int eDefence = enemy->getDefense();
+	int critPerc = (rand() % 100) / 100;
+	if (critPerc <= criticalStat){ //critical strike - extra damages!
+		damage = 1.5 * damage;
+	}
 
-	enemy->getHurt(damage - eDefence);
+	enemy->getHurt(damage);
+}
 
+//damage done to the player
+void Player::getHurt(int damage){
+	//base defense plus helm, breastplate, and pants defense
+	int mDefense = defenseStat + equippedBoobs->getStat(UsableItems::DEFENSE) + equippedHelm->getStat(UsableItems::DEFENSE) + equippedPants->getStat(UsableItems::DEFENSE);
+
+	if (isBlocking){
+		mDefense += equippedShield->getStat(UsableItems::DEFENSE);
+	}
+
+	healthStat -= ((damage - mDefense) >= 0) ? damage - mDefense : 0;
 }
 
 //Expand to cover collisions with all NPCs
