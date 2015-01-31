@@ -67,6 +67,8 @@ void NPC::checkHit(){
 }
 
 void NPC::getHurt(int d){
-	health -= d;
+	if (d > defense){
+		health -= (d - defense);
+	}
 }
 
