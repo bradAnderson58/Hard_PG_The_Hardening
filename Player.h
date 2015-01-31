@@ -37,6 +37,9 @@ public:
 	void restart();
 	void setInitPos(Ogre::Vector3 p){initPos = p;}
 
+	void checkHits(char attack);  //for attacks - check if an enemy gets hit
+	void getHurt(int dam);		//code for when your getting hurt
+
 private:
 	bool fForward; //how am I moving? Each flag indicates a direction
 
@@ -105,11 +108,12 @@ private:
 	UsableItems *equippedPants;
 	UsableItems *equippedNeck;
 
+	
+	void dealDamage(NPC *enemy);  //deal damage to an enemy
+
 	bool isBlocking;  //whether the player is currently blocking
 	
-	void checkHits(char attack);  //for attacks - check if an enemy gets hit
-	void dealDamage(NPC *enemy);
-	void getHurt(int dam);		//code for when your getting hurt
+	
 	
 
 };
