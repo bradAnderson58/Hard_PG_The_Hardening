@@ -23,7 +23,7 @@ public:
 
 	virtual void update(Ogre::Real deltaTime) = 0;		// update hero!
 	virtual void updateLocomote(Ogre::Real deltaTime);
-	virtual void setMovement(char dir, bool on); //set the movemnt
+	void setMovement(char dir, bool on); //set the movemnt
 
 	void getHurt(int d);
 	
