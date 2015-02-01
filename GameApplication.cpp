@@ -16,7 +16,6 @@ GameApplication::GameApplication(void):
 	startGame = false;
 	gameOver = false;
 	level = 0;
-
 }
 //-------------------------------------------------------------------------------------
 GameApplication::~GameApplication(void)
@@ -673,4 +672,9 @@ void GameApplication::nextLevel(){
 	houseHUD->setProgress(houseHealth);
 	mTrayMgr->hideCursor();
 	*/
+}
+
+bool GameApplication::quit(const CEGUI::EventArgs &e)
+{
+	return true;
 }

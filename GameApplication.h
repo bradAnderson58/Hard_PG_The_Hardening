@@ -2,6 +2,10 @@
 #define __GameApplication_h_
 
 #include "BaseApplication.h"
+
+//#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h> //from 0.8 it's just Ogre/Renderer.h
+
 #include "Agent.h"
 #include "Player.h"
 #include "Grid.h"
@@ -29,7 +33,6 @@ private:
 	void nextLevel();
 
 public:	
-
     GameApplication(void);
     virtual ~GameApplication(void); 
 
@@ -78,6 +81,8 @@ public:
 	void destroyallChildren(Ogre::SceneNode* p);
 
 protected:
+	CEGUI::OgreREnderer* mRenderer;
+
     virtual void createScene(void);
 
 	virtual void createGUI(void);  //for gui's
@@ -86,13 +91,10 @@ protected:
 
 	bool startGame;	//start button
 
+	bool quit(const CEGUI::EventArgs &e);
+
 	//GUI buttons and such
 	OgreBites::Button *cont;
-
-	//Strings for GUI
-	
-	//Path files for sounds
-
 	OgreBites::ParamsPanel* mParamsPanel;
 
 };
