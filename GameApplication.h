@@ -89,7 +89,7 @@ public:
 	void endGame(char condition);		//End the game in either victory or crushing defeat
 	void destroyallChildren(Ogre::SceneNode* p);
 
-	static enum gameState
+	enum GameState
 	{
 		MAINSCREEN,
 		PLAYING,
@@ -106,7 +106,7 @@ protected:
 
 	void buttonHit(OgreBites::Button *b);
 
-	gameState startGame;
+	GameState gameState;
 
 	//GUI buttons and such
 	OgreBites::Button *cont;

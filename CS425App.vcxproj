@@ -89,20 +89,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Agent.h" />
+    <ClInclude Include="BadNPC.h" />
     <ClInclude Include="BaseApplication.h" />
+    <ClInclude Include="Environment.h" />
     <ClInclude Include="GameApplication.h" />
     <ClInclude Include="Grid.h" />
-    <ClInclude Include="Robot.h" />
-    <ClInclude Include="Yoshimi.h" />
+    <ClInclude Include="IteractableObj.h" />
+    <ClInclude Include="NPC.h" />
+    <ClInclude Include="Objects.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Rat.h" />
+    <ClInclude Include="StaticObj.h" />
+    <ClInclude Include="UsableItems.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Agent.cpp" />
+    <ClCompile Include="BadNPC.cpp" />
     <ClCompile Include="BaseApplication.cpp" />
+    <ClCompile Include="Environment.cpp" />
     <ClCompile Include="GameApplication.cpp" />
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="InteractableObj.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Robot.cpp" />
-    <ClCompile Include="Yoshimi.cpp" />
+    <ClCompile Include="NPC.cpp" />
+    <ClCompile Include="Objects.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Rat.cpp" />
+    <ClCompile Include="StaticObj.cpp" />
+    <ClCompile Include="UsableItems.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

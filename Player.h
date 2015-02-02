@@ -43,7 +43,7 @@ public:
 	UsableItems* getWpn(){ return equippedWpn; }	//The weapon you are using
 	UsableItems* getShield(){ return equippedShield; }
 	UsableItems* getHelm(){ return equippedHelm;}
-	UsableItems* getBoobs(){ return equippedBoobs; }
+	UsableItems* getBoobs(){ return equippedBoobs; }	// really?
 	UsableItems* getPants(){ return equippedPants; }
 	UsableItems* getNeck(){ return equippedNeck; }
 
@@ -119,9 +119,6 @@ private:
 	void dealDamage(NPC *enemy);  //deal damage to an enemy
 
 	bool isBlocking;  //whether the player is currently blocking
-	
-	
-	
 
 };
 

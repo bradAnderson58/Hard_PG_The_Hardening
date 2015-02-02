@@ -1,7 +1,7 @@
 #include "NPC.h"
 #include "GameApplication.h"
 
-NPC::NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, goodBad t):
+NPC::NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, GoodBad t):
 	Agent(SceneManager, name, filename, height, scale, a)
 {
 	type = t;

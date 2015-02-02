@@ -13,7 +13,7 @@ GameApplication::GameApplication(void):
 	bRMouseDown(false)
 {
 	agent = NULL; // Init member data
-	startGame = MAINSCREEN;
+	gameState = MAINSCREEN;
 	gameOver = false;
 	level = 0;
 	ghettoSelect = 0; //probably take this out later
@@ -288,7 +288,7 @@ void
 GameApplication::addTime(Ogre::Real deltaTime)
 {
 	if (!gameOver){
-		if (startGame == PLAYING) {
+		if (gameState == PLAYING) {
 			playerPointer->update(deltaTime); //Yoshimi has a different update function
 			for (NPC* guy : NPClist){
 				guy->update(deltaTime);
@@ -397,7 +397,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 	}
 	else if (arg.key == OIS::KC_W) {
 		
-		if (startGame == PLAYING){
+		if (gameState == PLAYING){
 			playerPointer->playerRot(M_PI / 2);
 			playerPointer->setMovement(true);
 			playerPointer->setVelocity(.5);
@@ -405,14 +405,14 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 		}
 	}
 	else if (arg.key == OIS::KC_A) {
-		if (startGame == PLAYING){
+		if (gameState == PLAYING){
 			playerPointer->playerRot(M_PI);
 			playerPointer->setMovement(true);
 			playerPointer->setVelocity(.5);
 		}
 	}
 	else if (arg.key == OIS::KC_D) {
-		if (startGame == PLAYING){
+		if (gameState == PLAYING){
 			playerPointer->playerRot(0);
 			playerPointer->setMovement(true);
 			playerPointer->setVelocity(.5);
@@ -420,7 +420,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 	
 	}
 	else if (arg.key == OIS::KC_S) {
-		if (startGame == PLAYING){
+		if (gameState == PLAYING){
 			playerPointer->playerRot(4.712);
 			playerPointer->setMovement(true);
 			playerPointer->setVelocity(.5);
@@ -439,7 +439,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 bool GameApplication::keyReleased( const OIS::KeyEvent &arg )
 {
 	//Set the flag to false for whichever key is no longer pressed
-	if (startGame == PLAYING){
+	if (gameState == PLAYING){
 		if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || arg.key == OIS::KC_D){
 			playerPointer->setMovement(false);
 		}
@@ -449,7 +449,7 @@ bool GameApplication::keyReleased( const OIS::KeyEvent &arg )
 
 bool GameApplication::mouseMoved( const OIS::MouseEvent &arg )
 {
-	if (startGame == PLAYING){
+	if (gameState == PLAYING){
 		//rotate the camera
 		playerPointer->rotationCode(arg);
 	}
@@ -461,7 +461,7 @@ bool GameApplication::mouseMoved( const OIS::MouseEvent &arg )
 bool GameApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
 	// attack using left and right mouse buttons once the game starts
-	if (startGame == PLAYING){
+	if (gameState == PLAYING){
 		if(id == OIS::MB_Left && !playerPointer->doingStuff){
 			playerPointer->changeSpeed(1);
 			playerPointer->buttonAnimation('s');
@@ -495,7 +495,7 @@ bool GameApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButto
 bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 	std::cout << button << std::endl;
 
-	if (startGame == PLAYING){
+	if (gameState == PLAYING){
 		//A button is 0
 		if (button == 0){
 			if (!playerPointer->doingStuff){
@@ -515,52 +515,52 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 		}
 		//Start button is 7
 		else if (button == 7){
-			startGame = MENUSCREEN;
+			gameState = MENUSCREEN;
 			openMenu();
 		}
 
 	}
 	//Pregame main menu screen
-	else if (startGame == MAINSCREEN) {
+	else if (gameState == MAINSCREEN) {
 		//A button
 		if (button == 0){	
 			mTrayMgr->hideCursor();
 			mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER); //going to remove
 			loadEnv();
 			setupEnv();
-			startGame = PLAYING;
+			gameState = PLAYING;
 		}
 	}
 	//in-game options menu
-	else if (startGame == MENUSCREEN){
+	else if (gameState == MENUSCREEN){
 		//A button test
 		if (button == 0){
 			openInventory();
-			startGame = INVENTORY;
+			gameState = INVENTORY;
 		}
 		if (button == 2){
 			openCharRecord();
-			startGame = CHAR_RECORD;
+			gameState = CHAR_RECORD;
 		}
 		//Select is 6
 		if (button == 6){
-			startGame = PLAYING;
+			gameState = PLAYING;
 		}
 
 	}
 	//inventory screen
-	else if (startGame == INVENTORY){
+	else if (gameState == INVENTORY){
 		//Select
 		if (button == 6){
-			startGame = MENUSCREEN;
+			gameState = MENUSCREEN;
 			openMenu();
 		}
 	}
 	//Character record screen
-	else if (startGame == CHAR_RECORD){
+	else if (gameState == CHAR_RECORD){
 		//Select is 6
 		if (button == 6){
-			startGame = MENUSCREEN;
+			gameState = MENUSCREEN;
 			openMenu();
 		}
 	}
@@ -573,7 +573,7 @@ bool GameApplication::buttonReleased( const OIS::JoyStickEvent &arg, int button 
 }
 
 bool GameApplication::axisMoved( const OIS::JoyStickEvent &arg, int axis){
-	if (startGame == PLAYING){
+	if (gameState == PLAYING){
 
 		//first normalize
 		//left joystick
@@ -633,12 +633,12 @@ void GameApplication::buttonHit(OgreBites::Button* b)
 	if (b->getName() == "ClickMe")
 	{
 		//Delete start GUI and start game
-		if (startGame == MAINSCREEN){
+		if (gameState == MAINSCREEN){
 			mTrayMgr->hideCursor();
 			mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER); //going to remove
 			loadEnv();
 			setupEnv();
-			startGame = PLAYING;
+			gameState = PLAYING;
 		}
 	}
 }
@@ -699,7 +699,7 @@ void GameApplication::restartLevel(){
 	housePointer->setPosition(houseInitPos);
 	yoshPointer->restart();
 	houseHealth = 1.0;
-	startGame = true;
+	gameState = true;
 	houseHealth = 1.0f;
 	gameOver = false;
 	mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER);
@@ -740,7 +740,7 @@ void GameApplication::nextLevel(){
 	Ogre::Vector3 robPos;
 	
 	houseHealth = 1.0;
-	startGame = true;
+	gameState = true;
 	houseHealth = 1.0f;
 	gameOver = false;
 	mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER);

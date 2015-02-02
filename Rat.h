@@ -9,16 +9,16 @@ class GameApplication;
 class Rat : public NPC{
 
 public:
-	static enum RatStates{
+	enum RatStates{
 		WANDER,
 		GUARD,
 		FLEE,
 		SEEK
 	};
-	Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::goodBad t, Rat::RatStates s);
+	Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::GoodBad t, Rat::RatStates s);
 	~Rat();
 
-	void update(Ogre::Real deltaTime);		// update hero!
+	void update(Ogre::Real deltaTime);
 	void updateLocomote(Ogre::Real deltaTime);
 	void setMovement(char dir, bool on); //set the movemnt
 

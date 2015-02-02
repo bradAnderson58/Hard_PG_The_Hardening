@@ -2,10 +2,9 @@
 #include "GameApplication.h"
 
 
-Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::goodBad t, Rat::RatStates s):
+Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::GoodBad t, Rat::RatStates s):
 	NPC(SceneManager, name, filename, height, scale, a, l, t)
 {
-
 	mVisionNode = mModelNode->createChildSceneNode();
 	mVisionEntity = mSceneMgr->createEntity("visionCube" + mBodyNode->getName(), Ogre::SceneManager::PT_CUBE);
 	mVisionEntity->setMaterialName("Examples/testing");

@@ -8,7 +8,7 @@ class GameApplication;
 class BadNPC : public NPC{
 
 public:
-	BadNPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::goodBad t);
+	BadNPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::GoodBad t);
 	~BadNPC();
 
 private:

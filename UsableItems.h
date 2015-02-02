@@ -8,7 +8,7 @@
 class UsableItems : public Objects{
 
 public:
-	static enum statType
+	enum statType
 	{
 		DAMAGE,
 		DEFENSE,
@@ -17,7 +17,7 @@ public:
 		MANA
 	};
 
-	static enum itemType
+	enum itemType
 	{
 		POTION,
 		WEAPON,

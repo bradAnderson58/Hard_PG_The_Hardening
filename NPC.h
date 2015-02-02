@@ -13,15 +13,15 @@ class NPC : public Agent{
 	//attack
 
 public:
-	static enum goodBad{
+	enum GoodBad{
 		GOOD,
 		BAD
 	};
 
-	NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, goodBad t);
+	NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, GoodBad t);
 	~NPC();
 
-	virtual void update(Ogre::Real deltaTime) = 0;		// update hero!
+	virtual void update(Ogre::Real deltaTime) = 0;
 	virtual void updateLocomote(Ogre::Real deltaTime);
 	void setMovement(char dir, bool on); //set the movemnt
 
@@ -33,7 +33,7 @@ protected:
 		ANIM_NONE
 	};
 
-	goodBad type;
+	GoodBad type;
 	//stats
 	int level;
 	int health;
