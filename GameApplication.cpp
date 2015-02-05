@@ -31,7 +31,17 @@ void GameApplication::createScene(void)
 {
     //delete or repurpose this?
 	//mRayScnQuery = mSceneMgr->createRayQuery(Ogre::Ray());
+	//mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
+	//CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
+	//CEGUI::Font::setDefaultResourceGroup("Fonts");
+	//CEGUI::Scheme::setDefaultResourceGroup("Schemes");
+	//CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
+	//CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
 
+	//// The following line of code selects the skin:
+	//CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+	//// The next thing we need to do is set the default mouse cursor:
+	//CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 }
 //////////////////////////////////////////////////////////////////
 // Returns a unique name for loaded objects and agents

@@ -14,6 +14,7 @@ class Grid;  //okay whatever
 class GameApplication : public BaseApplication
 {
 private:
+	/*CEGUI::OgreRenderer* mRenderer;*/
 	Agent* agent; // store a pointer to the character
 	Ogre::Vector3 houseInitPos;
 
