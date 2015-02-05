@@ -43,6 +43,16 @@ private:
 
 public:	
 
+	enum GameState
+	{
+		MAINSCREEN,
+		SETUP,
+		PLAYING,
+		MENUSCREEN,
+		INVENTORY,
+		CHAR_RECORD		
+	};	//game states
+
     GameApplication(void);
     virtual ~GameApplication(void); 
 
@@ -53,6 +63,7 @@ public:
 	void setupEnv();		// Set up the lights, shadows, etc
 	void loadObjects();		// Load other props or objects (e.g. furniture)
 	void loadCharacters();	// Load actors, agents, characters
+	void toggleState(GameState s);	// toggle to game state s
 
 	Grid* getGrid(){ return grid; } //get it
 
@@ -89,16 +100,6 @@ public:
 
 	void endGame(char condition);		//End the game in either victory or crushing defeat
 	void destroyallChildren(Ogre::SceneNode* p);
-
-	enum GameState
-	{
-		MAINSCREEN,
-		PLAYING,
-		MENUSCREEN,
-		INVENTORY,
-		CHAR_RECORD
-			
-	};	//game states
 
 protected:
     virtual void createScene(void);

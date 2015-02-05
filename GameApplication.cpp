@@ -307,6 +307,57 @@ GameApplication::addTime(Ogre::Real deltaTime)
 	}
 }
 
+
+// toggle to game state s
+// handle initializations to each state here as well.
+void
+GameApplication::toggleState(GameState s)
+{
+	if (s == MAINSCREEN)	// start screen
+	{
+		gameState = s;
+	}
+	else if (s == SETUP)		// initialize actual game
+	{
+		gameState = s;
+
+		// destroy initial start screen GUI elements,
+		// and build ones used in game, like the inventory etc etc
+		mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER);
+
+		// initialize all gui elements, than only show what is needed,
+		// hide the rest of them
+		mTrayMgr->hideAll();	// hide all trays, next, reveal needed ones
+		
+		// load enviroment and set up level
+		loadEnv();
+		setupEnv();
+		toggleState(PLAYING);
+	}
+	else if(s == PLAYING)		// mode where player interacts with world
+	{
+		gameState = s;
+	}
+	else if (s == MENUSCREEN)	// pause menu
+	{
+		gameState = s;
+		openMenu();
+	}
+	else if (s == INVENTORY)	// inventory menu
+	{
+		gameState = s;
+		// need to also pause the game OR turn off character controls
+		openInventory();
+	}
+	else if (s == CHAR_RECORD)
+	{
+		gameState = s;
+		openCharRecord();
+	}
+	else
+		std::cout << "Not a valid state" << std::endl;
+}
+
 bool 
 GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplication
 {
@@ -357,7 +408,6 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
             tfo = Ogre::TFO_BILINEAR;
             aniso = 1;
         }
-
         Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(tfo);
         Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(aniso);
         mDetailsPanel->setParamValue(9, newVal);
@@ -525,8 +575,7 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 		}
 		//Start button is 7
 		else if (button == 7){
-			gameState = MENUSCREEN;
-			openMenu();
+			toggleState(MENUSCREEN);
 		}
 
 	}
@@ -534,27 +583,25 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 	else if (gameState == MAINSCREEN) {
 		//A button
 		if (button == 0){	
-			mTrayMgr->hideCursor();
-			mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER); //going to remove
-			loadEnv();
-			setupEnv();
-			gameState = PLAYING;
+			//mTrayMgr->hideCursor();
+			//mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER); //going to remove
+			//loadEnv();
+			//setupEnv();	// Brandon killed it
+			toggleState(SETUP);
 		}
 	}
 	//in-game options menu
 	else if (gameState == MENUSCREEN){
 		//A button test
 		if (button == 0){
-			openInventory();
-			gameState = INVENTORY;
+			toggleState(INVENTORY);
 		}
 		if (button == 2){
-			openCharRecord();
-			gameState = CHAR_RECORD;
+			toggleState(CHAR_RECORD);
 		}
 		//Select is 6
 		if (button == 6){
-			gameState = PLAYING;
+			toggleState(PLAYING);
 		}
 
 	}
@@ -562,16 +609,14 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 	else if (gameState == INVENTORY){
 		//Select
 		if (button == 6){
-			gameState = MENUSCREEN;
-			openMenu();
+			toggleState(MENUSCREEN);
 		}
 	}
 	//Character record screen
 	else if (gameState == CHAR_RECORD){
 		//Select is 6
 		if (button == 6){
-			gameState = MENUSCREEN;
-			openMenu();
+			toggleState(MENUSCREEN);
 		}
 	}
 	return true;
@@ -629,11 +674,22 @@ void GameApplication::createGUI(void)
 	
 	//Set up our GUI buttons-- this will be replaced by CEGUI
 
-	OgreBites::Label *title = mTrayMgr->createLabel(TL_CENTER, "Title", "Hard PG: The Hardening", 500.0f);
-	mTrayMgr->createSeparator(TL_CENTER,"sep", 500.0f);
+	if (gameState == MAINSCREEN)
+	{
+		OgreBites::Label *title = mTrayMgr->createLabel(TL_CENTER, "Title", "Hard PG: The Hardening", 500.0f);
+		mTrayMgr->createSeparator(TL_CENTER,"sep", 500.0f);
 	
-	cont = mTrayMgr->createButton(TL_CENTER, "ClickMe", "Press A", 200.0);
-	mTrayMgr->buttonHit(cont);
+		cont = mTrayMgr->createButton(TL_CENTER, "ClickMe", "Press A", 200.0);
+		mTrayMgr->buttonHit(cont);
+	}
+
+	// else create other GUI elements based on state?
+	// probably just need a if gamestate == SETUP
+	// build all inventory, menu, and HUD GUI elements
+	else if (gameState == SETUP)
+	{
+
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////
 }
@@ -644,11 +700,7 @@ void GameApplication::buttonHit(OgreBites::Button* b)
 	{
 		//Delete start GUI and start game
 		if (gameState == MAINSCREEN){
-			mTrayMgr->hideCursor();
-			mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER); //going to remove
-			loadEnv();
-			setupEnv();
-			gameState = PLAYING;
+			toggleState(SETUP);
 		}
 	}
 }
