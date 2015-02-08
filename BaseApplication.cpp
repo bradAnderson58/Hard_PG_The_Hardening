@@ -273,7 +273,7 @@ bool BaseApplication::setup(void)
 	loadResources();
 	mTrayMgr->hideLoadingBar();
 
-	createGUI();  //my guis  - make these before creating scene - This will need to be replaced with CEGUI stuff
+	createGUI();  //my guis  - make these before creating scene - 
 	// Create the scene
 	createScene();
 
