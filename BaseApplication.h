@@ -34,7 +34,11 @@ This source file is part of the
 #include <SdkTrays.h>
 #include <SdkCameraMan.h>
 
-//#include <ostream>
+
+#include <boost/thread/recursive_mutex.hpp>
+
+#include <MyGUI.h>
+#include <MyGUI_OgrePlatform.h>
 //#include <CEGUI/CEGUI.h>
 //#include <CEGUI/RendererModules/Ogre/Renderer.h>
 //#include <CEGUI/String.h>
@@ -82,6 +86,10 @@ protected:
 
 	//Fix for 1.9
 	Ogre::OverlaySystem *mOverlaySystem;
+
+	//GUI stuffs?
+	MyGUI::Gui* mGUI;
+	MyGUI::OgrePlatform* mPlatform;
 
     // OgreBites
     OgreBites::SdkTrayManager* mTrayMgr;

@@ -45,6 +45,14 @@ BaseApplication::~BaseApplication(void)
     if (mCameraMan) delete mCameraMan;
 	if (mOverlaySystem) delete mOverlaySystem;
 
+	mGUI->shutdown();
+	delete mGUI;
+	mGUI = 0;   
+	mPlatform->shutdown();
+	delete mPlatform;
+	mPlatform = 0;
+	
+
     //Remove ourself as a Window listener
     Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
     windowClosed(mWindow);
@@ -133,7 +141,7 @@ void BaseApplication::createFrameListener(void)
     Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
 
 	//Fix for 1.9 - put this in:
-	mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);
+	//mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);  //--TAKE OUT SDKTray
 	
     // create a params panel for displaying sample details
 	//don't actually need?
@@ -150,10 +158,10 @@ void BaseApplication::createFrameListener(void)
     items.push_back("Filtering");
     items.push_back("Poly Mode");
 
-    mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
+    /*mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
     mDetailsPanel->setParamValue(9, "Bilinear");
     mDetailsPanel->setParamValue(10, "Solid");
-    mDetailsPanel->hide();
+    mDetailsPanel->hide();*/
 
     mRoot->addFrameListener(this);
 }
@@ -212,6 +220,8 @@ void BaseApplication::loadResources(void)
 	//move this line outside?
 
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+	//load myGUI here?
+
 }
 //-------------------------------------------------------------------------------------
 void BaseApplication::go(void)
@@ -269,9 +279,9 @@ bool BaseApplication::setup(void)
 	//----------------------------------------------------------------------------------
 
 	//loader bar for loading
-	mTrayMgr->showLoadingBar(1, 0); 
+	//mTrayMgr->showLoadingBar(1, 0); 
 	loadResources();
-	mTrayMgr->hideLoadingBar();
+	//mTrayMgr->hideLoadingBar();
 
 	createGUI();  //my guis  - make these before creating scene - This will need to be replaced with CEGUI stuff
 	// Create the scene
@@ -295,10 +305,10 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	if (mJoy != 0) mJoy->capture();
 	//mInputContext.capture();
 
-    mTrayMgr->frameRenderingQueued(evt);
+    //mTrayMgr->frameRenderingQueued(evt);
 	this->addTime(evt.timeSinceLastFrame);
 
-    if (!mTrayMgr->isDialogVisible())
+    /*if (!mTrayMgr->isDialogVisible())
     {
         mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera
         if (mDetailsPanel->isVisible())   // if details panel is visible, then update its contents
@@ -311,7 +321,7 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
             mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().y));
             mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().z));
         }
-    }
+    }*/
 
     return true;
 }

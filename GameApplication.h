@@ -106,7 +106,7 @@ protected:
 
 	virtual void createGUI(void);  //for gui's
 
-	void buttonHit(OgreBites::Button *b);
+	void buttonHit(MyGUI::WidgetPtr _sender);
 
 	GameState gameState;
 

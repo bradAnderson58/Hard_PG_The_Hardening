@@ -323,11 +323,12 @@ GameApplication::toggleState(GameState s)
 
 		// destroy initial start screen GUI elements,
 		// and build ones used in game, like the inventory etc etc
-		mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER);
+		//Not using mTrayMgr anymore
+		//mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER);
 
 		// initialize all gui elements, than only show what is needed,
 		// hide the rest of them
-		mTrayMgr->hideAll();	// hide all trays, next, reveal needed ones
+		//mTrayMgr->hideAll();	// hide all trays, next, reveal needed ones
 		
 		// load enviroment and set up level
 		loadEnv();
@@ -361,15 +362,15 @@ GameApplication::toggleState(GameState s)
 bool 
 GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplication
 {
-    if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
+    //if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
 
     if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats - leave for now
     {
-        mTrayMgr->toggleAdvancedFrameStats();
+        //mTrayMgr->toggleAdvancedFrameStats();
     }
     else if (arg.key == OIS::KC_G)   // toggle visibility of even rarer debugging details - leave for now
     {
-        if (mDetailsPanel->getTrayLocation() == OgreBites::TL_NONE)
+        /*if (mDetailsPanel->getTrayLocation() == OgreBites::TL_NONE)
         {
             mTrayMgr->moveWidgetToTray(mDetailsPanel, OgreBites::TL_TOPRIGHT, 0);
             mDetailsPanel->show();
@@ -378,7 +379,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
         {
             mTrayMgr->removeWidgetFromTray(mDetailsPanel);
             mDetailsPanel->hide();
-        }
+        }*/
     }
     else if (arg.key == OIS::KC_T)   // cycle polygon rendering mode - DELETE?
     {
@@ -493,6 +494,9 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 			playerPointer->doingStuff = true;
 		}
 	}
+
+	MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), arg.text);
+
     return true;
 }
 
@@ -504,6 +508,10 @@ bool GameApplication::keyReleased( const OIS::KeyEvent &arg )
 			playerPointer->setMovement(false);
 		}
 	}
+
+	//myGUI test
+	MyGUI::InputManager::getInstance().injectKeyRelease(MyGUI::KeyCode::Enum(arg.key));
+
     return true;
 }
 
@@ -514,8 +522,11 @@ bool GameApplication::mouseMoved( const OIS::MouseEvent &arg )
 		playerPointer->rotationCode(arg);
 	}
 	
-    if (mTrayMgr->injectMouseMove(arg)) return true; //DELETE?
-    return true;
+    //if (mTrayMgr->injectMouseMove(arg)) return true; //DELETE?
+    
+	MyGUI::InputManager::getInstance().injectMouseMove(arg.state.X.abs, arg.state.Y.abs, arg.state.Z.abs);
+	
+	return true;
 }
 
 bool GameApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
@@ -535,19 +546,25 @@ bool GameApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButton
 		}
 	}
 	
-	//To prevent breakage
+	//MyGUI test
+	MyGUI::InputManager::getInstance().injectMousePress(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
+
+	/*To prevent breakage
 	if (id == OIS::MB_Right) bRMouseDown = false;
 	else if (id == OIS::MB_Left) bLMouseDown = false;
-    if (mTrayMgr->injectMouseDown(arg, id)) return true;
+    if (mTrayMgr->injectMouseDown(arg, id)) return true;*/
     return true;
 }
 
 bool GameApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
+	//MyGUI test
+	MyGUI::InputManager::getInstance().injectMouseRelease(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
+	
 	//To prevent breakage
 	if (id == OIS::MB_Right) bRMouseDown = false;
 	else if (id == OIS::MB_Left) bLMouseDown = false;
-	if (mTrayMgr->injectMouseUp(arg, id)) return true;
+	//if (mTrayMgr->injectMouseUp(arg, id)) return true;
     return true;
 }
 
@@ -668,7 +685,29 @@ bool GameApplication::axisMoved( const OIS::JoyStickEvent &arg, int axis){
 
 void GameApplication::createGUI(void)
 {
+	//std::cout << MyGUI::LayoutManager::getInstancePtr() << std::endl;//->loadLayout("C:/hackyTemp/layouts/sample.layout");
+	mPlatform = new MyGUI::OgrePlatform();
+	mPlatform->initialise(mWindow, mSceneMgr); // mWindow is Ogre::RenderWindow*, mSceneManager is Ogre::SceneManager*
+	mGUI = new MyGUI::Gui();
+	mGUI->initialise();  //don't intialize until after resources have been loaded
+
+	MyGUI::ButtonPtr button = mGUI->createWidget<MyGUI::Button>("Button", 50, 50, 300, 50, MyGUI::Align::Default, "Main");
+	//MyGUI::ButtonPtr button2 = mGUI->createWidget<MyGUI::Button>(
+	button->setCaption("I'm a GUI Bitch!!!");
+
+	// set callback
+	button->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
 	
+	
+	if (button->getVisible()) std::cout << "Should be visible" <<std::endl;
+	else std::cout << "Is not visible" << std::endl;
+	button->setVisible(true);
+	if (button->getVisible()) std::cout <<"Now visible" << std::endl;
+
+	if (gameState == MAINSCREEN){
+			toggleState(SETUP);
+	}
+	/*
 	if (mTrayMgr == NULL) return;
 	using namespace OgreBites; 
 	
@@ -691,18 +730,19 @@ void GameApplication::createGUI(void)
 
 	}
 
-	//////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////*/
 }
 
-void GameApplication::buttonHit(OgreBites::Button* b)
+void GameApplication::buttonHit(MyGUI::WidgetPtr _sender)
 {
-	if (b->getName() == "ClickMe")
+	std::cout << "I'm a MyGUI button!" << std::endl;
+	/*if (b->getName() == "ClickMe")
 	{
 		//Delete start GUI and start game
 		if (gameState == MAINSCREEN){
 			toggleState(SETUP);
 		}
-	}
+	}*/
 }
 
 //open in-game menu screen
