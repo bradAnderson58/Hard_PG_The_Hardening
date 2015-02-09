@@ -17,6 +17,7 @@ GameApplication::GameApplication(void):
 	gameOver = false;
 	level = 0;
 	ghettoSelect = 0; //probably take this out later
+	keyW = keyA = keyS = keyD = 0;
 
 }
 //-------------------------------------------------------------------------------------
@@ -444,36 +445,12 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 			playerPointer->doingStuff = true;
 		}
 	}
-	else if (arg.key == OIS::KC_W) {
+	else if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || OIS::KC_D) {
 		
 		if (gameState == PLAYING){
-			playerPointer->playerRot(M_PI / 2);
-			playerPointer->setMovement(true);
-			playerPointer->setVelocity(.5);
-
-		}
-	}
-	else if (arg.key == OIS::KC_A) {
-		if (gameState == PLAYING){
-			playerPointer->playerRot(M_PI);
-			playerPointer->setMovement(true);
-			playerPointer->setVelocity(.5);
-		}
-	}
-	else if (arg.key == OIS::KC_D) {
-		if (gameState == PLAYING){
-			playerPointer->playerRot(0);
-			playerPointer->setMovement(true);
-			playerPointer->setVelocity(.5);
+			keyHandler(arg.key, true);
 		}
 	
-	}
-	else if (arg.key == OIS::KC_S) {
-		if (gameState == PLAYING){
-			playerPointer->playerRot(4.712);
-			playerPointer->setMovement(true);
-			playerPointer->setVelocity(.5);
-		}
 	}
 	//Some wicked attacks - template for spellcasting possibly
 	else if (arg.key == OIS::KC_Q){
@@ -493,7 +470,7 @@ bool GameApplication::keyReleased( const OIS::KeyEvent &arg )
 	//Set the flag to false for whichever key is no longer pressed
 	if (gameState == PLAYING){
 		if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || arg.key == OIS::KC_D){
-			playerPointer->setMovement(false);
+			keyHandler(arg.key, false);
 		}
 	}
 
@@ -501,6 +478,34 @@ bool GameApplication::keyReleased( const OIS::KeyEvent &arg )
 	MyGUI::InputManager::getInstance().injectKeyRelease(MyGUI::KeyCode::Enum(arg.key));
 
     return true;
+}
+
+void GameApplication::keyHandler(OIS::KeyCode keyd, bool down){
+	double vx, vy, rots;
+	vx = vy = rots = 0;
+
+	//update flags based on which button was just pressed
+	if (keyd == OIS::KC_W) keyW = (down) ? true : false;
+	else if (keyd == OIS::KC_S) keyS = (down) ? true : false;
+	else if (keyd == OIS::KC_A) keyA = (down) ? true : false;
+	else if (keyd == OIS::KC_D) keyD = (down) ? true : false;
+
+	//if no keys are down, dont move the player
+	if (!keyW && !keyA && !keyS && !keyD) playerPointer->setMovement(false);
+	
+	//set player rotation based on keys.  Compatible with Xbox code
+	else{
+
+		if (keyW) vy = 1.0;
+		if (keyA) vx = -1.0;
+		if (keyS) vy = -1.0;
+		if (keyD) vx = 1.0;
+
+		rots = std::atan2(vy, vx);
+		playerPointer->playerRot(rots);
+		playerPointer->setMovement(true);
+		playerPointer->setVelocity(.3);
+	}
 }
 
 bool GameApplication::mouseMoved( const OIS::MouseEvent &arg )

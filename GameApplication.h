@@ -74,6 +74,11 @@ public:
 	// OIS::KeyListener
     bool keyPressed( const OIS::KeyEvent &arg );
     bool keyReleased( const OIS::KeyEvent &arg );
+	void keyHandler(OIS::KeyCode keyd, bool down);
+	bool keyW;
+	bool keyA;
+	bool keyS;
+	bool keyD;
 
 	//OIS::JoyStickListener
 	bool buttonPressed( const OIS::JoyStickEvent &arg, int button);
