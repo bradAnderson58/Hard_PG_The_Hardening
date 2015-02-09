@@ -34,14 +34,8 @@ This source file is part of the
 #include <SdkTrays.h>
 #include <SdkCameraMan.h>
 
-
-#include <boost/thread/recursive_mutex.hpp>
-
 #include <MyGUI.h>
 #include <MyGUI_OgrePlatform.h>
-//#include <CEGUI/CEGUI.h>
-//#include <CEGUI/RendererModules/Ogre/Renderer.h>
-//#include <CEGUI/String.h>
 
 class BaseApplication : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener, public OIS::JoyStickListener
 {
