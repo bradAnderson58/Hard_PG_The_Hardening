@@ -83,6 +83,14 @@ void Player::updateStats(){
 	defenseStat = (1.5 * (double) constitutionAtt) + (.5 * (double) strengthAtt);		//base defense initially 2
 	healthStat = (15 * (double) dexterityAtt) + (10 * (double) constitutionAtt);		//base health intially 25
 	manaStat = (10 * (double) intelligenceAtt) + (5 * (double) evilAtt);				//base mana initially 15
+
+	//This is what my damage or my defense is
+	mDamage = (equippedWpn != NULL) ? damageStat + equippedWpn->getStat(UsableItems::DAMAGE) : damageStat;
+	mDefense =	defenseStat;
+	if (equippedHelm != NULL) mDefense += equippedHelm->getStat(UsableItems::DEFENSE);
+	if (equippedBoobs != NULL) mDefense += equippedBoobs->getStat(UsableItems::DEFENSE);
+	if (equippedPants != NULL) mDefense += equippedPants->getStat(UsableItems::DEFENSE);
+	if (equippedNeck != NULL) mDefense += equippedNeck->getStat(UsableItems::DEFENSE);
 }
 
 void Player::update(Ogre::Real deltaTime){
@@ -214,7 +222,7 @@ void Player::updateAnimations(Ogre::Real deltaTime){
 	//If Yoshimi has an active animation, call the update method
 	if (playerAnim != ANIM_NONE){
 		mAnims[playerAnim]->addTime(deltaTime * speed);
-		if (mAnims[playerAnim]->hasEnded()){
+		if (mAnims[playerAnim]->hasEnded() && playerAnim != BLOCK){
 			doingStuff = false;   //no longer doing stuff
 			speed = 2;
 		}
@@ -303,13 +311,14 @@ void Player::setAnimation(AnimID id, bool reset){
 	}
 }
 
-void Player::buttonAnimation(char key){
-	if (key == 'j'){
+void Player::buttonAnimation(int en, bool start){
+	if (en == OIS::KC_SPACE){
 		setAnimation(JUMP, true);
 	}
-	else if (key == 't') setAnimation(ATTACK_ONE, true);  //throw fishbomb?
-	else if (key == 's') setAnimation(ATTACK_THREE, true);//use sword
-	else if (key == 'k') setAnimation(KICK, true);		  //judo-kick
+	else if (en == OIS::KC_Q) setAnimation(ATTACK_ONE, true);  //throw fishbomb?
+	else if (en == OIS::MB_Left ) setAnimation(ATTACK_THREE, true);	//use sword
+	else if (en == OIS::MB_Right && start) setAnimation(BLOCK, true);		  //Blocking
+	else if (en == OIS::MB_Right) setAnimation(IDLE_THREE, true);
 }
 
 //Player checks the robot list to see if any robots are close enough to hit
@@ -322,11 +331,12 @@ void Player::checkHits(char attack){
 	Ogre::AxisAlignedBox rRange;
 
 	//ADD MORE
-
+	//app->
 }
 
 void Player::dealDamage(NPC *enemy){
 
+	//base damage plus weapon damage
 	int damage = (equippedWpn != NULL) ? damageStat + equippedWpn->getStat(UsableItems::DAMAGE) : damageStat;
 	int critPerc = (rand() % 100) / 100;
 	if (critPerc <= criticalStat){ //critical strike - extra damages!
@@ -338,13 +348,14 @@ void Player::dealDamage(NPC *enemy){
 
 //damage done to the player
 void Player::getHurt(int damage){
-	//base defense plus helm, breastplate, and pants defense
-	int mDefense = defenseStat + equippedBoobs->getStat(UsableItems::DEFENSE) + equippedHelm->getStat(UsableItems::DEFENSE) + equippedPants->getStat(UsableItems::DEFENSE);
-
+	
+	//blocking adds 1 defense plus whatever defense the shield provides if equipped
 	if (isBlocking){
-		mDefense += equippedShield->getStat(UsableItems::DEFENSE);
+		mDefense += (equippedShield != NULL) ? equippedShield->getStat(UsableItems::DEFENSE) + 1 : 1;
 	}
 
+	//you loose health equal to the attackers damage minus your defense
+	//if your defense is higher than the enemies damage, you take no damage?
 	healthStat -= ((damage - mDefense) >= 0) ? damage - mDefense : 0;
 }
 

@@ -23,7 +23,7 @@ public:
 	void cameraRot(double arg);				//for rotating camera with RS joystick
 	void playerRot(double arg);				//for rotating player with LS joystick
 	void setVelocity(double arg);			//Set how fast to walk
-	void buttonAnimation(char pressed);		//tell me what animation to do
+	void buttonAnimation(int en, bool start);	//tell me what animation to do
 	
 	double mPlayerRot;
 	double mPlayerVel;
@@ -39,6 +39,7 @@ public:
 
 	void checkHits(char attack);  //for attacks - check if an enemy gets hit
 	void getHurt(int dam);		//code for when your getting hurt
+	void setBlocking(bool y) { isBlocking = y; }
 
 	UsableItems* getWpn(){ return equippedWpn; }	//The weapon you are using
 	UsableItems* getShield(){ return equippedShield; }
@@ -115,6 +116,8 @@ private:
 	UsableItems *equippedPants;
 	UsableItems *equippedNeck;
 
+	double mDamage;
+	double mDefense;
 	
 	void dealDamage(NPC *enemy);  //deal damage to an enemy
 

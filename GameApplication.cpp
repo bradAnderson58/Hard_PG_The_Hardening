@@ -441,7 +441,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 	{
 		if(!playerPointer->doingStuff){
 			playerPointer->changeSpeed(.6);  //jump should be slower
-			playerPointer->buttonAnimation('j');
+			playerPointer->buttonAnimation(arg.key, true);
 			playerPointer->doingStuff = true;
 		}
 	}
@@ -455,7 +455,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
 	//Some wicked attacks - template for spellcasting possibly
 	else if (arg.key == OIS::KC_Q){
 		if(!playerPointer->doingStuff){
-			playerPointer->buttonAnimation('t');
+			playerPointer->buttonAnimation(arg.key, true);
 			playerPointer->doingStuff = true;
 		}
 	}
@@ -528,29 +528,34 @@ bool GameApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButton
 	if (gameState == PLAYING){
 		if(id == OIS::MB_Left && !playerPointer->doingStuff){
 			playerPointer->changeSpeed(1);
-			playerPointer->buttonAnimation('s');
+			playerPointer->buttonAnimation(id, true);
 			playerPointer->doingStuff = true;
 			playerPointer->checkHits('s'); //This may change
 		}
 		else if (id == OIS::MB_Right && !playerPointer->doingStuff){
-			playerPointer->buttonAnimation('k');
+			playerPointer->buttonAnimation(id, true);
 			playerPointer->doingStuff = true;
-			playerPointer->checkHits('k');
+			playerPointer->setBlocking(true);  //make
 		}
 	}
 	
 	//MyGUI test
 	MyGUI::InputManager::getInstance().injectMousePress(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
 
-	/*To prevent breakage
+	//To prevent breakage
 	if (id == OIS::MB_Right) bRMouseDown = false;
 	else if (id == OIS::MB_Left) bLMouseDown = false;
-    if (mTrayMgr->injectMouseDown(arg, id)) return true;*/
+    //if (mTrayMgr->injectMouseDown(arg, id)) return true;
     return true;
 }
 
 bool GameApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
+	if (id == OIS::MB_Right){
+		playerPointer->doingStuff = false;
+		playerPointer->setBlocking(false);
+		playerPointer->buttonAnimation(id, false);
+	}
 	//MyGUI test
 	MyGUI::InputManager::getInstance().injectMouseRelease(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
 	
@@ -570,7 +575,7 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 		if (button == 0){
 			if (!playerPointer->doingStuff){
 				playerPointer->changeSpeed(.8);
-				playerPointer->buttonAnimation('j');
+				playerPointer->buttonAnimation(OIS::KC_SPACE, true);
 				playerPointer->doingStuff = true;
 			}
 		}
@@ -578,7 +583,7 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 		else if (button == 2){
 			if(!playerPointer->doingStuff){
 				playerPointer->changeSpeed(1);
-				playerPointer->buttonAnimation('s');
+				playerPointer->buttonAnimation(OIS::MB_Left, true);
 				playerPointer->doingStuff = true;
 				playerPointer->checkHits('s');
 			}
@@ -690,12 +695,8 @@ void GameApplication::createGUI(void)
 
 	// set callback
 	button->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
-	
-	
-	if (button->getVisible()) std::cout << "Should be visible" <<std::endl;
-	else std::cout << "Is not visible" << std::endl;
+
 	button->setVisible(true);
-	if (button->getVisible()) std::cout <<"Now visible" << std::endl;
 
 	if (gameState == MAINSCREEN){
 			toggleState(SETUP);
