@@ -67,7 +67,6 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	//intialize stats with update stats function
 	updateStats();
 	
-	
 	setupAnimations();
 }
 
@@ -78,11 +77,17 @@ Player::~Player(void)
 
 void Player::updateStats(){
 	//call to quickly update them stats when needed
+	// Brandon NOTE: called when changing gear?
+	// maybe call when leveling too, just need to include that in math
 	criticalStat = ((1.5 * (double) evilAtt) + (.5 * (double) dexterityAtt) ) / 200;	//initially 1% critical strike chance
 	damageStat = (1.5 * (double) strengthAtt) + (.5 * (double) intelligenceAtt);		//base damage initially 2
 	defenseStat = (1.5 * (double) constitutionAtt) + (.5 * (double) strengthAtt);		//base defense initially 2
 	healthStat = (15 * (double) dexterityAtt) + (10 * (double) constitutionAtt);		//base health intially 25
 	manaStat = (10 * (double) intelligenceAtt) + (5 * (double) evilAtt);				//base mana initially 15
+
+	healthNow = healthStat;		// updates health and mana as well, would do this
+	manaNow = manaNow;			// if lvling up calls updateStats
+								// if changing gear calls this, than adjust this.
 
 	//This is what my damage or my defense is
 	mDamage = (equippedWpn != NULL) ? damageStat + equippedWpn->getStat(UsableItems::DAMAGE) : damageStat;
@@ -356,7 +361,7 @@ void Player::getHurt(int damage){
 
 	//you loose health equal to the attackers damage minus your defense
 	//if your defense is higher than the enemies damage, you take no damage?
-	healthStat -= ((damage - mDefense) >= 0) ? damage - mDefense : 0;
+	healthNow -= ((damage - mDefense) >= 0) ? damage - mDefense : 0;
 }
 
 //Expand to cover collisions with all NPCs

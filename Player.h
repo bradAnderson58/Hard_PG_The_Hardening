@@ -93,20 +93,22 @@ private:
 	void collisionWalls();
 
 	//Stats for player
-	double criticalStat;	//chance to cause critical hit
-	double damageStat;		//base damage
-	double defenseStat;		//base defense
-	double healthStat;		//base health
-	double manaStat;		//base mana
+	double criticalStat;	// chance to cause critical hit
+	double damageStat;		// base damage
+	double defenseStat;		// base defense
+	double healthStat;		// base health
+	double manaStat;		// base mana
+	double healthNow;		// current health
+	double manaNow;			// current mana
 
-	int level;				//your level
+	int level;				// your level
 
 	//attributes for player
-	int evilAtt;		//affects crit, mana
-	int strengthAtt;	//affects dam, def
-	int dexterityAtt;	//affects heal, crit
-	int constitutionAtt;//affects def, heal
-	int intelligenceAtt;//affects mana, dam
+	int evilAtt;			// affects crit, mana
+	int strengthAtt;		// affects dam, def
+	int dexterityAtt;		// affects heal, crit
+	int constitutionAtt;	// affects def, heal
+	int intelligenceAtt;	// affects mana, dam
 	
 	//equipment for player
 	UsableItems *equippedWpn;	//The weapon you are using
