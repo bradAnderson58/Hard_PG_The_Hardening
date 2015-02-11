@@ -14,7 +14,6 @@ class Grid;  //okay whatever
 class GameApplication : public BaseApplication
 {
 private:
-	/*CEGUI::OgreRenderer* mRenderer;*/
 	Agent* agent; // store a pointer to the character
 	Ogre::Vector3 houseInitPos;
 
@@ -24,13 +23,18 @@ private:
 	Ogre::SceneNode* housePointer;		//point to the location of the house COM
 	bool gameOver;						//game is over
 
+	// gui stuff decl's
+	MyGUI::ProgressPtr healthBar;		// progress bar to track health
+
 	std::list<Ogre::SceneNode*> wallList;
 	std::list<Ogre::SceneNode*> borderWalls;
 	Ogre::AxisAlignedBox boundBox;  //bounding box of the barrel - DELETE?
 	int level;
+
 	//Boundaries of the world
 	Grid *grid;
 	float xMax, zMax;
+
 	void restartLevel();
 	void nextLevel();
 
@@ -39,7 +43,7 @@ private:
 	void openInventory();
 	void openCharRecord();
 
-	int ghettoSelect;
+	int ghettoSelect;	// what is this?
 
 public:	
 
@@ -116,13 +120,13 @@ protected:
 	GameState gameState;
 
 	//GUI buttons and such
-	OgreBites::Button *cont;
+	/*OgreBites::Button *cont;*/
 
 	//Strings for GUI
 	
 	//Path files for sounds
 
-	OgreBites::ParamsPanel* mParamsPanel;
+	//OgreBites::ParamsPanel* mParamsPanel;
 
 };
 

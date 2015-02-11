@@ -32,6 +32,9 @@ public:
 
 	void updateStats();
 
+	double getHealthStat() { return healthStat; }
+	double getHealthNow() { return healthNow; }
+
 	void checkBump();
 	Ogre::Vector3 getPosition(){return mBodyNode->getPosition();}
 	void restart();
