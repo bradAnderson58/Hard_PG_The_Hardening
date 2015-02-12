@@ -274,22 +274,9 @@ bool BaseApplication::setup(void)
 
 	//soundcode - PlaySound sucks, to be replaced with a better alternative------------
 
-	//loader bar for loading
-	mPlatform = new MyGUI::OgrePlatform();
-	mPlatform->initialise(mWindow, mSceneMgr); // mWindow is Ogre::RenderWindow*, mSceneManager is Ogre::SceneManager*
-	mGUI = new MyGUI::Gui();
-	mGUI->initialise();  //don't intialize until after resources have been loaded
-	//mTrayMgr->showLoadingBar(1, 0);
-	MyGUI::ProgressPtr prog = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar",0,200,400,100,MyGUI::Align::Center,"Main");
-	prog->setEnabled(true);
-	prog->setProgressRange(100);
-	prog->setVisible(true);
-
-
+	//we should probably do stuffs here to show progress board
 	loadResources();
 	//mTrayMgr->hideLoadingBar();
-	prog->setVisible(false);
-	std::cout << "im here" << std::endl;
 
 	createGUI();  //my guis  - make these before creating scene - 
 	// Create the scene
