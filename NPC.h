@@ -26,7 +26,7 @@ public:
 	void setMovement(char dir, bool on); //set the movemnt
 
 	void getHurt(int d);
-	
+	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }
 
 protected:
 	enum AnimId{

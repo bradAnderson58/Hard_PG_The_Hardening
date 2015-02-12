@@ -324,12 +324,20 @@ void Player::buttonAnimation(int en, bool start){
 //Player checks the robot list to see if any robots are close enough to hit
 //If so, they get hurted and such
 //TODO: This will be updated as enemies are introduced
-void Player::checkHits(char attack){
+void Player::checkHits(){
 	
 	//get bounding boxes for Player and her adversaries
 	Ogre::AxisAlignedBox aRange = mAttackEntity->getWorldBoundingBox();
 	Ogre::AxisAlignedBox rRange;
 
+	for (NPC *enemy : app->getNPCs()){
+		rRange = enemy->getBoundingBox();
+
+		if (aRange.intersects(rRange)){
+			dealDamage(enemy);	//hit em
+			std::cout << "hit this bitch" << std::endl;
+		}
+	}
 	//ADD MORE
 	//app->
 }

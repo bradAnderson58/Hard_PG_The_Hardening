@@ -530,7 +530,7 @@ bool GameApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButton
 			playerPointer->changeSpeed(1);
 			playerPointer->buttonAnimation(id, true);
 			playerPointer->doingStuff = true;
-			playerPointer->checkHits('s'); //This may change
+			playerPointer->checkHits(); //This may change
 		}
 		else if (id == OIS::MB_Right && !playerPointer->doingStuff){
 			playerPointer->buttonAnimation(id, true);
@@ -585,7 +585,7 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 				playerPointer->changeSpeed(1);
 				playerPointer->buttonAnimation(OIS::MB_Left, true);
 				playerPointer->doingStuff = true;
-				playerPointer->checkHits('s');
+				playerPointer->checkHits();
 			}
 		}
 		//Start button is 7
@@ -683,11 +683,11 @@ bool GameApplication::axisMoved( const OIS::JoyStickEvent &arg, int axis){
 
 void GameApplication::createGUI(void)
 {
-	//std::cout << MyGUI::LayoutManager::getInstancePtr() << std::endl;//->loadLayout("C:/hackyTemp/layouts/sample.layout");
+	/*std::cout << MyGUI::LayoutManager::getInstancePtr() << std::endl;//->loadLayout("C:/hackyTemp/layouts/sample.layout");
 	mPlatform = new MyGUI::OgrePlatform();
 	mPlatform->initialise(mWindow, mSceneMgr); // mWindow is Ogre::RenderWindow*, mSceneManager is Ogre::SceneManager*
 	mGUI = new MyGUI::Gui();
-	mGUI->initialise();  //don't intialize until after resources have been loaded
+	mGUI->initialise();  //don't intialize until after resources have been loaded*/
 
 	MyGUI::ButtonPtr button = mGUI->createWidget<MyGUI::Button>("Button", 50, 50, 300, 50, MyGUI::Align::Default, "Main");
 	//MyGUI::ButtonPtr button2 = mGUI->createWidget<MyGUI::Button>(

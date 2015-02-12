@@ -65,17 +65,18 @@ bool BaseApplication::configure(void)
     // Show the configuration dialog and initialise the system
     // You can skip this and use root.restoreConfig() to load configuration
     // settings if you were sure there are valid ones saved in ogre.cfg
-    if(mRoot->showConfigDialog())
+	// mRoot->showConfigDialog()
+    if(mRoot->restoreConfig())
     {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'
-        mWindow = mRoot->initialise(true, "GameApplication Render Window");
-
+        mWindow = mRoot->initialise(true, "Hard PG: The Hardening");
+		//mRoot->restoreConfig();
         return true;
     }
     else
     {
-        return false;
+        return false; //mRoot->restoreConfig();
     }
 }
 //-------------------------------------------------------------------------------------
@@ -260,7 +261,9 @@ bool BaseApplication::setup(void)
     Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
 
 	//Need this for the loading bar?
-	Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Essential");
+	//Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("General");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("C:/MyGUI_3.2.0/Media/MyGUI_Media", "Zip", "progress");
+    Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("progress");
 
     // Create any resource listeners (for loading screens)  This could be helpful?
     createResourceListener();
@@ -271,17 +274,22 @@ bool BaseApplication::setup(void)
 
 	//soundcode - PlaySound sucks, to be replaced with a better alternative------------
 
-	/*std::string path = __FILE__; //gets the current cpp file's path with the cpp file
-	path = path.substr(0,1+path.find_last_of('\\')); //removes filename to leave path
-	path+= "\\Sounds\\YBPR_part1.wav"; //if txt file is in the same directory as cpp file
-	PlaySound(path.c_str(), NULL, SND_FILENAME|SND_ASYNC);    //Intro song plays immediately*/
-
-	//----------------------------------------------------------------------------------
-
 	//loader bar for loading
-	//mTrayMgr->showLoadingBar(1, 0); 
+	mPlatform = new MyGUI::OgrePlatform();
+	mPlatform->initialise(mWindow, mSceneMgr); // mWindow is Ogre::RenderWindow*, mSceneManager is Ogre::SceneManager*
+	mGUI = new MyGUI::Gui();
+	mGUI->initialise();  //don't intialize until after resources have been loaded
+	//mTrayMgr->showLoadingBar(1, 0);
+	MyGUI::ProgressPtr prog = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar",0,200,400,100,MyGUI::Align::Center,"Main");
+	prog->setEnabled(true);
+	prog->setProgressRange(100);
+	prog->setVisible(true);
+
+
 	loadResources();
 	//mTrayMgr->hideLoadingBar();
+	prog->setVisible(false);
+	std::cout << "im here" << std::endl;
 
 	createGUI();  //my guis  - make these before creating scene - 
 	// Create the scene

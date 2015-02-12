@@ -59,6 +59,8 @@ public:
 	float getXmax() { return xMax; }
 	float getZmax() { return zMax; }
 
+	std::list<NPC*> getNPCs(){ return NPClist;}
+
 	void loadEnv();			// Load the buildings or ground plane, etc.
 	void setupEnv();		// Set up the lights, shadows, etc
 	void loadObjects();		// Load other props or objects (e.g. furniture)

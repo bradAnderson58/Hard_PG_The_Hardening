@@ -37,7 +37,7 @@ public:
 	void restart();
 	void setInitPos(Ogre::Vector3 p){initPos = p;}
 
-	void checkHits(char attack);  //for attacks - check if an enemy gets hit
+	void checkHits();  //for attacks - check if an enemy gets hit
 	void getHurt(int dam);		//code for when your getting hurt
 	void setBlocking(bool y) { isBlocking = y; }
 
