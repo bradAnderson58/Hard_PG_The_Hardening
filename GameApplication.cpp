@@ -309,19 +309,16 @@ GameApplication::toggleState(GameState s)
 	else if (s == SETUP)		// initialize actual game
 	{
 		gameState = s;
-
-		// destroy initial start screen GUI elements,
-		// and build ones used in game, like the inventory etc etc
-		//Not using mTrayMgr anymore
-		//mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER);
-
-		// initialize all gui elements, than only show what is needed,
-		// hide the rest of them
-		//mTrayMgr->hideAll();	// hide all trays, next, reveal needed ones
 		
 		// load enviroment and set up level
 		loadEnv();
 		setupEnv();
+
+		// reveal HUD and set up gui things
+		healthBar->setProgressRange(playerPointer->getHealthStat());
+		healthBar->setProgressPosition(playerPointer->getHealthNow());
+		healthBar->setVisible(true);
+
 		toggleState(PLAYING);
 	}
 	else if(s == PLAYING)		// mode where player interacts with world
@@ -683,20 +680,25 @@ bool GameApplication::axisMoved( const OIS::JoyStickEvent &arg, int axis){
 
 void GameApplication::createGUI(void)
 {
-	/*std::cout << MyGUI::LayoutManager::getInstancePtr() << std::endl;//->loadLayout("C:/hackyTemp/layouts/sample.layout");
+
 	mPlatform = new MyGUI::OgrePlatform();
 	mPlatform->initialise(mWindow, mSceneMgr); // mWindow is Ogre::RenderWindow*, mSceneManager is Ogre::SceneManager*
 	mGUI = new MyGUI::Gui();
 	mGUI->initialise();  //don't intialize until after resources have been loaded*/
 
-	MyGUI::ButtonPtr button = mGUI->createWidget<MyGUI::Button>("Button", 50, 50, 300, 50, MyGUI::Align::Default, "Main");
-	//MyGUI::ButtonPtr button2 = mGUI->createWidget<MyGUI::Button>(
-	button->setCaption("I'm a GUI Bitch!!!");
+	// now MyGUI widgets needed for menu interface and HUD
+	//MyGUI::ButtonPtr button = mGUI->createWidget<MyGUI::Button>("Button", 50, 50, 300, 50, MyGUI::Align::Default, "Main");
+	////MyGUI::ButtonPtr button2 = mGUI->createWidget<MyGUI::Button>(
+	//button->setCaption("I'm a GUI Bitch!!!");
+	
+	// progress bar to track health, update this in addtime
+													// skin				pos							size		alignment			layer
+	healthBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 50, mWindow->getHeight()-50, 150, 50, MyGUI::Align::Default, "Main");
+	
+	// set callbacks
+	//button->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
 
-	// set callback
-	button->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
-
-	button->setVisible(true);
+	//button->setVisible(true);
 
 	if (gameState == MAINSCREEN){
 			toggleState(SETUP);
