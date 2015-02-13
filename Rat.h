@@ -13,7 +13,9 @@ public:
 		WANDER,
 		GUARD,
 		FLEE,
-		SEEK
+		DEAD,
+		SEEK,
+		NONE
 	};
 	Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::GoodBad t, Rat::RatStates s);
 	~Rat();

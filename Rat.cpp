@@ -34,9 +34,50 @@ void Rat::update(Ogre::Real deltaTime){
 	else if (state == FLEE){
 
 	}
-	else {
-		
+	else if (state == DEAD){
+		state = NONE;
+		mBodyNode->roll(Ogre::Degree(180));
 	}
+	else if (state == NONE){
+		return;
+	}
+	else{
+		mDirection = Ogre::Vector3::ZERO;
+	}
+	if (health <= 0 && !(state == DEAD || state == NONE)){
+		state=DEAD;
+	}
+	
+	if (mDirection != Ogre::Vector3::ZERO){//if the velocity isnt zero set up animations
+		//if (ratAnim != WALK){
+		//	setAnimation(WALK);
+		//}
+		mTimer = 0;
+
+		//check wall issues
+		//checkBoundaryCollision();     
+
+		//always rotating
+		Ogre::Vector3 src = mBodyNode->getOrientation() * Ogre::Vector3::UNIT_X;//rotate for first location
+		if ((1.0f + src.dotProduct(mDirection)) < 0.0001f) 
+		{
+			mBodyNode->yaw(Ogre::Degree(180));
+		}
+		else
+		{
+			Ogre::Quaternion quat = src.getRotationTo(mDirection.normalisedCopy());
+			mBodyNode->rotate(quat);
+		}
+		//mDirection = mDirection * 100;
+		mBodyNode->translate(mDirection);
+	}
+	else{//when velocity is zero set idle animations
+		//if(rarAnim != IDLE ){
+			//setAnimation(IDLE);
+		//}
+		mTimer = 0;
+	}
+
 }
 
 void Rat::updateLocomote(Ogre::Real deltaTime){
@@ -156,6 +197,18 @@ bool Rat::checkInFront(){
 }
 
 void Rat::wander(){
+	Ogre::Vector3 circleCenter = Ogre::Vector3::ZERO;
+	circleCenter = mDirection;
+	//circleCenter.normalise();
+	//circleCenter.scaleBy(Circle_Distance);
+	Ogre::Vector3 displacement = Ogre::Vector3::ZERO;
+	//displacement = vector(0,-1);
+	//displacement.scaleBy(Circle_radius);
+	//setAngle(displacement, wanderAngle);
+	//	len = displacement.length();
+	//	dispalcement[0] = Math.cos(wanderAngle) * len;
+	//	displacement[2] = Math.sin(wanderAngle) * len;
+	//wanderForce = circleCenter.add(displacement);
 
 }
 
@@ -164,5 +217,17 @@ void Rat::seek(){
 }
 
 void Rat::flee(){
+	//run in the opposite direction of Yoshimi
+	Ogre::Vector3 yoshPos = app->getPlayerPointer()->getPosition();
+	Ogre::Vector3 mPosition = mBodyNode->getPosition();
+	Ogre::Vector3 desired = (mPosition - yoshPos);
+	desired.normalise();
+	desired *= .05;
+	desired[1] = 0;
+	/*Ogre::Vector3 steer = desired - mDirection;
+	steer[1] = 0;
+	steer += mDirection*/							//if you wanna make it impossible to catch the guy;
+	//return desired;
+
 
 }
