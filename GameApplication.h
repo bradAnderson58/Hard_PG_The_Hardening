@@ -55,7 +55,8 @@ public:
 		PLAYING,
 		MENUSCREEN,
 		INVENTORY,
-		CHAR_RECORD		
+		CHAR_RECORD,
+		DEAD_STATE
 	};	//game states
 
     GameApplication(void);
@@ -63,6 +64,8 @@ public:
 
 	float getXmax() { return xMax; }
 	float getZmax() { return zMax; }
+
+	std::list<NPC*> getNPCs(){ return NPClist;}
 
 	void loadEnv();			// Load the buildings or ground plane, etc.
 	void setupEnv();		// Set up the lights, shadows, etc

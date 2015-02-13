@@ -65,12 +65,12 @@ bool BaseApplication::configure(void)
     // Show the configuration dialog and initialise the system
     // You can skip this and use root.restoreConfig() to load configuration
     // settings if you were sure there are valid ones saved in ogre.cfg
-    if(mRoot->showConfigDialog())
+	// mRoot->showConfigDialog() //use this to show configuration if you want to
+    if(mRoot->restoreConfig())
     {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'
-        mWindow = mRoot->initialise(true, "GameApplication Render Window");
-
+        mWindow = mRoot->initialise(true, "Brandon is a Loser");
         return true;
     }
     else
@@ -140,10 +140,7 @@ void BaseApplication::createFrameListener(void)
     //Register as a Window listener
     Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
 
-	//Fix for 1.9 - put this in:
-	//mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);  //--TAKE OUT SDKTray
-	
-    // create a params panel for displaying sample details
+    // These were used to create the original mDetailsPanel - may want to recreate with MyGUI
 	//don't actually need?
     Ogre::StringVector items;
     items.push_back("cam.pX");
@@ -157,11 +154,6 @@ void BaseApplication::createFrameListener(void)
     items.push_back("");
     items.push_back("Filtering");
     items.push_back("Poly Mode");
-
-    /*mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
-    mDetailsPanel->setParamValue(9, "Bilinear");
-    mDetailsPanel->setParamValue(10, "Solid");
-    mDetailsPanel->hide();*/
 
     mRoot->addFrameListener(this);
 }
@@ -260,26 +252,15 @@ bool BaseApplication::setup(void)
     Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
 
 	//Need this for the loading bar?
-	Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Essential");
+	//Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("General");
 
-    // Create any resource listeners (for loading screens)  This could be helpful?
+    // Create any resource listeners (for loading screens)
     createResourceListener();
 
     // Load resources
-	//mTrayMgr should be initialized in the Frame Listener
 	createFrameListener();
-
-	//soundcode - PlaySound sucks, to be replaced with a better alternative------------
-
-	/*std::string path = __FILE__; //gets the current cpp file's path with the cpp file
-	path = path.substr(0,1+path.find_last_of('\\')); //removes filename to leave path
-	path+= "\\Sounds\\YBPR_part1.wav"; //if txt file is in the same directory as cpp file
-	PlaySound(path.c_str(), NULL, SND_FILENAME|SND_ASYNC);    //Intro song plays immediately*/
-
-	//----------------------------------------------------------------------------------
-
-	//loader bar for loading
-	//mTrayMgr->showLoadingBar(1, 0); 
+	//soundcode - PlaySound sucks, to be replaced with a better alternative------------PUT HERE
+	//we should probably do stuffs here to show progress board
 	loadResources();
 	//mTrayMgr->hideLoadingBar();
 
@@ -303,25 +284,8 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
     mKeyboard->capture();
     mMouse->capture();
 	if (mJoy != 0) mJoy->capture();
-	//mInputContext.capture();
 
-    //mTrayMgr->frameRenderingQueued(evt);
 	this->addTime(evt.timeSinceLastFrame);
-
-    /*if (!mTrayMgr->isDialogVisible())
-    {
-        mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera
-        if (mDetailsPanel->isVisible())   // if details panel is visible, then update its contents
-        {
-            mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(mCamera->getDerivedPosition().x));
-            mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(mCamera->getDerivedPosition().y));
-            mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(mCamera->getDerivedPosition().z));
-            mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().w));
-            mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().x));
-            mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().y));
-            mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().z));
-        }
-    }*/
 
     return true;
 }
