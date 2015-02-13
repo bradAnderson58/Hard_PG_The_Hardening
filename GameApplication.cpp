@@ -287,8 +287,10 @@ void
 GameApplication::addTime(Ogre::Real deltaTime)
 {
 	if (!gameOver){
-		if (gameState == PLAYING) {
+		if (gameState == PLAYING) 
+		{
 			playerPointer->update(deltaTime); //Yoshimi has a different update function
+			healthBar->setProgressPosition(playerPointer->getHealthNow()); // update health bar
 			for (NPC* guy : NPClist){
 				guy->update(deltaTime);
 			}
@@ -323,23 +325,17 @@ GameApplication::toggleState(GameState s)
 	}
 	else if(s == PLAYING)		// mode where player interacts with world
 	{
+		// hide menu and inventory
+		openMenu(false);
 		gameState = s;
 	}
-	else if (s == MENUSCREEN)	// pause menu
+	else if (s == MENUSCREEN)	// pause, main menu
 	{
+		// show main menu
+		// for testing, show all gui menus
 		gameState = s;
-		openMenu();
-	}
-	else if (s == INVENTORY)	// inventory menu
-	{
-		gameState = s;
-		// need to also pause the game OR turn off character controls
-		openInventory();
-	}
-	else if (s == CHAR_RECORD)
-	{
-		gameState = s;
-		openCharRecord();
+		playerPointer->setMovement(false);	// movement locks up when you pause during movement
+		openMenu(true);
 	}
 	else
 		std::cout << "Not a valid state" << std::endl;
@@ -434,6 +430,7 @@ GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplic
     {
         mShutDown = true;
     }
+
 	else if (arg.key == OIS::KC_SPACE)
 	{
 		if(!playerPointer->doingStuff){
@@ -468,6 +465,36 @@ bool GameApplication::keyReleased( const OIS::KeyEvent &arg )
 	if (gameState == PLAYING){
 		if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || arg.key == OIS::KC_D){
 			keyHandler(arg.key, false);
+		}
+
+		// keys for testing menus without xbox controller ==========
+		else if (arg.key == OIS::KC_F1)
+		{
+			toggleState(MENUSCREEN);
+		}
+		//else if (arg.key == OIS::KC_F2)
+		//{
+		//	if (gameState == MENUSCREEN)
+		//	{
+		//		//hide menu and show inventory
+		//		openInventory(true);
+		//	}
+		//}
+		//else if (arg.key == OIS::KC_F3)
+		//{
+		//	if (gameState == MENUSCREEN)
+		//	{
+		//		//hide menu and show records
+		//		openCharRecord(true);
+		//	}
+		//}
+		// ========================================================
+	}
+	else if (gameState == MENUSCREEN)
+	{
+		if (arg.key == OIS::KC_F1)
+		{
+			toggleState(PLAYING);
 		}
 	}
 
@@ -595,10 +622,6 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 	else if (gameState == MAINSCREEN) {
 		//A button
 		if (button == 0){	
-			//mTrayMgr->hideCursor();
-			//mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER); //going to remove
-			//loadEnv();
-			//setupEnv();	// Brandon killed it
 			toggleState(SETUP);
 		}
 	}
@@ -606,31 +629,37 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 	else if (gameState == MENUSCREEN){
 		//A button test
 		if (button == 0){
-			toggleState(INVENTORY);
+			//toggleState(INVENTORY);
+			//just show inventory and hide others
+			openInventory(true);
 		}
-		if (button == 2){
-			toggleState(CHAR_RECORD);
+		else if (button == 2){
+			//toggleState(CHAR_RECORD);
+			//show record and hide others
+			openCharRecord(true);
 		}
+		// need buttons to toggle back to menu
+		// need buttons prompt exit game window
 		//Select is 6
-		if (button == 6){
+		else if (button == 6){
 			toggleState(PLAYING);
 		}
 
 	}
-	//inventory screen
-	else if (gameState == INVENTORY){
-		//Select
-		if (button == 6){
-			toggleState(MENUSCREEN);
-		}
-	}
-	//Character record screen
-	else if (gameState == CHAR_RECORD){
-		//Select is 6
-		if (button == 6){
-			toggleState(MENUSCREEN);
-		}
-	}
+	////inventory screen
+	//else if (gameState == INVENTORY){
+	//	//Select
+	//	if (button == 6){
+	//		toggleState(MENUSCREEN);
+	//	}
+	//}
+	////Character record screen
+	//else if (gameState == CHAR_RECORD){
+	//	//Select is 6
+	//	if (button == 6){
+	//		toggleState(MENUSCREEN);
+	//	}
+	//}
 	return true;
 }
 
@@ -691,14 +720,22 @@ void GameApplication::createGUI(void)
 	////MyGUI::ButtonPtr button2 = mGUI->createWidget<MyGUI::Button>(
 	//button->setCaption("I'm a GUI Bitch!!!");
 	
+	double wWidth, wHeight;
+	wWidth = mWindow->getWidth();
+	wHeight = mWindow->getHeight();
+
 	// progress bar to track health, update this in addtime
 													// skin				pos							size		alignment			layer
-	healthBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 50, mWindow->getHeight()-50, 150, 50, MyGUI::Align::Default, "Main");
+	healthBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 50, wHeight-50, 150, 50, MyGUI::Align::Default, "Main");
 	
+	// menu window to navigate to exit, inventory, etc
+	pauseMenu = mGUI->createWidget<MyGUI::Window>("Window", wWidth/2, wHeight/3, 100, 100, MyGUI::Align::Center, "Main");
+
 	// set callbacks
 	//button->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
 
 	//button->setVisible(true);
+	pauseMenu->setVisible(false);
 
 	if (gameState == MAINSCREEN){
 			toggleState(SETUP);
@@ -742,27 +779,48 @@ void GameApplication::buttonHit(MyGUI::WidgetPtr _sender)
 }
 
 //open in-game menu screen
-void GameApplication::openMenu(){
+void GameApplication::openMenu(bool visible){
 	//This will be replaced by GUI code
-	std::cout << "This is the main Menu, do this things:" << std::endl;
-	std::cout << "Enter Inventory" << std::endl;
-	std::cout << "Enter Character Record" << std::endl;
-	std::cout << "Return to Game" << std::endl;
+	pauseMenu->setVisible(visible);
+	if (visible)
+	{
+		
+		std::cout << "This is the main Menu, do this things:" << std::endl;
+		std::cout << "Enter Inventory" << std::endl;
+		std::cout << "Enter Character Record" << std::endl;
+		std::cout << "Return to Game" << std::endl;
+	}
+	else
+		std::cout << "close menu" << std::endl;
 }
 
 //open inventory menu
-void GameApplication::openInventory(){
-	std::cout << "Helm: " << playerPointer->getHelm()->getName() << std::endl;
-	std::cout << "Necklace: " << playerPointer->getNeck()->getName() << std::endl;
-	std::cout << "Breastplate: " << playerPointer->getBoobs()->getName() << std::endl;
-	std::cout << "Pants: " << playerPointer->getPants()->getName() << std::endl;
-	std::cout << "Main Hand: " << playerPointer->getWpn()->getName() << std::endl;
-	std::cout << "Off Hand: " << "NULL" << std::endl;
+void GameApplication::openInventory(bool visible){
+	if (visible)
+	{
+		std::cout << "Helm: " << playerPointer->getHelm()->getName() << std::endl;
+		std::cout << "Necklace: " << playerPointer->getNeck()->getName() << std::endl;
+		std::cout << "Breastplate: " << playerPointer->getBoobs()->getName() << std::endl;
+		std::cout << "Pants: " << playerPointer->getPants()->getName() << std::endl;
+		std::cout << "Main Hand: " << playerPointer->getWpn()->getName() << std::endl;
+		std::cout << "Off Hand: " << "NULL" << std::endl;
+	}
+	else
+	{
+		std::cout << "close inventory" << std::endl;
+	}
 }
 
-void GameApplication::openCharRecord(){
-	std::cout << "Player Name: Mat Cauthon" << std::endl;
-	std::cout << "stats: blah blah" << std::endl;
+void GameApplication::openCharRecord(bool visible){
+	if (visible)
+	{
+		std::cout << "Player Name: Mat Cauthon" << std::endl;
+		std::cout << "stats: blah blah" << std::endl;
+	}
+	else
+	{
+		std::cout << "close records" << std::endl;
+	}
 }
 
 void GameApplication::endGame(char condition){

@@ -25,6 +25,7 @@ private:
 
 	// gui stuff decl's
 	MyGUI::ProgressPtr healthBar;		// progress bar to track health
+	MyGUI::WindowPtr pauseMenu;			// window to quit, check records, or inventory
 
 	std::list<Ogre::SceneNode*> wallList;
 	std::list<Ogre::SceneNode*> borderWalls;
@@ -39,9 +40,9 @@ private:
 	void nextLevel();
 
 	//menu code stuff
-	void openMenu();
-	void openInventory();
-	void openCharRecord();
+	void openMenu(bool visible);
+	void openInventory(bool visible);
+	void openCharRecord(bool visible);
 
 	int ghettoSelect;	// what is this?
 
