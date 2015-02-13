@@ -54,7 +54,8 @@ public:
 		PLAYING,
 		MENUSCREEN,
 		INVENTORY,
-		CHAR_RECORD		
+		CHAR_RECORD,
+		DEAD_STATE
 	};	//game states
 
     GameApplication(void);

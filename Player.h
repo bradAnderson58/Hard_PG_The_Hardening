@@ -31,6 +31,8 @@ public:
 	void changeSpeed(double s) { speed = s; }	//change the speed for different animations
 
 	void updateStats();
+	void updateDamDef();
+	void die();
 
 	double getHealthStat() { return healthStat; }
 	double getHealthNow() { return healthNow; }
