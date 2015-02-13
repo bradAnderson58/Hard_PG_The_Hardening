@@ -1,4 +1,5 @@
 #include "GameApplication.h"
+#include "GameController.h"
 #include <fstream>
 #include <sstream>
 #include <map>
@@ -16,7 +17,6 @@ GameApplication::GameApplication(void):
 	gameState = MAINSCREEN;
 	gameOver = false;
 	level = 0;
-	keyW = keyA = keyS = keyD = 0;
 
 }
 //-------------------------------------------------------------------------------------
@@ -30,6 +30,33 @@ GameApplication::~GameApplication(void)
 void GameApplication::createScene(void)
 {
 	//remove
+}
+
+//Use this to make the Game Controller and such
+void GameApplication::createFrameListener(void)
+{
+    
+	gameCont = new GameController(this);
+
+    //Register as a Window listener
+    Ogre::WindowEventUtilities::addWindowEventListener(mWindow, gameCont);
+
+    // These were used to create the original mDetailsPanel - may want to recreate with MyGUI
+	//don't actually need?
+    Ogre::StringVector items;
+    items.push_back("cam.pX");
+    items.push_back("cam.pY");
+    items.push_back("cam.pZ");
+    items.push_back("");
+    items.push_back("cam.oW");
+    items.push_back("cam.oX");
+    items.push_back("cam.oY");
+    items.push_back("cam.oZ");
+    items.push_back("");
+    items.push_back("Filtering");
+    items.push_back("Poly Mode");
+
+    mRoot->addFrameListener(this);  //addFrameListener!
 }
 //////////////////////////////////////////////////////////////////
 // Returns a unique name for loaded objects and agents
@@ -154,7 +181,9 @@ GameApplication::loadEnv()
 					// Use subclasses instead!
 					if (c == 'n') {
 						agent = new Player(this->mSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, this);
-						playerPointer = (Player*) agent;  //you are a yoshimi
+						playerPointer = (Player*) agent;		//access this player
+						gameCont->setPlayer(playerPointer);		//Allow controller access to this player
+
 						agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						playerPointer->setInitPos(playerPointer->getPosition());
 					}else if (c == 'f'){
@@ -343,369 +372,6 @@ GameApplication::toggleState(GameState s)
 	}
 	else
 		std::cout << "Not a valid state" << std::endl;
-}
-
-bool 
-GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplication
-{
-    
-    if (arg.key == OIS::KC_T)   // cycle polygon rendering mode - DELETE?
-    {
-        Ogre::String newVal;
-        Ogre::TextureFilterOptions tfo;
-        unsigned int aniso;
-
-        switch (mDetailsPanel->getParamValue(9).asUTF8()[0])
-        {
-        case 'B':
-            newVal = "Trilinear";
-            tfo = Ogre::TFO_TRILINEAR;
-            aniso = 1;
-            break;
-        case 'T':
-            newVal = "Anisotropic";
-            tfo = Ogre::TFO_ANISOTROPIC;
-            aniso = 8;
-            break;
-        case 'A':
-            newVal = "None";
-            tfo = Ogre::TFO_NONE;
-            aniso = 1;
-            break;
-        default:
-            newVal = "Bilinear";
-            tfo = Ogre::TFO_BILINEAR;
-            aniso = 1;
-        }
-        Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(tfo);
-        Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(aniso);
-        mDetailsPanel->setParamValue(9, newVal);
-    }
-    else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode - DELETE?
-    {
-        Ogre::String newVal;
-        Ogre::PolygonMode pm;
-
-        switch (mCamera->getPolygonMode())
-        {
-        case Ogre::PM_SOLID:
-            newVal = "Wireframe";
-            pm = Ogre::PM_WIREFRAME;
-            break;
-        case Ogre::PM_WIREFRAME:
-            newVal = "Points";
-            pm = Ogre::PM_POINTS;
-            break;
-        default:
-            newVal = "Solid";
-            pm = Ogre::PM_SOLID;
-        }
-
-        mCamera->setPolygonMode(pm);
-        mDetailsPanel->setParamValue(10, newVal);
-    }
-    else if(arg.key == OIS::KC_F5)   // refresh all textures
-    {
-        Ogre::TextureManager::getSingleton().reloadAll();
-    }
-    else if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
-    {
-        mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
-    }
-    else if (arg.key == OIS::KC_ESCAPE)
-    {
-        mShutDown = true;
-    }
-
-	else if (arg.key == OIS::KC_SPACE)
-	{
-		if(!playerPointer->doingStuff){
-			playerPointer->changeSpeed(.6);  //jump should be slower
-			playerPointer->buttonAnimation(arg.key, true);
-			playerPointer->doingStuff = true;
-		}
-	}
-	else if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || OIS::KC_D) {
-		
-		if (gameState == PLAYING){
-			keyHandler(arg.key, true);
-		}
-	
-	}
-	//Some wicked attacks - template for spellcasting possibly
-	else if (arg.key == OIS::KC_Q){
-		if(!playerPointer->doingStuff){
-			playerPointer->buttonAnimation(arg.key, true);
-			playerPointer->doingStuff = true;
-		}
-	}
-
-	MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), arg.text);
-
-    return true;
-}
-
-bool GameApplication::keyReleased( const OIS::KeyEvent &arg )
-{
-	//Set the flag to false for whichever key is no longer pressed
-	if (gameState == PLAYING){
-		if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || arg.key == OIS::KC_D){
-			keyHandler(arg.key, false);
-		}
-
-		// keys for testing menus without xbox controller ==========
-		else if (arg.key == OIS::KC_F1)
-		{
-			toggleState(MENUSCREEN);
-		}
-		//else if (arg.key == OIS::KC_F2)
-		//{
-		//	if (gameState == MENUSCREEN)
-		//	{
-		//		//hide menu and show inventory
-		//		openInventory(true);
-		//	}
-		//}
-		//else if (arg.key == OIS::KC_F3)
-		//{
-		//	if (gameState == MENUSCREEN)
-		//	{
-		//		//hide menu and show records
-		//		openCharRecord(true);
-		//	}
-		//}
-		// ========================================================
-	}
-	else if (gameState == MENUSCREEN)
-	{
-		if (arg.key == OIS::KC_F1)
-		{
-			toggleState(PLAYING);
-		}
-	}
-
-	//myGUI test
-	MyGUI::InputManager::getInstance().injectKeyRelease(MyGUI::KeyCode::Enum(arg.key));
-
-    return true;
-}
-
-void GameApplication::keyHandler(OIS::KeyCode keyd, bool down){
-	double vx, vy, rots;
-	vx = vy = rots = 0;
-
-	//update flags based on which button was just pressed
-	if (keyd == OIS::KC_W) keyW = (down) ? true : false;
-	else if (keyd == OIS::KC_S) keyS = (down) ? true : false;
-	else if (keyd == OIS::KC_A) keyA = (down) ? true : false;
-	else if (keyd == OIS::KC_D) keyD = (down) ? true : false;
-
-	//if no keys are down, dont move the player
-	if (!keyW && !keyA && !keyS && !keyD) playerPointer->setMovement(false);
-	
-	//set player rotation based on keys.  Compatible with Xbox code
-	else{
-
-		if (keyW) vy = 1.0;
-		if (keyA) vx = -1.0;
-		if (keyS) vy = -1.0;
-		if (keyD) vx = 1.0;
-
-		rots = std::atan2(vy, vx);
-		playerPointer->playerRot(rots);
-		playerPointer->setMovement(true);
-		playerPointer->setVelocity(.3);
-	}
-}
-
-bool GameApplication::mouseMoved( const OIS::MouseEvent &arg )
-{
-	if (gameState == PLAYING){
-		//rotate the camera
-		playerPointer->rotationCode(arg);
-	}
-	
-	MyGUI::InputManager::getInstance().injectMouseMove(arg.state.X.abs, arg.state.Y.abs, arg.state.Z.abs);
-	
-	return true;
-}
-
-bool GameApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
-{
-	// attack using left and right mouse buttons once the game starts
-	if (gameState == PLAYING){
-		if(id == OIS::MB_Left && !playerPointer->doingStuff){
-			playerPointer->changeSpeed(1);
-			playerPointer->buttonAnimation(id, true);
-			playerPointer->doingStuff = true;
-			playerPointer->checkHits(); //This may change
-		}
-		else if (id == OIS::MB_Right && !playerPointer->doingStuff){
-			playerPointer->buttonAnimation(id, true);
-			playerPointer->doingStuff = true;
-			playerPointer->setBlocking(true);  //make
-		}
-	}
-	
-	//MyGUI
-	MyGUI::InputManager::getInstance().injectMousePress(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
-
-	//To prevent breakage
-	if (id == OIS::MB_Right) bRMouseDown = false;
-	else if (id == OIS::MB_Left) bLMouseDown = false;
-    //if (mTrayMgr->injectMouseDown(arg, id)) return true;
-    return true;
-}
-
-bool GameApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
-{
-	if (id == OIS::MB_Right){
-		playerPointer->doingStuff = false;
-		playerPointer->setBlocking(false);
-		playerPointer->buttonAnimation(id, false);
-	}
-	//MyGUI
-	MyGUI::InputManager::getInstance().injectMouseRelease(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
-	
-	//To prevent breakage
-	if (id == OIS::MB_Right) bRMouseDown = false;
-	else if (id == OIS::MB_Left) bLMouseDown = false;
-	//if (mTrayMgr->injectMouseUp(arg, id)) return true;
-    return true;
-}
-
-//Xbox Controller button functions
-bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
-
-	if (gameState == PLAYING){
-		//A button is 0
-		if (button == 0){
-			if (!playerPointer->doingStuff){
-				playerPointer->changeSpeed(.8);
-				playerPointer->buttonAnimation(OIS::KC_SPACE, true);
-				playerPointer->doingStuff = true;
-			}
-		}
-		//X button is 2
-		else if (button == 2){
-			if(!playerPointer->doingStuff){
-				playerPointer->changeSpeed(1);
-				playerPointer->buttonAnimation(OIS::MB_Left, true);
-				playerPointer->doingStuff = true;
-				playerPointer->checkHits();
-			}
-		}
-		//B button is 1
-		else if (button == 1){
-			if(!playerPointer->doingStuff){
-				playerPointer->buttonAnimation(OIS::MB_Right, true);
-				playerPointer->doingStuff = true;
-				playerPointer->setBlocking(true);
-			}
-		}
-		//Y button is 3
-		else if (button == 3){
-			//This is just Hari-Kari code for testing purposes
-			playerPointer->getHurt(5);
-		}
-		//Start button is 7
-		else if (button == 7){
-			toggleState(MENUSCREEN);
-		}
-
-	}
-	//Pregame main menu screen
-	else if (gameState == MAINSCREEN) {
-		//A button
-		if (button == 0){	
-			toggleState(SETUP);
-		}
-	}
-	//in-game options menu
-	else if (gameState == MENUSCREEN){
-		//A button test
-		if (button == 0){
-			//toggleState(INVENTORY);
-			//just show inventory and hide others
-			openInventory(true);
-		}
-		else if (button == 2){
-			//toggleState(CHAR_RECORD);
-			//show record and hide others
-			openCharRecord(true);
-		}
-		// need buttons to toggle back to menu
-		// need buttons prompt exit game window
-		//Select is 6
-		else if (button == 6){
-			toggleState(PLAYING);
-		}
-
-	}
-	////inventory screen
-	//else if (gameState == INVENTORY){
-	//	//Select
-	//	if (button == 6){
-	//		toggleState(MENUSCREEN);
-	//	}
-	//}
-	////Character record screen
-	//else if (gameState == CHAR_RECORD){
-	//	//Select is 6
-	//	if (button == 6){
-	//		toggleState(MENUSCREEN);
-	//	}
-	//}
-	return true;
-}
-
-bool GameApplication::buttonReleased( const OIS::JoyStickEvent &arg, int button ){
-	//Blocking codes
-	if (button == 1){
-		playerPointer->doingStuff = false;
-		playerPointer->setBlocking(false);
-		playerPointer->buttonAnimation(OIS::MB_Right, false);
-	}
-	return true;
-}
-
-bool GameApplication::axisMoved( const OIS::JoyStickEvent &arg, int axis){
-	if (gameState == PLAYING){
-
-		//first normalize
-		//left joystick
-		double xValLeft =  ((double)(arg.state.mAxes[1].abs)) / 32800.0; //x axis
-		double yValLeft =  ((double)(arg.state.mAxes[0].abs)) / 32800.0; //y axis
-
-		//right joystick
-		double xValRight =  ((double)(arg.state.mAxes[3].abs)) / 32800.0; //x axis
-		double yValRight =  ((double)(arg.state.mAxes[2].abs)) / 32800.0; //y axis
-
-		//Now trig
-		double radLeft = std::atan2(-yValLeft, xValLeft);		//left angle in radians
-		double hypotLeft =	std::sqrt(std::pow(xValLeft, 2) + std::pow(yValLeft, 2));	//left hypotenuse
-
-		double radRight = std::atan2(-yValRight, xValRight);	//right angle in radians
-		double hypotRight =	std::sqrt(std::pow(xValRight, 2) + std::pow(yValRight, 2));	//right hypotenuse
-			
-		//Rotate player to direction of left stick
-		if (hypotLeft >= .2){ //avoid hypersensitivity
-			playerPointer->playerRot(radLeft);
-			playerPointer->setMovement(true);
-			playerPointer->setVelocity(hypotLeft * .23);
-		}else{
-			playerPointer->setMovement(false);
-		}
-		
-		//Rotate camera with right stick
-		if (hypotRight >= .3){
-			if (xValRight > 0) playerPointer->cameraRot(-hypotRight);
-			else if (xValRight < 0) playerPointer->cameraRot(hypotRight);
-		}else{
-			playerPointer->cameraRot(0);
-		}
-	}
-	return true;
 }
 
 void GameApplication::createGUI(void)

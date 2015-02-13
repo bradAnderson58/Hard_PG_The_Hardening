@@ -77,17 +77,6 @@ Agent::setupAnimations()
 }
 
 void 
-Agent::setBaseAnimation(AnimID id, bool reset)
-{
-	//overwritten in subclasses as necessary
-}
-	
-void Agent::setTopAnimation(AnimID id, bool reset)
-{
-	//overwritten in subclasses as necessary
-}
-
-void 
 Agent::updateAnimations(Ogre::Real deltaTime)
 {
 	//DELETE?

@@ -39,11 +39,6 @@ private:
 	void restartLevel();
 	void nextLevel();
 
-	//menu code stuff
-	void openMenu(bool visible);
-	void openInventory(bool visible);
-	void openCharRecord(bool visible);
-
 	int ghettoSelect;	// what is this?
 
 public:	
@@ -60,7 +55,12 @@ public:
 	};	//game states
 
     GameApplication(void);
-    virtual ~GameApplication(void); 
+    virtual ~GameApplication(void);
+
+	//menu code stuff - accessed from GameController
+	void openMenu(bool visible);
+	void openInventory(bool visible);
+	void openCharRecord(bool visible);
 
 	float getXmax() { return xMax; }
 	float getZmax() { return zMax; }
@@ -77,27 +77,8 @@ public:
 
 	void addTime(Ogre::Real deltaTime);		// update the game state
 
-	//////////////////////////////////////////////////////////////////////////
-	// moved from base application
-	// OIS::KeyListener
-    bool keyPressed( const OIS::KeyEvent &arg );
-    bool keyReleased( const OIS::KeyEvent &arg );
-	void keyHandler(OIS::KeyCode keyd, bool down);
-	bool keyW;
-	bool keyA;
-	bool keyS;
-	bool keyD;
-
-	//OIS::JoyStickListener
-	bool buttonPressed( const OIS::JoyStickEvent &arg, int button);
-	bool buttonReleased( const OIS::JoyStickEvent &arg, int button);
-	bool axisMoved( const OIS::JoyStickEvent &arg, int axis);
-    
-	// OIS::MouseListener
-    bool mouseMoved( const OIS::MouseEvent &arg );
-    bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
-    bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
-	////////////////////////////////////////////////////////////////////////////
+	void setShutDown(bool s){ mShutDown = s; }		//to shutdown the game
+	GameState getGameState(){ return gameState; }	//To get the current GameState
 
 	bool bLMouseDown, bRMouseDown;		//true if mouse buttons are held down
 	Ogre::SceneNode *mCurrentObject;	//pointer to our currently selected object
@@ -118,6 +99,8 @@ protected:
     virtual void createScene(void);
 
 	virtual void createGUI(void);  //for gui's
+
+	virtual void createFrameListener(void);  //for Controller
 
 	void buttonHit(MyGUI::WidgetPtr _sender);
 

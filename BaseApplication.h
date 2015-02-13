@@ -37,11 +37,16 @@ This source file is part of the
 #include <MyGUI.h>
 #include <MyGUI_OgrePlatform.h>
 
-class BaseApplication : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener, public OIS::JoyStickListener
+//#include "GameController.h"
+class GameController;  //Why error on line 95?
+
+class BaseApplication : public Ogre::FrameListener, OgreBites::SdkTrayListener
 {
 public:
     BaseApplication(void);
     virtual ~BaseApplication(void);
+
+	Ogre::RenderWindow* getWindow(){ return mWindow; }  //give my window to the controller (or whoever)
 
     virtual void go(void);
 
@@ -65,12 +70,6 @@ protected:
     // Ogre::FrameListener
     virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
-    // Ogre::WindowEventListener
-    //Adjust mouse clipping area
-    virtual void windowResized(Ogre::RenderWindow* rw);
-    //Unattach OIS before window shutdown (very important under Linux)
-    virtual void windowClosed(Ogre::RenderWindow* rw);
-
     Ogre::Root *mRoot;
     Ogre::Camera* mCamera;
     Ogre::SceneManager* mSceneMgr;
@@ -89,19 +88,12 @@ protected:
     OgreBites::SdkTrayManager* mTrayMgr;
     OgreBites::SdkCameraMan* mCameraMan;       // basic camera controller
     OgreBites::ParamsPanel* mDetailsPanel;     // sample details panel
-   
-	//Fix for 1.9:
-	OgreBites::InputContext mInputContext;
 	
 	bool mCursorWasVisible;                    // was cursor visible before dialog appeared
     bool mShutDown;
 
     //OIS Input devices
-    OIS::InputManager* mInputManager;
-    OIS::Mouse*    mMouse;
-    OIS::Keyboard* mKeyboard;
-	OIS::JoyStick* mJoy;
-
+	GameController* gameCont;  //The controller for user interactions
 	
 	Ogre::RaySceneQuery* mRayScnQuery;	//pointer to our ray scene query - not being used anymore, DELETE?
 };

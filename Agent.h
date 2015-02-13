@@ -1,3 +1,6 @@
+#ifndef __Agent_h_
+#define __Agent_h_
+
 #include "BaseApplication.h"
 #include <deque>
 
@@ -51,8 +54,8 @@ protected:
 	};*/
 
 	Ogre::AnimationState* mAnims[21];		// master animation list - CHANGE if need more than 21 animations
-	AnimID mBaseAnimID;						// current base (full- or lower-body) animation - if needed
-	AnimID mTopAnimID;						// current top (upper-body) animation
+	//AnimID mBaseAnimID;						// current base (full- or lower-body) animation - if needed
+	//AnimID mTopAnimID;						// current top (upper-body) animation
 	bool mFadingIn[20];						// which animations are fading in
 	bool mFadingOut[20];					// which animations are fading out
 	Ogre::Real mTimer;						// general timer to see how long animations have been playing
@@ -84,8 +87,10 @@ public:
 
 	virtual void update(Ogre::Real deltaTime);		// update the agent
 	
-	void setBaseAnimation(AnimID id, bool reset = false);	// choose animation to display
-	void setTopAnimation(AnimID id, bool reset = false);
+	//void setBaseAnimation(AnimID id, bool reset = false);	// choose animation to display
+	//void setTopAnimation(AnimID id, bool reset = false);
 
 	void setApp(GameApplication *a) { app = a; }  //I need to access some stuff in the gameApplication from the agent
 };
+
+#endif

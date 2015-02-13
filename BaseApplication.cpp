@@ -15,6 +15,7 @@ This source file is part of the
 -----------------------------------------------------------------------------
 */
 #include "BaseApplication.h"
+#include "GameController.h"
 
 //-------------------------------------------------------------------------------------
 BaseApplication::BaseApplication(void)
@@ -29,10 +30,6 @@ BaseApplication::BaseApplication(void)
     mDetailsPanel(0),
     mCursorWasVisible(false),
     mShutDown(false),
-    mInputManager(0),
-    mMouse(0),
-    mKeyboard(0),
-	mJoy(0),
 	mOverlaySystem(0)
 {
 }
@@ -54,8 +51,8 @@ BaseApplication::~BaseApplication(void)
 	
 
     //Remove ourself as a Window listener
-    Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
-    windowClosed(mWindow);
+	gameCont->removeSelf();
+    
     delete mRoot;
 }
 
@@ -102,61 +99,6 @@ void BaseApplication::createCamera(void)
     mCameraMan = new OgreBites::SdkCameraMan(mCamera);   // create a default camera controller
 }
 //-------------------------------------------------------------------------------------
-void BaseApplication::createFrameListener(void)
-{
-    Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
-    OIS::ParamList pl;
-    size_t windowHnd = 0;
-    std::ostringstream windowHndStr;
-
-    mWindow->getCustomAttribute("WINDOW", &windowHnd);
-    windowHndStr << windowHnd;
-    pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
-
-    mInputManager = OIS::InputManager::createInputSystem( pl );
-
-    mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, true ));
-    mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, true ));
-
-	//If the controller is not plugged in, mJoy will be set to 0
-	try {
-		mJoy = static_cast<OIS::JoyStick*>(mInputManager->createInputObject( OIS::OISJoyStick, true ));
-		mJoy->setEventCallback(this);
-	}
-	catch(...) {
-		mJoy = 0;
-	}
-
-	//Fix for 1.9
-	mInputContext.mKeyboard = mKeyboard;
-    mInputContext.mMouse = mMouse;
-
-    mMouse->setEventCallback(this);
-    mKeyboard->setEventCallback(this);
-
-    //Set initial mouse clipping size
-    windowResized(mWindow);
-
-    //Register as a Window listener
-    Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
-
-    // These were used to create the original mDetailsPanel - may want to recreate with MyGUI
-	//don't actually need?
-    Ogre::StringVector items;
-    items.push_back("cam.pX");
-    items.push_back("cam.pY");
-    items.push_back("cam.pZ");
-    items.push_back("");
-    items.push_back("cam.oW");
-    items.push_back("cam.oX");
-    items.push_back("cam.oY");
-    items.push_back("cam.oZ");
-    items.push_back("");
-    items.push_back("Filtering");
-    items.push_back("Poly Mode");
-
-    mRoot->addFrameListener(this);
-}
 //-------------------------------------------------------------------------------------
 void BaseApplication::destroyScene(void)
 {
@@ -280,42 +222,15 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
         return false;
 
 	//Fix for 1.9
-	//Need to capture/update each device
-    mKeyboard->capture();
-    mMouse->capture();
-	if (mJoy != 0) mJoy->capture();
+	//Need to capture/update input devices
+	gameCont->captureAll();
 
 	this->addTime(evt.timeSinceLastFrame);
 
     return true;
 }
 
-//Adjust mouse clipping area
-void BaseApplication::windowResized(Ogre::RenderWindow* rw)
-{
-    unsigned int width, height, depth;
-    int left, top;
-    rw->getMetrics(width, height, depth, left, top);
-
-    const OIS::MouseState &ms = mMouse->getMouseState();
-    ms.width = width;
-    ms.height = height;
+void BaseApplication::createFrameListener(void){
+	mRoot->addFrameListener(this);  //addFrameListener!
 }
 
-//Unattach OIS before window shutdown (very important under Linux)
-void BaseApplication::windowClosed(Ogre::RenderWindow* rw)
-{
-    //Only close for window that created OIS (the main window in these demos)
-    if( rw == mWindow )
-    {
-        if( mInputManager )
-        {
-            mInputManager->destroyInputObject( mMouse );
-            mInputManager->destroyInputObject( mKeyboard );
-			mInputManager->destroyInputObject( mJoy );
-
-            OIS::InputManager::destroyInputSystem(mInputManager);
-            mInputManager = 0;
-        }
-    }
-}
