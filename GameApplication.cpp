@@ -16,7 +16,6 @@ GameApplication::GameApplication(void):
 	gameState = MAINSCREEN;
 	gameOver = false;
 	level = 0;
-	ghettoSelect = 0; //probably take this out later
 	keyW = keyA = keyS = keyD = 0;
 
 }
@@ -30,7 +29,7 @@ GameApplication::~GameApplication(void)
 //-------------------------------------------------------------------------------------
 void GameApplication::createScene(void)
 {
-
+	//remove
 }
 //////////////////////////////////////////////////////////////////
 // Returns a unique name for loaded objects and agents
@@ -74,7 +73,7 @@ GameApplication::loadEnv()
 	path+= "level001.txt"; //if txt file is in the same directory as cpp file
 	inputfile.open(path);
 
-	//inputfile.open("D:/CS425-2012/Lecture 8/GameEngine-loadLevel/level001.txt"); //explicit path!!!
+	//inputfile.open("D:/CS425-2012/Lecture 8/GameEngine-loadLevel/level001.txt"); //explicit path in Release?
 	if (!inputfile.is_open()) // oops. there was a problem opening the file
 	{
 		cout << "ERROR, FILE COULD NOT BE OPENED" << std::endl;	// Hmm. No output?
@@ -170,9 +169,7 @@ GameApplication::loadEnv()
 				{
 					if (rent->filename == "tudorhouse.mesh"){
 						String work = getNewName();
-						//temp = grid->loadObject(work, rent->filename, i, rent->y, j, rent->scale);
-						//housePointer = mSceneMgr->getSceneNode(work);
-
+						
 						Entity *ent = mSceneMgr->createEntity(work, rent->filename);
 						
 						//This house code is no longer needed, but will break stuff if taken out - DELETE
@@ -287,11 +284,13 @@ void
 GameApplication::addTime(Ogre::Real deltaTime)
 {
 	if (!gameOver){
-		if (gameState == PLAYING) {
+		if (gameState == PLAYING || gameState == DEAD_STATE) {
+			if(gameState == DEAD_STATE) std::cout << "WTF" << std::endl;
 			playerPointer->update(deltaTime); //Yoshimi has a different update function
 			for (NPC* guy : NPClist){
 				guy->update(deltaTime);
 			}
+			healthBar->setProgressPosition(playerPointer->getHealthNow()); //American Association of Highway Officials, Litigators, and Engineers 
 		}
 	}
 }
@@ -341,6 +340,11 @@ GameApplication::toggleState(GameState s)
 		gameState = s;
 		openCharRecord();
 	}
+	else if (s == DEAD_STATE)
+	{
+		gameState = s;
+		playerPointer->die();
+	}
 	else
 		std::cout << "Not a valid state" << std::endl;
 }
@@ -348,26 +352,8 @@ GameApplication::toggleState(GameState s)
 bool 
 GameApplication::keyPressed( const OIS::KeyEvent &arg ) // Moved from BaseApplication
 {
-    //if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
-
-    if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats - leave for now
-    {
-        //mTrayMgr->toggleAdvancedFrameStats();
-    }
-    else if (arg.key == OIS::KC_G)   // toggle visibility of even rarer debugging details - leave for now
-    {
-        /*if (mDetailsPanel->getTrayLocation() == OgreBites::TL_NONE)
-        {
-            mTrayMgr->moveWidgetToTray(mDetailsPanel, OgreBites::TL_TOPRIGHT, 0);
-            mDetailsPanel->show();
-        }
-        else
-        {
-            mTrayMgr->removeWidgetFromTray(mDetailsPanel);
-            mDetailsPanel->hide();
-        }*/
-    }
-    else if (arg.key == OIS::KC_T)   // cycle polygon rendering mode - DELETE?
+    
+    if (arg.key == OIS::KC_T)   // cycle polygon rendering mode - DELETE?
     {
         Ogre::String newVal;
         Ogre::TextureFilterOptions tfo;
@@ -512,8 +498,6 @@ bool GameApplication::mouseMoved( const OIS::MouseEvent &arg )
 		playerPointer->rotationCode(arg);
 	}
 	
-    //if (mTrayMgr->injectMouseMove(arg)) return true; //DELETE?
-    
 	MyGUI::InputManager::getInstance().injectMouseMove(arg.state.X.abs, arg.state.Y.abs, arg.state.Z.abs);
 	
 	return true;
@@ -536,7 +520,7 @@ bool GameApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButton
 		}
 	}
 	
-	//MyGUI test
+	//MyGUI
 	MyGUI::InputManager::getInstance().injectMousePress(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
 
 	//To prevent breakage
@@ -553,7 +537,7 @@ bool GameApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButto
 		playerPointer->setBlocking(false);
 		playerPointer->buttonAnimation(id, false);
 	}
-	//MyGUI test
+	//MyGUI
 	MyGUI::InputManager::getInstance().injectMouseRelease(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
 	
 	//To prevent breakage
@@ -565,7 +549,6 @@ bool GameApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButto
 
 //Xbox Controller button functions
 bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
-	std::cout << button << std::endl;
 
 	if (gameState == PLAYING){
 		//A button is 0
@@ -585,6 +568,19 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 				playerPointer->checkHits();
 			}
 		}
+		//B button is 1
+		else if (button == 1){
+			if(!playerPointer->doingStuff){
+				playerPointer->buttonAnimation(OIS::MB_Right, true);
+				playerPointer->doingStuff = true;
+				playerPointer->setBlocking(true);
+			}
+		}
+		//Y button is 3
+		else if (button == 3){
+			//This is just Hari-Kari code for testing purposes
+			playerPointer->getHurt(5);
+		}
 		//Start button is 7
 		else if (button == 7){
 			toggleState(MENUSCREEN);
@@ -595,10 +591,6 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 	else if (gameState == MAINSCREEN) {
 		//A button
 		if (button == 0){	
-			//mTrayMgr->hideCursor();
-			//mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER); //going to remove
-			//loadEnv();
-			//setupEnv();	// Brandon killed it
 			toggleState(SETUP);
 		}
 	}
@@ -635,7 +627,12 @@ bool GameApplication::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 }
 
 bool GameApplication::buttonReleased( const OIS::JoyStickEvent &arg, int button ){
-	//Some code will be here eventually
+	//Blocking codes
+	if (button == 1){
+		playerPointer->doingStuff = false;
+		playerPointer->setBlocking(false);
+		playerPointer->buttonAnimation(OIS::MB_Right, false);
+	}
 	return true;
 }
 
@@ -684,61 +681,21 @@ void GameApplication::createGUI(void)
 	mPlatform = new MyGUI::OgrePlatform();
 	mPlatform->initialise(mWindow, mSceneMgr); // mWindow is Ogre::RenderWindow*, mSceneManager is Ogre::SceneManager*
 	mGUI = new MyGUI::Gui();
-	mGUI->initialise();  //don't intialize until after resources have been loaded*/
-
-	// now MyGUI widgets needed for menu interface and HUD
-	//MyGUI::ButtonPtr button = mGUI->createWidget<MyGUI::Button>("Button", 50, 50, 300, 50, MyGUI::Align::Default, "Main");
-	////MyGUI::ButtonPtr button2 = mGUI->createWidget<MyGUI::Button>(
-	//button->setCaption("I'm a GUI Bitch!!!");
+	mGUI->initialise();  //don't intialize until after resources have been loaded
 	
 	// progress bar to track health, update this in addtime
 													// skin				pos							size		alignment			layer
 	healthBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 50, mWindow->getHeight()-50, 150, 50, MyGUI::Align::Default, "Main");
-	
-	// set callbacks
-	//button->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
-
-	//button->setVisible(true);
-
+	mGUI->hidePointer();
 	if (gameState == MAINSCREEN){
 			toggleState(SETUP);
 	}
-	/*
-	if (mTrayMgr == NULL) return;
-	using namespace OgreBites; 
 	
-	//Set up our GUI buttons-- 
-
-	if (gameState == MAINSCREEN)
-	{
-		OgreBites::Label *title = mTrayMgr->createLabel(TL_CENTER, "Title", "Hard PG: The Hardening", 500.0f);
-		mTrayMgr->createSeparator(TL_CENTER,"sep", 500.0f);
-	
-		cont = mTrayMgr->createButton(TL_CENTER, "ClickMe", "Press A", 200.0);
-		mTrayMgr->buttonHit(cont);
-	}
-
-	// else create other GUI elements based on state?
-	// probably just need a if gamestate == SETUP
-	// build all inventory, menu, and HUD GUI elements
-	else if (gameState == SETUP)
-	{
-
-	}
-
-	////////////////////////////////////////////////////////////////////////////////*/
 }
 
 void GameApplication::buttonHit(MyGUI::WidgetPtr _sender)
 {
 	std::cout << "I'm a MyGUI button!" << std::endl;
-	/*if (b->getName() == "ClickMe")
-	{
-		//Delete start GUI and start game
-		if (gameState == MAINSCREEN){
-			toggleState(SETUP);
-		}
-	}*/
 }
 
 //open in-game menu screen

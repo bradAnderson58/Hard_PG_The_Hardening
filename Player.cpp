@@ -90,12 +90,18 @@ void Player::updateStats(){
 								// if changing gear calls this, than adjust this.
 
 	//This is what my damage or my defense is
+	updateDamDef();
+}
+//This is what my damage or my defense is
+//Player will probably equip more frequently than level up
+void Player::updateDamDef(){
 	mDamage = (equippedWpn != NULL) ? damageStat + equippedWpn->getStat(UsableItems::DAMAGE) : damageStat;
 	mDefense =	defenseStat;
 	if (equippedHelm != NULL) mDefense += equippedHelm->getStat(UsableItems::DEFENSE);
 	if (equippedBoobs != NULL) mDefense += equippedBoobs->getStat(UsableItems::DEFENSE);
 	if (equippedPants != NULL) mDefense += equippedPants->getStat(UsableItems::DEFENSE);
 	if (equippedNeck != NULL) mDefense += equippedNeck->getStat(UsableItems::DEFENSE);
+
 }
 
 void Player::update(Ogre::Real deltaTime){
@@ -227,7 +233,7 @@ void Player::updateAnimations(Ogre::Real deltaTime){
 	//If Yoshimi has an active animation, call the update method
 	if (playerAnim != ANIM_NONE){
 		mAnims[playerAnim]->addTime(deltaTime * speed);
-		if (mAnims[playerAnim]->hasEnded() && playerAnim != BLOCK){
+		if (mAnims[playerAnim]->hasEnded() && playerAnim != BLOCK && playerAnim != DEATH_ONE){
 			doingStuff = false;   //no longer doing stuff
 			speed = 2;
 		}
@@ -361,15 +367,21 @@ void Player::dealDamage(NPC *enemy){
 
 //damage done to the player
 void Player::getHurt(int damage){
-	
+	int temp = mDefense;
 	//blocking adds 1 defense plus whatever defense the shield provides if equipped
 	if (isBlocking){
-		mDefense += (equippedShield != NULL) ? equippedShield->getStat(UsableItems::DEFENSE) + 1 : 1;
+		temp += (equippedShield != NULL) ? equippedShield->getStat(UsableItems::DEFENSE) + 1 : 1;
 	}
 
 	//you loose health equal to the attackers damage minus your defense
 	//if your defense is higher than the enemies damage, you take no damage?
-	healthNow -= ((damage - mDefense) >= 0) ? damage - mDefense : 0;
+	healthNow -= ((damage - temp) >= 0) ? damage - temp : 0;
+	if (healthNow <= 0){
+		healthNow = 0;
+		app->toggleState(GameApplication::DEAD_STATE);
+	}
+	std::cout << healthNow << std::endl;
+
 }
 
 //Expand to cover collisions with all NPCs
@@ -389,4 +401,9 @@ void Player::restart(){
 	mBodyNode->yaw(Ogre::Radian(M_PI));
 	fForward = false;  //starts by not moving
 	doingStuff = false;  //starts not doing anything
+}
+
+void Player::die(){
+	setAnimation(DEATH_ONE);
+	doingStuff = true;
 }
