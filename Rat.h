@@ -43,6 +43,8 @@ private:
 	void updateAnimations(Ogre::Real deltaTime);			// update the animation frame
 	void setAnimation(AnimID id, bool reset = false);
 
+
+	double wanderAngle;
 	void attackPlayer(Player* mainPlayer);
 	void attack(NPC* otherGuys);
 	void interact();

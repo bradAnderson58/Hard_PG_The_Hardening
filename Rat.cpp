@@ -1,6 +1,12 @@
 #include "Rat.h"
 #include "GameApplication.h"
+#define _USE_MATH_DEFINES 
+#include <math.h>
 
+#define CIRCLE_DIST 5;
+#define CIRCLE_RAD 10;
+#define ANGLE_CHANGE .1;
+#define RAT_SPEED .1;
 
 Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::GoodBad t, Rat::RatStates s):
 	NPC(SceneManager, name, filename, height, scale, a, l, t)
@@ -10,10 +16,14 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	mVisionEntity->setMaterialName("Examples/testing");
 	mVisionNode->setScale(.4,.02,.1);
 	mVisionNode->attachObject(mVisionEntity);
-
+	mVisionNode->showBoundingBox(true);
 	mVisionNode->setPosition(mBodyNode->getPosition()[0]-20, mBodyNode->getPosition()[1], mBodyNode->getPosition()[2]);
-	mVisionNode->setVisible(false);
+	//mVisionNode->setVisible(false);
 
+
+	mBodyNode->yaw(Ogre::Degree(-90.0f));	//rotate so fish faces the right direction	mVisionNode = mModelNode->createChildSceneNode();
+	mBodyNode->setPosition(mBodyNode->getPosition()[0], 0, mBodyNode->getPosition()[2]);
+	wanderAngle = 0;
 	state = s;
 	defense = level * 1;
 	setupAnimations();
@@ -26,13 +36,22 @@ Rat::~Rat(void)
 
 void Rat::update(Ogre::Real deltaTime){
 	if (state == GUARD){
-		
+		mDirection = Ogre::Vector3::ZERO;
+		if (checkInFront()){
+			state = SEEK;
+		}
 	}
 	else if (state == WANDER){
-
+		wander();
+		if (checkInFront()){
+			state = SEEK;
+		}
 	}
 	else if (state == FLEE){
-
+		flee();
+	}
+	else if (state == SEEK){
+		seek();
 	}
 	else if (state == DEAD){
 		state = NONE;
@@ -55,7 +74,36 @@ void Rat::update(Ogre::Real deltaTime){
 		mTimer = 0;
 
 		//check wall issues
-		//checkBoundaryCollision();     
+		//checkBoundaryCollision();  
+		float xBound = (app->getXmax() * 10) - 5;
+		float zBound = (app->getZmax() * 10) - 5;
+		Ogre::Vector3 myPos = mBodyNode->getPosition();
+		Ogre::Vector3 house = app->getHousePointer()->getPosition();
+		house.y = 0;  //to prevent crazies
+
+		if (myPos.x <= -xBound){
+			//hit bounds in x direction
+			mBodyNode->setPosition(-xBound + 2, myPos.y, myPos.z);
+			mDirection.x = -0;
+			wanderAngle -= M_PI;
+		}else if ( myPos.x >= xBound){
+	
+			mBodyNode->setPosition(xBound - 2, myPos.y, myPos.z);
+			mDirection.x = 0;
+			wanderAngle -= M_PI;
+		}
+		if (myPos.z <= -zBound){
+			//hit bounds in z direction
+			mBodyNode->setPosition( myPos.x, myPos.y, -zBound + 2);
+			mDirection.z = 0;
+			wanderAngle -= M_PI;
+			
+		}else if (myPos.z >= zBound){
+			
+			mBodyNode->setPosition( myPos.x, myPos.y, zBound - 2);
+			mDirection.z = 0;
+			wanderAngle -= M_PI;
+		}
 
 		//always rotating
 		Ogre::Vector3 src = mBodyNode->getOrientation() * Ogre::Vector3::UNIT_X;//rotate for first location
@@ -193,41 +241,48 @@ void Rat::checkHit(){
 }
 
 bool Rat::checkInFront(){
-	return false;
+	Ogre::AxisAlignedBox aRange = mVisionEntity->getWorldBoundingBox();			//get ratVisionBox to see if player is visible
+	Ogre::AxisAlignedBox rRange = app->getPlayerPointer()->getBoundingBox();	//get the players bounding box
+	return aRange.intersects(rRange);											//return true if the bounding boxes intersect
 }
 
 void Rat::wander(){
 	Ogre::Vector3 circleCenter = Ogre::Vector3::ZERO;
 	circleCenter = mDirection;
-	//circleCenter.normalise();
-	//circleCenter.scaleBy(Circle_Distance);
-	Ogre::Vector3 displacement = Ogre::Vector3::ZERO;
-	//displacement = vector(0,-1);
-	//displacement.scaleBy(Circle_radius);
-	//setAngle(displacement, wanderAngle);
-	//	len = displacement.length();
-	//	dispalcement[0] = Math.cos(wanderAngle) * len;
-	//	displacement[2] = Math.sin(wanderAngle) * len;
-	//wanderForce = circleCenter.add(displacement);
-
+	circleCenter.normalise();
+	circleCenter *= CIRCLE_DIST;				//.scaleBy(Circle_Distance);
+	Ogre::Vector3 displacement(0,0,-1);			//displacement = vector(0,-1);
+	displacement *= CIRCLE_RAD;					//displacement.scaleBy(Circle_radius);
+	double len = displacement.length();
+	displacement[0] = cos(wanderAngle) * len;
+	displacement[2] = sin(wanderAngle) * len;
+	wanderAngle += ((double)rand() / RAND_MAX) * ANGLE_CHANGE;
+	wanderAngle -= .5 * ANGLE_CHANGE;
+	
+	mDirection = circleCenter + displacement;
+	mDirection.normalise();
+	mDirection *= RAT_SPEED;
+	mDirection[1] = 0;
 }
 
 void Rat::seek(){
-
+	flee();
+	mDirection *= -1;
 }
 
 void Rat::flee(){
 	//run in the opposite direction of Yoshimi
-	Ogre::Vector3 yoshPos = app->getPlayerPointer()->getPosition();
+	Ogre::Vector3 playerPos = app->getPlayerPointer()->getPosition();
 	Ogre::Vector3 mPosition = mBodyNode->getPosition();
-	Ogre::Vector3 desired = (mPosition - yoshPos);
+	Ogre::Vector3 desired = (mPosition - playerPos);
 	desired.normalise();
 	desired *= .05;
 	desired[1] = 0;
+	mDirection = desired;
+	mDirection.normalise();
+	mDirection *= RAT_SPEED;
+	mDirection[1] = 0;
 	/*Ogre::Vector3 steer = desired - mDirection;
 	steer[1] = 0;
 	steer += mDirection*/							//if you wanna make it impossible to catch the guy;
-	//return desired;
-
-
 }
