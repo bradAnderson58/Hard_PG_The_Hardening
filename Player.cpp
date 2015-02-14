@@ -153,9 +153,9 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 		newPos[2] = -maxZ + .5;
 	}
 
-	//doing collisions with the house - this is too specific, will need to be changed
+	//doing collisions with the house - this is too specific, will need to be changed - KEEP FOR REFERENCE?
 	//house xcoords -18 from center to 15
-	//house z coords -18 from center to 18
+	/*house z coords -18 from center to 18
 	Ogre::Vector3 hp = app->getHousePointer()->getPosition();
 	hp[1] = 0;
 	if (newPos.distance(hp) < 25){
@@ -179,7 +179,7 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 				}
 			}
 		}
-	}
+	}*/
 
 	mBodyNode->setPosition(newPos);
 }
