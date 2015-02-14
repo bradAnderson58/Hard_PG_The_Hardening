@@ -132,6 +132,8 @@ private:
 
 	bool isBlocking;  //whether the player is currently blocking
 
+	std::vector<UsableItems*> inventory;
+
 };
 
 #endif

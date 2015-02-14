@@ -78,8 +78,8 @@ void Rat::update(Ogre::Real deltaTime){
 		float xBound = (app->getXmax() * 10) - 5;
 		float zBound = (app->getZmax() * 10) - 5;
 		Ogre::Vector3 myPos = mBodyNode->getPosition();
-		Ogre::Vector3 house = app->getHousePointer()->getPosition();
-		house.y = 0;  //to prevent crazies
+		//Ogre::Vector3 house = app->getHousePointer()->getPosition();
+		//house.y = 0;  //to prevent crazies
 
 		if (myPos.x <= -xBound){
 			//hit bounds in x direction
