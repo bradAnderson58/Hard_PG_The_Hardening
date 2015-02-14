@@ -406,4 +406,5 @@ void Player::restart(){
 void Player::die(){
 	setAnimation(DEATH_ONE);
 	doingStuff = true;
+	fForward = false;
 }

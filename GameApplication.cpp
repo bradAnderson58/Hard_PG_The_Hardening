@@ -10,21 +10,15 @@
 
 //-------------------------------------------------------------------------------------
 GameApplication::GameApplication(void): 
-	mCurrentObject(0),
-	bLMouseDown(false),
-	bRMouseDown(false)
+	mCurrentObject(0)
 {
-	agent = NULL; // Init member data
 	gameState = MAINSCREEN;
-	gameOver = false;
 	level = 0;
-
 }
 //-------------------------------------------------------------------------------------
 GameApplication::~GameApplication(void)
 {
-	if (agent != NULL)  // clean up memory
-		delete agent; 
+	//just in case
 }
 
 //-------------------------------------------------------------------------------------
@@ -64,17 +58,15 @@ void GameApplication::createFrameListener(void)
 void
 GameApplication::addTime(Ogre::Real deltaTime)
 {
-	if (!gameOver){
-		if (gameState == PLAYING || gameState == DEAD_STATE) {
-			if(gameState == DEAD_STATE) std::cout << "WTF" << std::endl;
+	//time updator
+	if (gameState == PLAYING || gameState == DEAD_STATE) {
 
-			playerPointer->update(deltaTime); //Yoshimi has a different update function
-			healthBar->setProgressPosition(playerPointer->getHealthNow()); // update health bar
-			for (NPC* guy : NPClist){
-				guy->update(deltaTime);
-			}
-			healthBar->setProgressPosition(playerPointer->getHealthNow()); //American Association of Highway Officials, Litigators, and Engineers 
+		playerPointer->update(deltaTime); //Yoshimi has a different update function
+		healthBar->setProgressPosition(playerPointer->getHealthNow()); // update health bar
+		for (NPC* guy : NPClist){
+			guy->update(deltaTime);
 		}
+		healthBar->setProgressPosition(playerPointer->getHealthNow()); //American Association of Highway Officials, Litigators, and Engineers 
 	}
 }
 

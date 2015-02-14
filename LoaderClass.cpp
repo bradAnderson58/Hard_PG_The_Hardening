@@ -11,7 +11,8 @@ LoaderClass::LoaderClass(Ogre::SceneManager* mgr, GameApplication* a){
 }
 
 LoaderClass::~LoaderClass(void){
-
+	if (agent != NULL)  // clean up memory
+		delete agent; 
 }
 
 // Returns a unique name for loaded objects and agents
