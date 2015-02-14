@@ -10,6 +10,7 @@
 #include "Rat.h"
 
 class Grid;  //okay whatever
+class LoaderClass;
 
 class GameApplication : public BaseApplication
 {
@@ -41,6 +42,8 @@ private:
 
 	int ghettoSelect;	// what is this?
 
+	LoaderClass* loading;  //Do loading with this shits
+
 public:	
 
 	enum GameState
@@ -62,15 +65,24 @@ public:
 	void openInventory(bool visible);
 	void openCharRecord(bool visible);
 
+	//setter for player shits
+	void setPlayer(Player* p);
+
+	//For world bounds getters / setters
 	float getXmax() { return xMax; }
 	float getZmax() { return zMax; }
+	void setMaxes(float x, float z){
+		xMax = x;
+		zMax = z;
+	}
 
+	//getters / setters for lists
 	std::list<NPC*> getNPCs(){ return NPClist;}
 
-	void loadEnv();			// Load the buildings or ground plane, etc.
-	void setupEnv();		// Set up the lights, shadows, etc
-	void loadObjects();		// Load other props or objects (e.g. furniture)
-	void loadCharacters();	// Load actors, agents, characters
+	void pushNPCs(NPC* npc) { NPClist.push_back(npc); }
+	void pushBorder(Ogre::SceneNode* wall){ borderWalls.push_back(wall); }
+	void pushWalls(Ogre::SceneNode* wall){ wallList.push_back(wall); }
+
 	void toggleState(GameState s);	// toggle to game state s
 
 	Grid* getGrid(){ return grid; } //get it
