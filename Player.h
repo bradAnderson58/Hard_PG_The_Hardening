@@ -34,8 +34,10 @@ public:
 	void updateDamDef();
 	void die();
 
-	double getHealthStat() { return healthStat; }
-	double getHealthNow() { return healthNow; }
+	double getHealthStat()	{ return healthStat; }
+	double getHealthNow()	{ return healthNow; }
+	double getManaStat()	{ return manaStat; }
+	double getManaNow()		{ return manaNow; }
 
 	void checkBump();
 	Ogre::Vector3 getPosition(){return mBodyNode->getPosition();}

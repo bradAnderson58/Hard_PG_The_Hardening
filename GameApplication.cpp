@@ -62,11 +62,11 @@ GameApplication::addTime(Ogre::Real deltaTime)
 	if (gameState == PLAYING || gameState == DEAD_STATE) {
 
 		playerPointer->update(deltaTime); //Yoshimi has a different update function
-		healthBar->setProgressPosition(playerPointer->getHealthNow()); // update health bar
 		for (NPC* guy : NPClist){
 			guy->update(deltaTime);
 		}
 		healthBar->setProgressPosition(playerPointer->getHealthNow()); //American Association of Highway Officials, Litigators, and Engineers 
+		manaBar->setProgressPosition(playerPointer->getManaNow());
 	}
 }
 
@@ -91,9 +91,16 @@ GameApplication::toggleState(GameState s)
 		//use a loading class?
 
 		// reveal HUD and set up gui things
+		questWin->setVisible(true);
+		playerImage->setVisible(true);
+
 		healthBar->setProgressRange(playerPointer->getHealthStat());
 		healthBar->setProgressPosition(playerPointer->getHealthNow());
 		healthBar->setVisible(true);
+
+		manaBar->setProgressRange(playerPointer->getHealthStat());
+		manaBar->setProgressPosition(playerPointer->getHealthNow());
+		manaBar->setVisible(true);
 
 		toggleState(PLAYING);
 	}
@@ -135,19 +142,52 @@ void GameApplication::createGUI(void)
 	wWidth = mWindow->getWidth();
 	wHeight = mWindow->getHeight();
 
+	questWin = mGUI->createWidget<MyGUI::Window>("WindowC", 
+			0, 0, 200, 100, MyGUI::Align::Default, "Main", "quest");
+	questWin->setCaption("Quest/Debug Window?");
+
+	// supposed to display ogre head, not working :/
+	playerImage = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
+			0, wHeight-200, 200, 200, MyGUI::Align::Default, "Main", "face");
+	playerImage->setImageTexture("thumb_cel.png");
+    playerImage->setImageCoord(MyGUI::IntCoord(0, 0, std::min(128, (int)wWidth), std::min(128, (int)wHeight)));
+    playerImage->setImageTile(MyGUI::IntSize(std::min(128, (int)wWidth), std::min(128, (int)wHeight)));
+
 	// progress bar to track health, update this in addtime
-													// skin				pos			size		alignment			layer
-	healthBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 50, wHeight-50, 150, 50, MyGUI::Align::Default, "Main");
+	// skin		pos			size		alignment			layer
+	healthBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 
+			200, wHeight-50, 200, 50, MyGUI::Align::Default, "Main", "health");
+	manaBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 
+			200, wHeight-100, 200, 30, MyGUI::Align::Default, "Main", "mana");
+	// menu buttons
+	inventoryB = mGUI->createWidget<MyGUI::Button>("Button", 
+		wWidth/3+50, wHeight/3+50, 200, 50, MyGUI::Align::Default, "Main", "inventory");
+	inventoryB->setCaption("Inventory");
+
+	charRecordB = mGUI->createWidget<MyGUI::Button>("Button", 
+		wWidth/3+50, wHeight/3+100, 200, 50, MyGUI::Align::Default, "Main", "records");
+	charRecordB->setCaption("Character Records");
+
+	exitB = mGUI->createWidget<MyGUI::Button>("Button", 
+		wWidth/3+50, wHeight/3+150, 200, 50, MyGUI::Align::Default, "Main", "exit");
+	exitB->setCaption("Exit Game");
 	
-	// menu window to navigate to exit, inventory, etc
-	pauseMenu = mGUI->createWidget<MyGUI::Window>("Window", wWidth/2, wHeight/3, 100, 100, MyGUI::Align::Center, "Main");
-
 	// set callbacks
-	//button->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
+	inventoryB->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
+	charRecordB->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit);	
+	exitB->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit);
 
-	//button->setVisible(true);
-	pauseMenu->setVisible(false);
+	//inventoryB->attachToWidget(popMenu, popMenu->getWidgetStyle(), "Main");
 
+	// hide guis to reveal later
+	questWin->setVisible(false);
+	playerImage->setVisible(false);
+	healthBar->setVisible(false);
+	manaBar->setVisible(false);
+	inventoryB->setVisible(false);
+	charRecordB->setVisible(false);
+	exitB->setVisible(false);
+	//popMenu->setVisible(false);
 	mGUI->hidePointer();
 
 	if (gameState == MAINSCREEN){
@@ -159,22 +199,37 @@ void GameApplication::createGUI(void)
 void GameApplication::buttonHit(MyGUI::WidgetPtr _sender)
 {
 	std::cout << "I'm a MyGUI button!" << std::endl;
+	if (_sender->getName() == "inventory")
+		std::cout << "Open dat inventory!" << std::endl;
+	else if(_sender->getName() == "records")
+		std::cout << "Char records here" << std::endl;
+	else if (_sender->getName() == "exit")
+	{
+		std::cout << "exit dis game now!" << std::endl;
+		setShutDown(true);   //app shutdown
+	}
 }
 
 //open in-game menu screen
 void GameApplication::openMenu(bool visible){
 	//This will be replaced by GUI code
-	pauseMenu->setVisible(visible);
+	//popMenu->setVisible(visible);
+	inventoryB->setVisible(visible);
+	charRecordB->setVisible(visible);
+	exitB->setVisible(visible);
 	if (visible)
 	{
-		
+		mGUI->showPointer();
 		std::cout << "This is the main Menu, do this things:" << std::endl;
 		std::cout << "Enter Inventory" << std::endl;
 		std::cout << "Enter Character Record" << std::endl;
 		std::cout << "Return to Game" << std::endl;
 	}
 	else
+	{
+		mGUI->hidePointer();
 		std::cout << "close menu" << std::endl;
+	}
 }
 
 //open inventory menu

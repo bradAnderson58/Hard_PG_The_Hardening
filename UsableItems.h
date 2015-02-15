@@ -47,6 +47,8 @@ private:
 
 	//display stuff
 	std::string name;
+	// need an img/icon to use in inventory
+	// need a model to display in game
 
 	int resaleVal;  //how much its worth
 	
