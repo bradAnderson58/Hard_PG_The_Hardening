@@ -23,6 +23,15 @@ public:
 	void update(Ogre::Real deltaTime);
 	void updateLocomote(Ogre::Real deltaTime);
 	void setMovement(char dir, bool on); //set the movemnt
+	Ogre::SceneNode *rayNode;
+	Ogre::Entity *rayEntity;
+
+	Ogre::ManualObject* myManualObject; 
+	Ogre::SceneNode* myManualObjectNode; 
+ 
+	// NOTE: The second parameter to the create method is the resource group the material will be added to.
+	// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
+	Ogre::MaterialPtr myManualObjectMaterial; 
 
 private:
 
