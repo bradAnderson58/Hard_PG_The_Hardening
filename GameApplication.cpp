@@ -110,6 +110,9 @@ GameApplication::toggleState(GameState s)
 		gameState = s;
 		playerPointer->setMovement(false);	// movement locks up when you pause during movement
 		openMenu(true);
+		for (UsableItems* thing : playerPointer->getInventory()){
+			std::cout << thing->getName() << " for testing - press Y to equip " << thing->getStat(UsableItems::DAMAGE) << std::endl;
+		}
 	}
 	else if (s == DEAD_STATE)
 	{

@@ -53,7 +53,11 @@ public:
 	UsableItems* getPants(){ return equippedPants; }
 	UsableItems* getNeck(){ return equippedNeck; }
 
+	std::vector<UsableItems*> getInventory(){ return inventory; }  //return inventory for GUI purposes
+	void switchEquipment(int ind);		//switch some inventory item with a current equipped item
+
 	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }
+	Ogre::SceneNode* getMBodyNode(){return mModelNode;}
 
 private:
 	bool fForward; //how am I moving? Each flag indicates a direction
