@@ -134,17 +134,44 @@ void GameApplication::createGUI(void)
 
 	// progress bar to track health, update this in addtime
 													// skin				pos			size		alignment			layer
-	healthBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 50, wHeight-50, 150, 50, MyGUI::Align::Default, "Main");
+	healthBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 
+			50, wHeight-50, 150, 50, MyGUI::Align::Default, "Main");
 	
 	// menu window to navigate to exit, inventory, etc
-	pauseMenu = mGUI->createWidget<MyGUI::Window>("Window", wWidth/2, wHeight/3, 100, 100, MyGUI::Align::Center, "Main");
+	//pauseMenu = mGUI->createWidget<MyGUI::Window>("Window",
+	//		wWidth/3, wHeight/3, 300, 400, MyGUI::Align::Center, "Main", "pause");
+	
+	//menuCtrl = mGUI->createWidget<MyGUI::MenuControl>("MenuControl",
+	//	wWidth/3, wHeight/3, 300, 400, MyGUI::Align::Center, "Main", "menu");
 
+	popMenu = mGUI->createWidget<MyGUI::PopupMenu>("PopupMenu",
+		wWidth/3, wHeight/3, 300, 400, MyGUI::Align::Center, "Main", "popmenu");
+
+	// menu buttons
+	inventoryB = mGUI->createWidget<MyGUI::Button>("Button", 
+		wWidth/3+50, wHeight/3+50, 200, 50, MyGUI::Align::Default, "Main", "inventory");
+	inventoryB->setCaption("Inventory");
+
+	charRecordB = mGUI->createWidget<MyGUI::Button>("Button", 
+		wWidth/3+50, wHeight/3+100, 200, 50, MyGUI::Align::Default, "Main", "records");
+	charRecordB->setCaption("Character Records");
+
+	exitB = mGUI->createWidget<MyGUI::Button>("Button", 
+		wWidth/3+50, wHeight/3+150, 200, 50, MyGUI::Align::Default, "Main", "exit");
+	exitB->setCaption("Exit Game");
+	
 	// set callbacks
-	//button->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
+	inventoryB->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
+	charRecordB->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit);	
+	exitB->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit);
 
-	//button->setVisible(true);
-	pauseMenu->setVisible(false);
+	//inventoryB->attachToWidget(popMenu, popMenu->getWidgetStyle(), "Main");
 
+	// hide certain guis
+	inventoryB->setVisible(false);
+	charRecordB->setVisible(false);
+	exitB->setVisible(false);
+	//popMenu->setVisible(false);
 	mGUI->hidePointer();
 
 	if (gameState == MAINSCREEN){
@@ -156,22 +183,37 @@ void GameApplication::createGUI(void)
 void GameApplication::buttonHit(MyGUI::WidgetPtr _sender)
 {
 	std::cout << "I'm a MyGUI button!" << std::endl;
+	if (_sender->getName() == "inventory")
+		std::cout << "Open dat inventory!" << std::endl;
+	else if(_sender->getName() == "records")
+		std::cout << "Char records here" << std::endl;
+	else if (_sender->getName() == "exit")
+	{
+		std::cout << "exit dis game now!" << std::endl;
+		setShutDown(true);   //app shutdown
+	}
 }
 
 //open in-game menu screen
 void GameApplication::openMenu(bool visible){
 	//This will be replaced by GUI code
-	pauseMenu->setVisible(visible);
+	//popMenu->setVisible(visible);
+	inventoryB->setVisible(visible);
+	charRecordB->setVisible(visible);
+	exitB->setVisible(visible);
 	if (visible)
 	{
-		
+		mGUI->showPointer();
 		std::cout << "This is the main Menu, do this things:" << std::endl;
 		std::cout << "Enter Inventory" << std::endl;
 		std::cout << "Enter Character Record" << std::endl;
 		std::cout << "Return to Game" << std::endl;
 	}
 	else
+	{
+		mGUI->hidePointer();
 		std::cout << "close menu" << std::endl;
+	}
 }
 
 //open inventory menu

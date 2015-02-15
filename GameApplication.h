@@ -23,6 +23,11 @@ private:
 	// gui stuff decl's
 	MyGUI::ProgressPtr healthBar;		// progress bar to track health
 	MyGUI::WindowPtr pauseMenu;			// window to quit, check records, or inventory
+	MyGUI::MenuCtrlPtr menuCtrl;		// something that controls menu items?
+	MyGUI::PopupMenuPtr popMenu;		// pop up menu when paused
+	MyGUI::ButtonPtr inventoryB;		// button to access inventory from pause menu
+	MyGUI::ButtonPtr charRecordB;		// button to acces character records from pause menu
+	MyGUI::ButtonPtr exitB;				// button to exit from pause menu
 
 	std::list<Ogre::SceneNode*> wallList;
 	std::list<Ogre::SceneNode*> borderWalls;
