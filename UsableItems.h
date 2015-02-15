@@ -31,8 +31,10 @@ public:
 	UsableItems(itemType mt, int damstat, int defstat, int critstat, int healthstat, int manastat, std::string n, int resale);
 	~UsableItems();
 
+	//getters for stuffs
 	int getStat(statType getMe);
 	std::string getName(){ return name; };
+	itemType getType(){ return mType; }
 
 private:
 	itemType mType;  //enum
