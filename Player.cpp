@@ -62,6 +62,8 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	equippedPants = new UsableItems(UsableItems::PANTS, 0, 0, 0, 0, 0, "Pantaloons", 2);
 	equippedNeck = new UsableItems(UsableItems::NECKLACE, 0, 0, 0, 0, 0, "Dangling Pointer", 15);
 
+	inventory.push_back(new UsableItems(UsableItems::WEAPON, 20, 0, 0, 0, 0, "The Allocator!", 5000));  //Super Awesome weapon for testing
+
 	srand(time(NULL));  //seed for random number generation
 
 	//intialize stats with update stats function
@@ -356,10 +358,12 @@ void Player::checkHits(){
 void Player::dealDamage(NPC *enemy){
 
 	//base damage plus weapon damage
-	int damage = (equippedWpn != NULL) ? damageStat + equippedWpn->getStat(UsableItems::DAMAGE) : damageStat;
+	int damage = mDamage;
 	int critPerc = (rand() % 100) / 100;
+	std::cout << criticalStat << std::endl;
 	if (critPerc <= criticalStat){ //critical strike - extra damages!
 		damage = 1.5 * damage;
+		std::cout << "Critical Strike! " << critPerc << std::endl;
 	}
 
 	enemy->getHurt(damage);
@@ -407,4 +411,42 @@ void Player::die(){
 	setAnimation(DEATH_ONE);
 	doingStuff = true;
 	fForward = false;
+}
+
+void Player::switchEquipment(int ind){
+	//determine the type of equipment, and swtich it out
+	UsableItems::itemType typ = inventory[ind]->getType();
+	UsableItems* temp = inventory[ind];
+	inventory.erase(inventory.begin()+ind);
+
+	//Replace the correct equipment
+	if (typ == UsableItems::WEAPON){
+		std::cout << "Switching Weapons" << std::endl;
+		if (equippedWpn != NULL) inventory.push_back(equippedWpn);
+		equippedWpn = temp;
+	}
+	else if (typ == UsableItems::BOOBPLATE){
+		if (equippedBoobs != NULL) inventory.push_back(equippedBoobs);
+		equippedBoobs = temp;
+	}
+	else if (typ == UsableItems::HELM){
+		if (equippedHelm != NULL) inventory.push_back(equippedHelm);
+		equippedHelm = temp;
+	}
+	else if (typ == UsableItems::NECKLACE){
+		if (equippedNeck != NULL) inventory.push_back(equippedNeck);
+		equippedNeck = temp;
+	}
+	else if (typ == UsableItems::PANTS){
+		if (equippedPants != NULL) inventory.push_back(equippedPants);
+		equippedPants= temp;
+	}
+	else if (typ == UsableItems::SHIELD){
+		if (equippedShield != NULL) inventory.push_back(equippedShield);
+		equippedShield = temp;
+	}
+	else {std::cout << "ERROR INVALID ITEM TYPE" << std::endl;
+
+	//apply changes for new weapons
+	updateDamDef();
 }

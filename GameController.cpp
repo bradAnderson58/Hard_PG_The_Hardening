@@ -318,6 +318,10 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 		else if (button == 6){
 			app->toggleState(GameApplication::PLAYING);
 		}
+		//Y button is 3
+		else if (button == 3){
+			player->switchEquipment(0);  //testing purposes - this will be expanded later
+		}
 
 	}
 	return true;
