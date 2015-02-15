@@ -62,11 +62,11 @@ GameApplication::addTime(Ogre::Real deltaTime)
 	if (gameState == PLAYING || gameState == DEAD_STATE) {
 
 		playerPointer->update(deltaTime); //Yoshimi has a different update function
-		healthBar->setProgressPosition(playerPointer->getHealthNow()); // update health bar
 		for (NPC* guy : NPClist){
 			guy->update(deltaTime);
 		}
 		healthBar->setProgressPosition(playerPointer->getHealthNow()); //American Association of Highway Officials, Litigators, and Engineers 
+		manaBar->setProgressPosition(playerPointer->getManaNow());
 	}
 }
 
@@ -91,9 +91,16 @@ GameApplication::toggleState(GameState s)
 		//use a loading class?
 
 		// reveal HUD and set up gui things
+		questWin->setVisible(true);
+		playerImage->setVisible(true);
+
 		healthBar->setProgressRange(playerPointer->getHealthStat());
 		healthBar->setProgressPosition(playerPointer->getHealthNow());
 		healthBar->setVisible(true);
+
+		manaBar->setProgressRange(playerPointer->getHealthStat());
+		manaBar->setProgressPosition(playerPointer->getHealthNow());
+		manaBar->setVisible(true);
 
 		toggleState(PLAYING);
 	}
@@ -135,11 +142,23 @@ void GameApplication::createGUI(void)
 	wWidth = mWindow->getWidth();
 	wHeight = mWindow->getHeight();
 
+	questWin = mGUI->createWidget<MyGUI::Window>("WindowC", 
+			0, 0, 200, 100, MyGUI::Align::Default, "Main", "quest");
+	questWin->setCaption("Quest/Debug Window?");
+
+	// supposed to display ogre head, not working :/
+	playerImage = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
+			0, wHeight-200, 200, 200, MyGUI::Align::Default, "Main", "face");
+	playerImage->setImageTexture("thumb_cel.png");
+    playerImage->setImageCoord(MyGUI::IntCoord(0, 0, std::min(128, (int)wWidth), std::min(128, (int)wHeight)));
+    playerImage->setImageTile(MyGUI::IntSize(std::min(128, (int)wWidth), std::min(128, (int)wHeight)));
+
 	// progress bar to track health, update this in addtime
 	// skin		pos			size		alignment			layer
 	healthBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 
-			50, wHeight-50, 150, 50, MyGUI::Align::Default, "Main");
-	
+			200, wHeight-50, 200, 50, MyGUI::Align::Default, "Main", "health");
+	manaBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 
+			200, wHeight-100, 200, 30, MyGUI::Align::Default, "Main", "mana");
 	// menu buttons
 	inventoryB = mGUI->createWidget<MyGUI::Button>("Button", 
 		wWidth/3+50, wHeight/3+50, 200, 50, MyGUI::Align::Default, "Main", "inventory");
@@ -160,7 +179,11 @@ void GameApplication::createGUI(void)
 
 	//inventoryB->attachToWidget(popMenu, popMenu->getWidgetStyle(), "Main");
 
-	// hide certain guis
+	// hide guis to reveal later
+	questWin->setVisible(false);
+	playerImage->setVisible(false);
+	healthBar->setVisible(false);
+	manaBar->setVisible(false);
 	inventoryB->setVisible(false);
 	charRecordB->setVisible(false);
 	exitB->setVisible(false);
