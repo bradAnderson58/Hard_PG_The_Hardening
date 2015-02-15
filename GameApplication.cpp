@@ -136,20 +136,10 @@ void GameApplication::createGUI(void)
 	wHeight = mWindow->getHeight();
 
 	// progress bar to track health, update this in addtime
-													// skin				pos			size		alignment			layer
+	// skin		pos			size		alignment			layer
 	healthBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 
 			50, wHeight-50, 150, 50, MyGUI::Align::Default, "Main");
 	
-	// menu window to navigate to exit, inventory, etc
-	//pauseMenu = mGUI->createWidget<MyGUI::Window>("Window",
-	//		wWidth/3, wHeight/3, 300, 400, MyGUI::Align::Center, "Main", "pause");
-	
-	//menuCtrl = mGUI->createWidget<MyGUI::MenuControl>("MenuControl",
-	//	wWidth/3, wHeight/3, 300, 400, MyGUI::Align::Center, "Main", "menu");
-
-	popMenu = mGUI->createWidget<MyGUI::PopupMenu>("PopupMenu",
-		wWidth/3, wHeight/3, 300, 400, MyGUI::Align::Center, "Main", "popmenu");
-
 	// menu buttons
 	inventoryB = mGUI->createWidget<MyGUI::Button>("Button", 
 		wWidth/3+50, wHeight/3+50, 200, 50, MyGUI::Align::Default, "Main", "inventory");
