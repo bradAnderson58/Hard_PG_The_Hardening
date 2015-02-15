@@ -54,6 +54,7 @@ public:
 	UsableItems* getNeck(){ return equippedNeck; }
 
 	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }
+	Ogre::SceneNode* getMBodyNode(){return mModelNode;}
 
 private:
 	bool fForward; //how am I moving? Each flag indicates a direction
