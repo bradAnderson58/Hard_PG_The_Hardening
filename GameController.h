@@ -11,6 +11,7 @@
 #include "GameApplication.h"
 class GameApplication;  //Why do I need to do this?
 class Player;
+class Environment;
 
 class GameController : public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener, public Ogre::WindowEventListener
 {
@@ -21,6 +22,8 @@ public:
 	void captureAll();								//capture events from the listeners
 	void removeSelf();								//on shutdown
 	void setPlayer(Player* p){ player = p; }		//set player (done from gameApp)
+
+	void setInteractible(Environment* i){interactWith = i;}  //Make sure to do NULL checking
 
 private:
 	OgreBites::InputContext mInputContext;  //for Ogre 1.9
@@ -57,6 +60,8 @@ private:
 	//handling window stuffs
 	void GameController::windowResized(Ogre::RenderWindow* rw);
 	void GameController::windowClosed(Ogre::RenderWindow* rw);
+
+	Environment* interactWith;
 };
 
 #endif

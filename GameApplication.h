@@ -11,6 +11,7 @@
 
 class Grid;  //okay whatever
 class LoaderClass;
+class Environment;
 
 class GameApplication : public BaseApplication
 {
@@ -26,6 +27,8 @@ private:
 
 	std::list<Ogre::SceneNode*> wallList;
 	std::list<Ogre::SceneNode*> borderWalls;
+
+	std::vector<Environment*> interactableObjs;   //these are objects that we can interact with in some way
 	int level;
 
 	//Boundaries of the world
@@ -40,7 +43,7 @@ private:
 	LoaderClass* loading;  //Do loading with this shits
 
 public:	
-
+	bool checkDebug;  //debugging take out
 	enum GameState
 	{
 		MAINSCREEN,
@@ -74,14 +77,19 @@ public:
 	//getters / setters for lists
 	std::list<NPC*> getNPCs(){ return NPClist;}
 	std::list<Ogre::SceneNode*> getWallList(){return wallList;}
+	std::vector<Environment*> getEnvObj(){ return interactableObjs; }
 
 	void pushNPCs(NPC* npc) { NPClist.push_back(npc); }
 	void pushBorder(Ogre::SceneNode* wall){ borderWalls.push_back(wall); }
 	void pushWalls(Ogre::SceneNode* wall){ wallList.push_back(wall); }
+	void pushEnvObj(Environment* obj){ interactableObjs.push_back(obj); }
+
+	void removeNulls(Environment* env);  //Use this to remove null objects from lists
 
 	void toggleState(GameState s);	// toggle to game state s
 
 	Grid* getGrid(){ return grid; } //get it
+	GameController* getController(){ return gameCont; }
 
 	void setShutDown(bool s){ mShutDown = s; }		//to shutdown the game
 	GameState getGameState(){ return gameState; }	//To get the current GameState

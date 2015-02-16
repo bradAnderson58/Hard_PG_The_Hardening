@@ -54,6 +54,7 @@ public:
 	UsableItems* getNeck(){ return equippedNeck; }
 
 	std::vector<UsableItems*> getInventory(){ return inventory; }  //return inventory for GUI purposes
+	void pushInventory(UsableItems* i){inventory.push_back(i); }   //push
 	void switchEquipment(int ind);		//switch some inventory item with a current equipped item
 
 	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }

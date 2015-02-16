@@ -1,6 +1,7 @@
 #include "GameApplication.h"
 #include "GameController.h"
 #include "loaderClass.h"
+#include "Environment.h"
 #include <fstream>
 #include <sstream>
 #include <map>
@@ -14,6 +15,8 @@ GameApplication::GameApplication(void):
 {
 	gameState = MAINSCREEN;
 	level = 0;
+
+	checkDebug = true;
 }
 //-------------------------------------------------------------------------------------
 GameApplication::~GameApplication(void)
@@ -65,6 +68,11 @@ GameApplication::addTime(Ogre::Real deltaTime)
 		healthBar->setProgressPosition(playerPointer->getHealthNow()); // update health bar
 		for (NPC* guy : NPClist){
 			guy->update(deltaTime);
+		}
+		if (!interactableObjs.empty()){
+			for (Environment* env : interactableObjs){
+				if (checkDebug) env->checkWithPlayer();
+			}
 		}
 		healthBar->setProgressPosition(playerPointer->getHealthNow()); //American Association of Highway Officials, Litigators, and Engineers 
 	}
@@ -291,4 +299,21 @@ void GameApplication::nextLevel(){
 void GameApplication::setPlayer(Player* p){
 	playerPointer = p;
 	gameCont->setPlayer(p);
+}
+
+void GameApplication::removeNulls(Environment* env){
+	//pull this item off the list
+	int pos = std::find(interactableObjs.begin(), interactableObjs.end(), env) - interactableObjs.begin();
+	if (pos < interactableObjs.size()){
+		interactableObjs.erase (interactableObjs.begin()+pos);  //erase this element from the list
+		delete env;												//clean up memory
+	}else{
+		std::cout << "Object Not Found, something went wrong" << std::endl;
+	}
+	
+	/*for (Environment* thing : interactableObjs){
+		if (thing == env){
+
+		}
+	}*/
 }

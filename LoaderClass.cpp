@@ -2,6 +2,7 @@
 #include "loaderClass.h"
 #include "GameApplication.h"
 #include "Player.h"
+#include "Environment.h"
 
 LoaderClass::LoaderClass(Ogre::SceneManager* mgr, GameApplication* a){
 	uSceneMgr = mgr;
@@ -148,8 +149,11 @@ void LoaderClass::loadEnv(){
 				}
 				else	// Load objects - non-agents will go in here
 				{
-					if (rent->filename == "tudorhouse.mesh"){
-						//no houses!
+					if (c == 's'){  //test our shield barrel
+						Environment* obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app);
+						obj->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
+						app->pushEnvObj(obj);
+						
 					}
 					else {//The temp object holds a pointer to the barrel node, which we need for bounding box access
 						temp = grid->loadObject(getNewName(), rent->filename, i, rent->y, j, rent->scale);

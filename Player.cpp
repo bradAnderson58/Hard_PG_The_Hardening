@@ -359,8 +359,8 @@ void Player::dealDamage(NPC *enemy){
 
 	//base damage plus weapon damage
 	int damage = mDamage;
-	int critPerc = (rand() % 100) / 100;
-	std::cout << criticalStat << std::endl;
+	float critPerc = (float)(rand() % 100) / 100.0;
+	std::cout << criticalStat << " " << critPerc << std::endl;
 	if (critPerc <= criticalStat){ //critical strike - extra damages!
 		damage = 1.5 * damage;
 		std::cout << "Critical Strike! " << critPerc << std::endl;
@@ -446,7 +446,7 @@ void Player::switchEquipment(int ind){
 		equippedShield = temp;
 	}
 	else {std::cout << "ERROR INVALID ITEM TYPE" << std::endl;
-
+	}
 	//apply changes for new weapons
 	updateDamDef();
 }

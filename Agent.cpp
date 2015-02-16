@@ -99,5 +99,3 @@ Agent::updateLocomote(Ogre::Real deltaTime)
 {
 	//DELETE?
 }
-
-

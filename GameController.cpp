@@ -1,5 +1,6 @@
 
 #include "GameController.h"
+#include "Environment.h"
 
 //Contructor requires use of GameApps mWindow for binding
 GameController::GameController(GameApplication* a)
@@ -10,6 +11,7 @@ GameController::GameController(GameApplication* a)
 
 	app = a;
 	uWindow = a->getWindow();		//It will be nice to hav a pointer to the main window
+	interactWith = NULL;
 
 	Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
     OIS::ParamList pl;
@@ -115,10 +117,18 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 
 	else if (arg.key == OIS::KC_SPACE)
 	{
-		if(!player->doingStuff){
-			player->changeSpeed(.6);  //jump should be slower
-			player->buttonAnimation(arg.key, true);
-			player->doingStuff = true;
+		if (interactWith == NULL){
+			if(!player->doingStuff){
+				player->changeSpeed(.6);  //jump should be slower
+				player->buttonAnimation(arg.key, true);
+				player->doingStuff = true;
+			}
+		}else{
+			//interact with
+			player->pushInventory(interactWith->getItem());
+				
+			app->removeNulls(interactWith);
+			interactWith = NULL;
 		}
 	}
 	else if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || OIS::KC_D) {
@@ -258,10 +268,18 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 	if (app->getGameState() == GameApplication::PLAYING){
 		//A button is 0
 		if (button == 0){
-			if (!player->doingStuff){
-				player->changeSpeed(.8);
-				player->buttonAnimation(OIS::KC_SPACE, true);
-				player->doingStuff = true;
+			if (interactWith == NULL){
+				if(!player->doingStuff){
+					player->changeSpeed(.6);  //jump should be slower
+					player->buttonAnimation(OIS::KC_SPACE, true);
+					player->doingStuff = true;
+				}
+			}else{
+				//interact with
+				player->pushInventory(interactWith->getItem());
+				
+				app->removeNulls(interactWith);
+				interactWith = NULL;
 			}
 		}
 		//X button is 2
@@ -321,6 +339,7 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 		//Y button is 3
 		else if (button == 3){
 			player->switchEquipment(0);  //testing purposes - this will be expanded later
+			player->switchEquipment(0);
 		}
 
 	}
