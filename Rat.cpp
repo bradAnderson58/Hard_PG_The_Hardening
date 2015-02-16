@@ -11,22 +11,51 @@
 Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::GoodBad t, Rat::RatStates s):
 	NPC(SceneManager, name, filename, height, scale, a, l, t)
 {
-	mVisionNode = mModelNode->createChildSceneNode();
-	mVisionEntity = mSceneMgr->createEntity("visionCube" + mBodyNode->getName(), Ogre::SceneManager::PT_CUBE);
-	mVisionEntity->setMaterialName("Examples/testing");
-	mVisionNode->setScale(.4,.02,.1);
-	mVisionNode->attachObject(mVisionEntity);
-	mVisionNode->showBoundingBox(true);
-	mVisionNode->setPosition(mBodyNode->getPosition()[0]-20, mBodyNode->getPosition()[1], mBodyNode->getPosition()[2]);
+	//mVisionNode = mModelNode->createChildSceneNode();
+	//mVisionEntity = mSceneMgr->createEntity("visionCube" + mBodyNode->getName(), Ogre::SceneManager::PT_CUBE);
+	//mVisionEntity->setMaterialName("Examples/testing");
+	//mVisionNode->setScale(.4,.02,.1);
+	//mVisionNode->attachObject(mVisionEntity);
+	//mVisionNode->showBoundingBox(true);
+	//mVisionNode->setPosition(mBodyNode->getPosition()[0]-20, mBodyNode->getPosition()[1], mBodyNode->getPosition()[2]);
 	//mVisionNode->setVisible(false);
 
+	rayNode = SceneManager->getRootSceneNode()->createChildSceneNode();
+	rayEntity = mSceneMgr->createEntity("rayCube" + mBodyNode->getName(), Ogre::SceneManager::PT_CUBE);
+	rayEntity->setMaterialName("Examples/testing");
+	rayNode->setScale(.05,.05,.05);
+	rayNode->attachObject(rayEntity);
+	//rayNode->setPosition(mBodyNode->getPosition());
 
-	mBodyNode->yaw(Ogre::Degree(-90.0f));	//rotate so fish faces the right direction	mVisionNode = mModelNode->createChildSceneNode();
+
+	//mBodyNode->yaw(Ogre::Degree(-180.0f));	//rotate so fish faces the right direction	mVisionNode = mModelNode->createChildSceneNode();
 	mBodyNode->setPosition(mBodyNode->getPosition()[0], 0, mBodyNode->getPosition()[2]);
 	wanderAngle = 0;
 	state = s;
 	defense = level * 1;
 	setupAnimations();
+
+	//Ogre::ManualObject* myManualObject =  mSceneMgr->createManualObject("manual1"); 
+	//Ogre::SceneNode* myManualObjectNode = mBodyNode->createChildSceneNode("manual1_node"); 
+ //
+	//// NOTE: The second parameter to the create method is the resource group the material will be added to.
+	//// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
+	//Ogre::MaterialPtr myManualObjectMaterial = Ogre::MaterialManager::getSingleton().create("manual1Material","General"); 
+	//myManualObjectMaterial->setReceiveShadows(false); 
+	//myManualObjectMaterial->getTechnique(0)->setLightingEnabled(true); 
+	//myManualObjectMaterial->getTechnique(0)->getPass(0)->setDiffuse(1,0,0,0); 
+	//myManualObjectMaterial->getTechnique(0)->getPass(0)->setAmbient(0,0,1); 
+	//myManualObjectMaterial->getTechnique(0)->getPass(0)->setSelfIllumination(0,0,1); 
+
+	////myManualObjectMaterial->dispose();  // dispose pointer, not the material
+ //
+	//myManualObject->begin("manual1Material", Ogre::RenderOperation::OT_LINE_LIST); 
+	//myManualObject->position(mModelNode->getPosition()[0], 2, mModelNode->getPosition()[2]);
+	//myManualObject->position(40, 2, 0); 
+	//// etc 
+	//myManualObject->end(); 
+ //
+	//myManualObjectNode->attachObject(myManualObject);
 }
 
 Rat::~Rat(void)
@@ -241,9 +270,58 @@ void Rat::checkHit(){
 }
 
 bool Rat::checkInFront(){
-	Ogre::AxisAlignedBox aRange = mVisionEntity->getWorldBoundingBox();			//get ratVisionBox to see if player is visible
-	Ogre::AxisAlignedBox rRange = app->getPlayerPointer()->getBoundingBox();	//get the players bounding box
-	return aRange.intersects(rRange);											//return true if the bounding boxes intersect
+	//Ogre::AxisAlignedBox aRange = mVisionEntity->getWorldBoundingBox();			//get ratVisionBox to see if player is visible
+	//Ogre::AxisAlignedBox rRange = app->getPlayerPointer()->getBoundingBox();	//get the players bounding box
+	//return aRange.intersects(rRange);												//return true if the bounding boxes intersect
+
+	double rad = 0.2618;
+	Ogre::Vector3 startPos = Ogre::Vector3(mBodyNode->getPosition());
+	startPos[1] = 5;
+	Ogre::Vector3 ray1Dir ;
+	Ogre::Vector3 ray2Dir ;
+	Ogre::Vector3 ray3Dir ;
+	Ogre::Vector3 ray4Dir ;
+	Ogre::Vector3 ray5Dir ;
+	if (mDirection != Ogre::Vector3::ZERO){
+		ray1Dir = Ogre::Vector3(mDirection * Ogre::Vector3(sin(rad), 0, cos(rad)));
+		ray2Dir = Ogre::Vector3(mDirection * Ogre::Vector3(sin(2*rad), 0, cos(2*rad)));
+		ray3Dir = Ogre::Vector3(mDirection * Ogre::Vector3(sin(-rad), 0, cos(-rad)));
+		ray4Dir = Ogre::Vector3(mDirection * Ogre::Vector3(sin(-2*rad), 0, cos(-2*rad)));
+		ray5Dir = Ogre::Vector3(mDirection);
+	}
+	else{
+		ray1Dir = Ogre::Vector3(mBodyNode->getOrientation().xAxis() * Ogre::Vector3(sin(rad), 0, cos(rad)));
+		ray2Dir = Ogre::Vector3(mBodyNode->getOrientation().xAxis() * Ogre::Vector3(sin(2*rad), 0, cos(2*rad)));
+		ray3Dir = Ogre::Vector3(mBodyNode->getOrientation().xAxis() * Ogre::Vector3(sin(-rad), 0, cos(-rad)));
+		ray4Dir = Ogre::Vector3(mBodyNode->getOrientation().xAxis() * Ogre::Vector3(sin(-2*rad), 0, cos(-2*rad)));
+		ray5Dir = Ogre::Vector3(1, 0, 0);
+	}
+	Ogre::Ray ray1 = Ogre::Ray(startPos, ray1Dir);
+	Ogre::Ray ray2 = Ogre::Ray(startPos, ray2Dir);
+	Ogre::Ray ray3 = Ogre::Ray(startPos, ray3Dir);
+	Ogre::Ray ray4 = Ogre::Ray(startPos, ray4Dir);
+	Ogre::Ray ray5 = Ogre::Ray(startPos, ray5Dir);
+	std::list<Ogre::Ray> rayList;
+	rayList.push_back(ray1);
+	rayList.push_back(ray2);
+	rayList.push_back(ray3);
+	rayList.push_back(ray4);
+	rayList.push_back(ray5);
+	rayNode->setPosition(ray5.getPoint(36));
+	Player *p = app->getPlayerPointer();
+	if (p->getPosition().distance(mBodyNode->getPosition()) <= 40){
+		for (Ogre::Ray ray : rayList){
+			if(ray.intersects(p->getBoundingBox()).first){
+				std::cout << ray.intersects(p->getBoundingBox()).second << std::endl;
+				std::cout << "I see you!!" << std::endl;
+				return true;
+			}
+		}
+	}
+	else{ 
+	}
+	return false;
+
 }
 
 void Rat::wander(){

@@ -22,8 +22,13 @@ private:
 	Player* playerPointer;				//This is our heroic savior
 
 	// gui stuff decl's
+	MyGUI::WindowPtr questWin;			// Window to contain quest text/debug info
+	MyGUI::ImageBox* playerImage;		// image representing player status
 	MyGUI::ProgressPtr healthBar;		// progress bar to track health
-	MyGUI::WindowPtr pauseMenu;			// window to quit, check records, or inventory
+	MyGUI::ProgressPtr manaBar;			// progress bar to track mana
+	MyGUI::ButtonPtr inventoryB;		// button to access inventory from pause menu
+	MyGUI::ButtonPtr charRecordB;		// button to acces character records from pause menu
+	MyGUI::ButtonPtr exitB;				// button to exit from pause menu
 
 	std::list<Ogre::SceneNode*> wallList;
 	std::list<Ogre::SceneNode*> borderWalls;
