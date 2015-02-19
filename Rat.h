@@ -23,8 +23,11 @@ public:
 	void update(Ogre::Real deltaTime);
 	void updateLocomote(Ogre::Real deltaTime);
 	void setMovement(char dir, bool on); //set the movemnt
+
+
 	Ogre::SceneNode *rayNode;
 	Ogre::Entity *rayEntity;
+	
 
 	Ogre::ManualObject* myManualObject; 
 	Ogre::SceneNode* myManualObjectNode; 

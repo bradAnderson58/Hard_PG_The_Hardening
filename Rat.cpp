@@ -58,6 +58,121 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	//myManualObject->end(); 
  //
 	//myManualObjectNode->attachObject(myManualObject);
+
+	//
+
+	//double rad = 0.1309;
+	//double cosRad = cos(rad);
+	//double sinRad = sin(rad);
+	//Ogre::Matrix3 rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
+
+	//Ogre::ManualObject* myManualObject2 =  mSceneMgr->createManualObject("manual2"); 
+	//Ogre::SceneNode* myManualObjectNode2 = mBodyNode->createChildSceneNode("manual2_node"); 
+ //
+	//// NOTE: The second parameter to the create method is the resource group the material will be added to.
+	//// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
+	//Ogre::MaterialPtr myManualObjectMaterial2 = Ogre::MaterialManager::getSingleton().create("manual2Material","General"); 
+	//myManualObjectMaterial2->setReceiveShadows(false); 
+	//myManualObjectMaterial2->getTechnique(0)->setLightingEnabled(true); 
+	//myManualObjectMaterial2->getTechnique(0)->getPass(0)->setDiffuse(1,0,0,0); 
+	//myManualObjectMaterial2->getTechnique(0)->getPass(0)->setAmbient(0,0,1); 
+	//myManualObjectMaterial2->getTechnique(0)->getPass(0)->setSelfIllumination(0,0,1); 
+
+	////myManualObjectMaterial->dispose();  // dispose pointer, not the material
+ //
+	//myManualObject2->begin("manual2Material", Ogre::RenderOperation::OT_LINE_LIST); 
+	//myManualObject2->position(mModelNode->getPosition()[0], 2, mModelNode->getPosition()[2]);
+	//myManualObject2->position(Ogre::Vector3(40, 2, 0) * rotMat); 
+	//// etc 
+	//
+	//myManualObject2->end(); 
+ //
+	//myManualObjectNode2->attachObject(myManualObject2);
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//cosRad = cos(-rad);
+	//sinRad = sin(-rad);
+	//rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
+
+	//Ogre::ManualObject* myManualObject3 =  mSceneMgr->createManualObject("manual3"); 
+	//Ogre::SceneNode* myManualObjectNode3 = mBodyNode->createChildSceneNode("manual3_node"); 
+ //
+	//// NOTE: The second parameter to the create method is the resource group the material will be added to.
+	//// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
+	//Ogre::MaterialPtr myManualObjectMaterial3 = Ogre::MaterialManager::getSingleton().create("manual3Material","General"); 
+	//myManualObjectMaterial3->setReceiveShadows(false); 
+	//myManualObjectMaterial3->getTechnique(0)->setLightingEnabled(true); 
+	//myManualObjectMaterial3->getTechnique(0)->getPass(0)->setDiffuse(1,0,0,0); 
+	//myManualObjectMaterial3->getTechnique(0)->getPass(0)->setAmbient(0,0,1); 
+	//myManualObjectMaterial3->getTechnique(0)->getPass(0)->setSelfIllumination(0,0,1); 
+
+	////myManualObjectMaterial->dispose();  // dispose pointer, not the material
+ //
+	//myManualObject3->begin("manual3Material", Ogre::RenderOperation::OT_LINE_LIST); 
+	//myManualObject3->position(mModelNode->getPosition()[0], 2, mModelNode->getPosition()[2]);
+	//myManualObject3->position(Ogre::Vector3(40, 2, 0) * rotMat); 
+	//// etc 
+	//
+	//myManualObject3->end(); 
+ //
+	//myManualObjectNode3->attachObject(myManualObject3);
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//cosRad = cos(2*rad);
+	//sinRad = sin(2*rad);
+	//rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
+
+	//Ogre::ManualObject* myManualObject4 =  mSceneMgr->createManualObject("manual4"); 
+	//Ogre::SceneNode* myManualObjectNode4 = mBodyNode->createChildSceneNode("manual4_node"); 
+ //
+	//// NOTE: The second parameter to the create method is the resource group the material will be added to.
+	//// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
+	//Ogre::MaterialPtr myManualObjectMaterial4 = Ogre::MaterialManager::getSingleton().create("manual4Material","General"); 
+	//myManualObjectMaterial4->setReceiveShadows(false); 
+	//myManualObjectMaterial4->getTechnique(0)->setLightingEnabled(true); 
+	//myManualObjectMaterial4->getTechnique(0)->getPass(0)->setDiffuse(1,0,0,0); 
+	//myManualObjectMaterial4->getTechnique(0)->getPass(0)->setAmbient(0,0,1); 
+	//myManualObjectMaterial4->getTechnique(0)->getPass(0)->setSelfIllumination(0,0,1); 
+
+	////myManualObjectMaterial->dispose();  // dispose pointer, not the material
+ //
+	//myManualObject4->begin("manual4Material", Ogre::RenderOperation::OT_LINE_LIST); 
+	//myManualObject4->position(mModelNode->getPosition()[0], 2, mModelNode->getPosition()[2]);
+	//myManualObject4->position(Ogre::Vector3(40, 2, 0) * rotMat); 
+	//// etc 
+	//
+	//myManualObject4->end(); 
+ //
+	//myManualObjectNode4->attachObject(myManualObject4);
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//cosRad = cos(-2*rad);
+	//sinRad = sin(-2*rad);
+	//rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
+
+	//Ogre::ManualObject* myManualObject5 =  mSceneMgr->createManualObject("manual5"); 
+	//Ogre::SceneNode* myManualObjectNode5 = mBodyNode->createChildSceneNode("manual5_node"); 
+ //
+	//// NOTE: The second parameter to the create method is the resource group the material will be added to.
+	//// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
+	//Ogre::MaterialPtr myManualObjectMaterial5 = Ogre::MaterialManager::getSingleton().create("manual5Material","General"); 
+	//myManualObjectMaterial5->setReceiveShadows(false); 
+	//myManualObjectMaterial5->getTechnique(0)->setLightingEnabled(true); 
+	//myManualObjectMaterial5->getTechnique(0)->getPass(0)->setDiffuse(1,0,0,0); 
+	//myManualObjectMaterial5->getTechnique(0)->getPass(0)->setAmbient(0,0,1); 
+	//myManualObjectMaterial5->getTechnique(0)->getPass(0)->setSelfIllumination(0,0,1); 
+
+	////myManualObjectMaterial->dispose();  // dispose pointer, not the material
+ //
+	//myManualObject5->begin("manual5Material", Ogre::RenderOperation::OT_LINE_LIST); 
+	//myManualObject5->position(mModelNode->getPosition()[0], 2, mModelNode->getPosition()[2]);
+	//myManualObject5->position(Ogre::Vector3(40, 2, 0) * rotMat); 
+	//// etc 
+	//
+	//myManualObject5->end(); 
+ //
+	//myManualObjectNode5->attachObject(myManualObject5);
 }
 
 Rat::~Rat(void)
@@ -318,7 +433,12 @@ bool Rat::checkInFront(){
 	//Ogre::AxisAlignedBox rRange = app->getPlayerPointer()->getBoundingBox();	//get the players bounding box
 	//return aRange.intersects(rRange);												//return true if the bounding boxes intersect
 
-	double rad = 0.2618;
+	double rad = 0.1309;
+	//rad*=2;
+	double cosRad = cos(rad);
+	double sinRad = sin(rad);
+	Ogre::Matrix3 rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
+
 	Ogre::Vector3 startPos = Ogre::Vector3(mBodyNode->getPosition());
 	startPos[1] = 5;
 	Ogre::Vector3 ray1Dir ;
@@ -327,18 +447,41 @@ bool Rat::checkInFront(){
 	Ogre::Vector3 ray4Dir ;
 	Ogre::Vector3 ray5Dir ;
 	if (mDirection != Ogre::Vector3::ZERO){
-		ray1Dir = Ogre::Vector3(mDirection * Ogre::Vector3(sin(rad), 0, cos(rad)));
-		ray2Dir = Ogre::Vector3(mDirection * Ogre::Vector3(sin(2*rad), 0, cos(2*rad)));
-		ray3Dir = Ogre::Vector3(mDirection * Ogre::Vector3(sin(-rad), 0, cos(-rad)));
-		ray4Dir = Ogre::Vector3(mDirection * Ogre::Vector3(sin(-2*rad), 0, cos(-2*rad)));
 		ray5Dir = Ogre::Vector3(mDirection);
+		ray1Dir = Ogre::Vector3(mDirection * rotMat);
+		
+		cosRad = cos(-rad);
+		sinRad = sin(-rad);
+		rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
+		ray2Dir = Ogre::Vector3(mDirection * rotMat);
+		cosRad = cos(2*rad);
+		sinRad = sin(2*rad);
+		rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
+		ray3Dir = Ogre::Vector3(mDirection * rotMat);
+		cosRad = cos(-2*rad);
+		sinRad = sin(-2*rad);
+		rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
+		ray4Dir = Ogre::Vector3(mDirection * rotMat);
 	}
 	else{
-		ray1Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * Ogre::Vector3(sin(rad), 0, cos(rad)));
-		ray2Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * Ogre::Vector3(sin(2*rad), 0, cos(2*rad)));
-		ray3Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * Ogre::Vector3(sin(-rad), 0, cos(-rad)));
-		ray4Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * Ogre::Vector3(sin(-2*rad), 0, cos(-2*rad)));
 		ray5Dir = Ogre::Vector3(1, 0, 0);
+
+		ray1Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * rotMat);
+		
+		cosRad = cos(-rad);
+		sinRad = sin(-rad);
+		rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
+		ray2Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * rotMat);
+		
+		cosRad = cos(2*rad);
+		sinRad = sin(2*rad);
+		rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
+		ray3Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * rotMat);
+		
+		cosRad = cos(-2*rad);
+		sinRad = sin(-2*rad);
+		rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
+		ray4Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * rotMat);
 	}
 	Ogre::Ray ray1 = Ogre::Ray(startPos, ray1Dir);
 	Ogre::Ray ray2 = Ogre::Ray(startPos, ray2Dir);
@@ -356,7 +499,7 @@ bool Rat::checkInFront(){
 	if (p->getPosition().distance(mBodyNode->getPosition()) <= 40){
 		for (Ogre::Ray ray : rayList){
 			if(ray.intersects(p->getBoundingBox()).first){
-				//std::cout << ray.intersects(p->getBoundingBox()).second << std::endl;
+				std::cout << "intersects at " << ray.getDirection() * ray.intersects(p->getBoundingBox()).second << std::endl;
 				std::cout << "I see you!!" << std::endl;
 				return true;
 			}
