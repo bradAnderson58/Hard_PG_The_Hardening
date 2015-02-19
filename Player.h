@@ -16,13 +16,13 @@ public:
 
 	void update(Ogre::Real deltaTime);			// update hero!
 	void updateLocomote(Ogre::Real deltaTime);
-	void setMovement(bool on);				//set the movemnt
-	void rotationCode(OIS::MouseEvent arg);  //Rotate the hero when we move the mouse
+	void setMovement(bool on);					//set the movemnt
+	void rotationCode(OIS::MouseEvent arg);		//Rotate the hero when we move the mouse
 
-	void rotationCode(double arg);			//Rotate the hero
-	void cameraRot(double arg);				//for rotating camera with RS joystick
-	void playerRot(double arg);				//for rotating player with LS joystick
-	void setVelocity(double arg);			//Set how fast to walk
+	void rotationCode(double arg);				//Rotate the hero
+	void cameraRot(double arg);					//for rotating camera with RS joystick
+	void playerRot(double arg);					//for rotating player with LS joystick
+	void setVelocity(double arg);				//Set how fast to walk
 	void buttonAnimation(int en, bool start);	//tell me what animation to do
 	
 	double mPlayerRot;
@@ -44,16 +44,19 @@ public:
 	void restart();
 	void setInitPos(Ogre::Vector3 p){initPos = p;}
 
-	void checkHits();  //for attacks - check if an enemy gets hit
-	void getHurt(int dam);		//code for when your getting hurt
+	void checkHits();			// for attacks - check if an enemy gets hit
+	void getHurt(int dam);		// code for when your getting hurt
 	void setBlocking(bool y) { isBlocking = y; }
 
-	UsableItems* getWpn(){ return equippedWpn; }	//The weapon you are using
+	UsableItems* getWpn(){ return equippedWpn; }		// The weapon you are using
 	UsableItems* getShield(){ return equippedShield; }
-	UsableItems* getHelm(){ return equippedHelm;}
+	UsableItems* getHelm(){	return equippedHelm; }
 	UsableItems* getBoobs(){ return equippedBoobs; }	// really?
 	UsableItems* getPants(){ return equippedPants; }
 	UsableItems* getNeck(){ return equippedNeck; }
+
+	void updateFace();			// change face img file based on status
+	std::string getFace() { return mFace; }
 
 	std::vector<UsableItems*> getInventory(){ return inventory; }  //return inventory for GUI purposes
 	void pushInventory(UsableItems* i){inventory.push_back(i); }   //push
@@ -63,15 +66,15 @@ public:
 	Ogre::SceneNode* getMBodyNode(){return mModelNode;}
 
 private:
-	bool fForward; //how am I moving? Each flag indicates a direction
+	bool fForward;		//how am I moving? Each flag indicates a direction
 
 	bool fRot;
 	double mRotator;
-	double speed;	//how fast to move
+	double speed;		//how fast to move
 
 	Ogre::SceneNode *mAttackNode;	//use this for bounding area for Yoshimi attacks
 	Ogre::Entity *mAttackEntity;
-	Ogre::SceneNode* mNullCamera;		//For rotating just the camera
+	Ogre::SceneNode* mNullCamera;	//For rotating just the camera
 
 	enum AnimID
 	{
@@ -134,10 +137,13 @@ private:
 
 	double mDamage;
 	double mDefense;
-	
-	void dealDamage(NPC *enemy);  //deal damage to an enemy
 
-	bool isBlocking;  //whether the player is currently blocking
+	std::string mFace;			// filename for img to represent character status
+	// will either hard code additional faces or have a list of them
+
+	void dealDamage(NPC *enemy);	// deal damage to an enemy
+
+	bool isBlocking;				// whether the player is currently blocking
 
 	std::vector<UsableItems*> inventory;
 

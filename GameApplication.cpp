@@ -157,7 +157,8 @@ void GameApplication::createGUI(void)
 	// supposed to display ogre head, not working :/
 	playerImage = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
 			0, wHeight-200, 200, 200, MyGUI::Align::Default, "Main", "face");
-	playerImage->setImageTexture("thumb_cel.png");
+	playerImage->setImageTexture("thumb_cel.png"); // can't get player face here, player doesn't exist yet
+	// this is assuming a set image size...
     playerImage->setImageCoord(MyGUI::IntCoord(0, 0, std::min(128, (int)wWidth), std::min(128, (int)wHeight)));
     playerImage->setImageTile(MyGUI::IntSize(std::min(128, (int)wWidth), std::min(128, (int)wHeight)));
 
