@@ -22,7 +22,6 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	mNullCamera = mBodyNode->createChildSceneNode();
 	Ogre::SceneNode* camNode = mNullCamera->createChildSceneNode();
 	camNode->attachObject(cam);
-	
 
 	fForward = false;  //starts by not moving
 	doingStuff = false;  //starts not doing anything
@@ -109,8 +108,18 @@ void Player::updateDamDef(){
 void Player::update(Ogre::Real deltaTime){
 	this->updateAnimations(deltaTime);	// Update animation playback
 	this->updateLocomote(deltaTime);	// Update Locomotion
-	this->collisionRobots(); //DELETE or refurbish
+	this->collisionRobots();			//DELETE or refurbish
 
+}
+
+// change face img file based on current status
+// call in getHit()?
+void Player::updateFace()
+{
+	if (healthNow <= 0)
+		mFace = "thumb_cel.png";
+	else
+		mFace = "thumb_cel.png";
 }
 
 void Player::updateLocomote(Ogre::Real deltaTime){
