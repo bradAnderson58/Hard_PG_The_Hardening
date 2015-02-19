@@ -20,11 +20,11 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	//mVisionNode->setPosition(mBodyNode->getPosition()[0]-20, mBodyNode->getPosition()[1], mBodyNode->getPosition()[2]);
 	//mVisionNode->setVisible(false);
 
-	rayNode = SceneManager->getRootSceneNode()->createChildSceneNode();
-	rayEntity = mSceneMgr->createEntity("rayCube" + mBodyNode->getName(), Ogre::SceneManager::PT_CUBE);
+	//rayNode = SceneManager->getRootSceneNode()->createChildSceneNode();
+	/*rayEntity = mSceneMgr->createEntity("rayCube" + mBodyNode->getName(), Ogre::SceneManager::PT_CUBE);
 	rayEntity->setMaterialName("Examples/testing");
 	rayNode->setScale(.05,.05,.05);
-	rayNode->attachObject(rayEntity);
+	rayNode->attachObject(rayEntity);*/
 	//rayNode->setPosition(mBodyNode->getPosition());
 
 
@@ -33,6 +33,8 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	wanderAngle = 0;
 	state = s;
 	defense = level * 1;
+	canHit = true;
+	lastHit = 0;
 	setupAnimations();
 
 	//Ogre::ManualObject* myManualObject =  mSceneMgr->createManualObject("manual1"); 
@@ -64,6 +66,8 @@ Rat::~Rat(void)
 }
 
 void Rat::update(Ogre::Real deltaTime){
+	Player* p = app->getPlayerPointer();
+	//std::cout << "DELTATIME: " << deltaTime << std::endl;
 	if (state == GUARD){
 		mDirection = Ogre::Vector3::ZERO;
 		if (checkInFront()){
@@ -78,9 +82,17 @@ void Rat::update(Ogre::Real deltaTime){
 	}
 	else if (state == FLEE){
 		flee();
+		
 	}
 	else if (state == SEEK){
 		seek();
+		if (p->getPosition().distance(mBodyNode->getPosition()) < 5){
+			if (canHit){
+				p->getHurt(damage);
+				canHit = false;
+				lastHit = 2;
+			}
+		}
 	}
 	else if (state == DEAD){
 		state = NONE;
@@ -94,6 +106,13 @@ void Rat::update(Ogre::Real deltaTime){
 	}
 	if (health <= 0 && !(state == DEAD || state == NONE)){
 		state=DEAD;
+	}
+
+	if (state != DEAD && lastHit <= 0){
+		canHit = true;
+	}
+	else if (state != DEAD){
+		lastHit -= deltaTime;
 	}
 	
 	if (mDirection != Ogre::Vector3::ZERO){//if the velocity isnt zero set up animations
@@ -132,6 +151,31 @@ void Rat::update(Ogre::Real deltaTime){
 			mBodyNode->setPosition( myPos.x, myPos.y, zBound - 2);
 			mDirection.z = 0;
 			wanderAngle -= M_PI;
+		}
+
+		if (p->getPosition().distance(mBodyNode->getPosition()) < 2.5){
+			Ogre::Vector3 playerpos = p->getPosition();
+
+			if (playerpos[0] >= mBodyNode->getPosition()[0]){
+				if (mDirection[0] > 0){
+					mDirection[0] = 0;
+				}
+			}
+			else{
+				if (mDirection[0] < 0){
+					mDirection[0] = 0;
+				}
+			}
+			if (playerpos[2] >= mBodyNode->getPosition()[2]){
+				if (mDirection[2] > 0){
+					mDirection[2] = 0;
+				}
+			}
+			else{
+				if (mDirection[2] < 0){
+					mDirection[2] = 0;
+				}
+			}
 		}
 
 		//always rotating
@@ -290,10 +334,10 @@ bool Rat::checkInFront(){
 		ray5Dir = Ogre::Vector3(mDirection);
 	}
 	else{
-		ray1Dir = Ogre::Vector3(mBodyNode->getOrientation().xAxis() * Ogre::Vector3(sin(rad), 0, cos(rad)));
-		ray2Dir = Ogre::Vector3(mBodyNode->getOrientation().xAxis() * Ogre::Vector3(sin(2*rad), 0, cos(2*rad)));
-		ray3Dir = Ogre::Vector3(mBodyNode->getOrientation().xAxis() * Ogre::Vector3(sin(-rad), 0, cos(-rad)));
-		ray4Dir = Ogre::Vector3(mBodyNode->getOrientation().xAxis() * Ogre::Vector3(sin(-2*rad), 0, cos(-2*rad)));
+		ray1Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * Ogre::Vector3(sin(rad), 0, cos(rad)));
+		ray2Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * Ogre::Vector3(sin(2*rad), 0, cos(2*rad)));
+		ray3Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * Ogre::Vector3(sin(-rad), 0, cos(-rad)));
+		ray4Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * Ogre::Vector3(sin(-2*rad), 0, cos(-2*rad)));
 		ray5Dir = Ogre::Vector3(1, 0, 0);
 	}
 	Ogre::Ray ray1 = Ogre::Ray(startPos, ray1Dir);
@@ -307,12 +351,12 @@ bool Rat::checkInFront(){
 	rayList.push_back(ray3);
 	rayList.push_back(ray4);
 	rayList.push_back(ray5);
-	rayNode->setPosition(ray5.getPoint(36));
+	//rayNode->setPosition(ray5.getPoint(36));
 	Player *p = app->getPlayerPointer();
 	if (p->getPosition().distance(mBodyNode->getPosition()) <= 40){
 		for (Ogre::Ray ray : rayList){
 			if(ray.intersects(p->getBoundingBox()).first){
-				std::cout << ray.intersects(p->getBoundingBox()).second << std::endl;
+				//std::cout << ray.intersects(p->getBoundingBox()).second << std::endl;
 				std::cout << "I see you!!" << std::endl;
 				return true;
 			}

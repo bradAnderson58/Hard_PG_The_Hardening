@@ -33,6 +33,9 @@ public:
 	// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
 	Ogre::MaterialPtr myManualObjectMaterial; 
 
+	bool canHit;
+	Ogre::Real lastHit;
+
 private:
 
 	enum AnimID
