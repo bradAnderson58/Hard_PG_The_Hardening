@@ -15,6 +15,7 @@ public:
 		FLEE,
 		DEAD,
 		SEEK,
+		LOST,
 		NONE
 	};
 	Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::GoodBad t, Rat::RatStates s);
@@ -23,18 +24,6 @@ public:
 	void update(Ogre::Real deltaTime);
 	void updateLocomote(Ogre::Real deltaTime);
 	void setMovement(char dir, bool on); //set the movemnt
-
-
-	Ogre::SceneNode *rayNode;
-	Ogre::Entity *rayEntity;
-	
-
-	Ogre::ManualObject* myManualObject; 
-	Ogre::SceneNode* myManualObjectNode; 
- 
-	// NOTE: The second parameter to the create method is the resource group the material will be added to.
-	// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
-	Ogre::MaterialPtr myManualObjectMaterial; 
 
 	bool canHit;
 	Ogre::Real lastHit;
@@ -50,9 +39,6 @@ private:
 	AnimID ratAnim;
 	RatStates state;
 
-	Ogre::SceneNode *mVisionNode;
-	Ogre::Entity *mVisionEntity;
-
 	void setupAnimations();									// load this character's animations
 	void fadeAnimations(Ogre::Real deltaTime);				// blend from one animation to another
 	void updateAnimations(Ogre::Real deltaTime);			// update the animation frame
@@ -60,6 +46,8 @@ private:
 
 
 	double wanderAngle;
+	Ogre::Vector3 lastPlayerPos;
+
 	void attackPlayer(Player* mainPlayer);
 	void attack(NPC* otherGuys);
 	void interact();
