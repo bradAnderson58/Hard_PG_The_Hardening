@@ -1,11 +1,11 @@
-#pragma once
+#ifndef __Projectile_h_
+#define __Projectile_h_
+
 #include "GameApplication.h"
-#include "Player.h"
 #include "Agent.h"
 
-class Agent;
-class Player;
 class GameApplication;
+class Agent;
 
 class Projectile : public Agent
 {
@@ -32,3 +32,4 @@ public:
 
 
 };
+#endif

@@ -26,3 +26,18 @@ Projectile::checkCollision()
 {
 
 }
+
+void Projectile::setupAnimations()
+{
+
+}
+
+void Projectile::fadeAnimations(Ogre::Real deltaTime)
+{
+
+}
+
+void Projectile::updateAnimations(Ogre::Real deltaTime)
+{
+
+}

@@ -2,12 +2,12 @@
 #define __Player_h_
 
 #include "Agent.h"
-#include "Projectile.h"
+//#include "Projectile.h"
 
-class Projectile;
 class GameApplication;
 class NPC;
 class UsableItems;
+class Projectile;
 
 class Player : public Agent{
 

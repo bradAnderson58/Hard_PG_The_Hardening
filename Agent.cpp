@@ -71,6 +71,24 @@ Agent::update(Ogre::Real deltaTime)
 
 
 void 
+Agent::updateLocomote(Ogre::Real deltaTime)
+{
+	//DELETE?
+}
+
+void 
+Agent::updateAnimations(Ogre::Real deltaTime)
+{
+	//DELETE?
+}
+
+void 
+Agent::fadeAnimations(Ogre::Real deltaTime)
+{
+	//DELETE?
+}
+
+void 
 Agent::setupAnimations()
 {
 	//overwritten in subclasses
