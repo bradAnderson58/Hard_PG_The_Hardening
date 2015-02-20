@@ -48,11 +48,11 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	level = 1;				//your level
 
 	//attributes for player
-	evilAtt = 1;		//affects crit, mana
-	strengthAtt = 1;	//affects dam, def
-	dexterityAtt = 1;	//affects heal, crit
-	constitutionAtt = 1;//affects def, heal
-	intelligenceAtt = 1;//affects mana, dam
+	evilAtt = 1;			// affects crit, mana
+	strengthAtt = 1;		// affects dam, def
+	dexterityAtt = 1;		// affects heal, crit
+	constitutionAtt = 1;	// affects def, heal
+	intelligenceAtt = 1;	// affects mana, dam
 
 	equippedWpn = new UsableItems(UsableItems::WEAPON, 1, 0, 0, 0, 0, "Bandito Shiv", 1);	//The weapon you are using
 	equippedShield = NULL;
@@ -394,6 +394,13 @@ void Player::getHurt(int damage){
 		app->toggleState(GameApplication::DEAD_STATE);
 	}
 	std::cout << healthNow << std::endl;
+
+}
+
+// create and fire a projectile
+void
+Player::shoot(Ogre::Real deltaTime)
+{
 
 }
 

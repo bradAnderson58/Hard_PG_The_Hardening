@@ -2,7 +2,9 @@
 #define __Player_h_
 
 #include "Agent.h"
+#include "Projectile.h"
 
+class Projectile;
 class GameApplication;
 class NPC;
 class UsableItems;
@@ -40,7 +42,7 @@ public:
 	double getManaNow()		{ return manaNow; }
 
 	void checkBump();
-	Ogre::Vector3 getPosition(){return mBodyNode->getPosition();}
+	Ogre::Vector3 getPosition(){ return mBodyNode->getPosition(); }
 	void restart();
 	void setInitPos(Ogre::Vector3 p){initPos = p;}
 
@@ -138,11 +140,12 @@ private:
 	double mDamage;
 	double mDefense;
 
+
 	std::string mFace;			// filename for img to represent character status
 	// will either hard code additional faces or have a list of them
 
+	void shoot(Ogre::Real deltaTime);	//shoot a projectile
 	void dealDamage(NPC *enemy);	// deal damage to an enemy
-
 	bool isBlocking;				// whether the player is currently blocking
 
 	std::vector<UsableItems*> inventory;

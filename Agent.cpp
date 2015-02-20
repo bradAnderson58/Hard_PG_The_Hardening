@@ -76,26 +76,4 @@ Agent::setupAnimations()
 	//overwritten in subclasses
 }
 
-void 
-Agent::updateAnimations(Ogre::Real deltaTime)
-{
-	//DELETE?
-}
 
-void 
-Agent::fadeAnimations(Ogre::Real deltaTime)
-{
-	//DELETE?
-}
-
-bool 
-Agent::nextLocation()
-{
-	return true; //Delete?
-}
-
-void 
-Agent::updateLocomote(Ogre::Real deltaTime)
-{
-	//DELETE?
-}

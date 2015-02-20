@@ -14,7 +14,6 @@ protected:
 	Ogre::SceneNode* mBodyNode;			// Root node for class
 	Ogre::SceneNode* mModelNode;		// Node for model
 	Ogre::Entity* mModelEntity;
-	
 
 	float height;						// height the character should be moved up
 	float scale;						// scale of character from original model
@@ -74,7 +73,7 @@ protected:
 	Ogre::Vector3 mDirection;				// The direction the object is moving
 	Ogre::Real mWalkSpeed;					// The speed at which the object is moving
 
-	virtual void updateLocomote(Ogre::Real deltaTime);			// update the character's walking
+	virtual void updateLocomote(Ogre::Real deltaTime);	// update the character's walking
 
 	//////////////////////////////////////////////
 	// DELETE?
