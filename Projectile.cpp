@@ -1,12 +1,19 @@
 #include "Projectile.h"
+#include "GameApplication.h"
 
 Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name, 
-	std::string filename, float height, float scale, GameApplication* a):
-	Agent(SceneManager, name, filename, height, scale, a)
+	std::string filename, float height, float scale, GameApplication* app):
+	Agent(SceneManager, name, filename, height, scale, app)
 {
+	// nodes and entities handled through inheritance
+	// game app from agent
+
 	projectile = true;
 	mSpeed = 2.5;
+	mHeight = height;
 	gravity = Ogre::Vector3(0.0, 9.5, 0.0);
+	mTarget = NULL;
+	mDmg = 0.0;
 }
 
 // inherit update from agent.cpp

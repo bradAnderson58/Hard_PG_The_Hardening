@@ -1,18 +1,20 @@
 #ifndef __Projectile_h_
 #define __Projectile_h_
 
-#include "GameApplication.h"
 #include "Agent.h"
 
 class GameApplication;
-class Agent;
 
 class Projectile : public Agent
 {
 private:
 
+	enum AnimID;	// depends on projectile?
+
 	double mSpeed;		// speed of the orb
 	double mDmg;		// damage to deal
+	double mHeight;
+	Agent* mTarget;		// use for targeted attackes, else null
 
 	Ogre::SceneNode *blastNode;		// use for explosion area
 
@@ -27,9 +29,8 @@ private:
 public:
 	
 	Projectile(Ogre::SceneManager* SceneManager, std::string name, 
-		std::string filename, float height, float scale, GameApplication* a);
+		std::string filename, float height, float scale, GameApplication* app);
 	~Projectile();
-
 
 };
 #endif
