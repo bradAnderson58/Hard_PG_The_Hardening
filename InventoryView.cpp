@@ -13,6 +13,7 @@ InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top)
 		left, top-50, 100, 50, MyGUI::Align::Default, "Main", "back");
 	backB->setCaption("<- Back");
 
+	backB->eventMouseButtonClick += MyGUI::newDelegate(this, &InventoryView::buttonHit);
 }
 
 InventoryView::~InventoryView(void)
@@ -23,7 +24,10 @@ InventoryView::~InventoryView(void)
 void
 InventoryView::addItem(UsableItems* item)
 {
+	std::cout << mItemBox->getItemCount() << std::endl;
 	mItemBox->addItem(item);
+	std::cout << mItemBox->getItemCount() << std::endl;
+	// gets added, but doesn't display it...
 }
 
 void 
@@ -60,9 +64,11 @@ InventoryView::updatePlayer()
 void 
 InventoryView::buttonHit(MyGUI::WidgetPtr _sender)
 {
+	std::cout << "inventory button hit." << std::endl;
 	if (_sender->getName() == "back")
 	{
 		std::cout << "close inventory." << std::endl;
-		this->open(false);
+		open(false);
+		
 	}
 }

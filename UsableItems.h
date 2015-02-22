@@ -28,13 +28,17 @@ public:
 		NECKLACE
 	};
 
-	UsableItems(itemType mt, int damstat, int defstat, int critstat, int healthstat, int manastat, std::string n, int resale);
+	UsableItems(itemType mt, int damstat, int defstat, int critstat, 
+		int healthstat, int manastat, std::string n, int resale);
 	~UsableItems();
 
 	//getters for stuffs
 	int getStat(statType getMe);
-	std::string getName(){ return name; };
+	std::string getName(){ return name; }
+	std::string getImgFile(){ return imgFile; }
 	itemType getType(){ return mType; }
+
+	void setImgFile(std::string filename) { imgFile = filename; }
 
 private:
 	itemType mType;  //enum
@@ -48,6 +52,7 @@ private:
 	//display stuff
 	std::string name;
 	// need an img/icon to use in inventory
+	std::string imgFile;
 	// need a model to display in game
 
 	int resaleVal;  //how much its worth

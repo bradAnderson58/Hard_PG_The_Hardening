@@ -115,9 +115,7 @@ public:
 
 protected:
     virtual void createScene(void);
-
 	virtual void createGUI(void);  //for gui's
-
 	virtual void createFrameListener(void);  //for Controller
 
 	void buttonHit(MyGUI::WidgetPtr _sender);

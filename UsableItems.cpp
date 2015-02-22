@@ -12,6 +12,7 @@ UsableItems::UsableItems(itemType mt, int damstat, int defstat, int critstat, in
 	resaleVal = resale;
 
 	name = n;
+	imgFile = "";
 	std::cout << name << std::endl;
 }
 

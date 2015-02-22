@@ -26,7 +26,7 @@ Environment::Environment(Ogre::SceneManager* SceneManager, std::string name, std
 	mBodyNode->scale(scale,scale,scale); // Scale the figure
 
 	inner = new UsableItems(UsableItems::SHIELD, 0, 5, 0, 0, 0, "Barrel Shield", 5); //this will not be hardcoded in the future
-
+	inner->setImgFile("default.png");
 }
 
 Environment::~Environment(){
