@@ -126,7 +126,10 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 		}else{
 			//interact with
 			player->pushInventory(interactWith->getItem());
-				
+
+			// add to inventory gui
+			app->getInventory()->addItem(interactWith->getItem());
+			
 			app->removeNulls(interactWith);
 			interactWith = NULL;
 		}

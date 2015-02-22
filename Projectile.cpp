@@ -9,6 +9,7 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 	// game app from agent
 
 	projectile = true;
+	isActive = false;
 	mSpeed = 2.5;
 	mHeight = height;
 	gravity = Ogre::Vector3(0.0, 9.5, 0.0);

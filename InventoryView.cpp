@@ -1,33 +1,68 @@
 #include "InventoryView.h"
 
-InventoryView::InventoryView(MyGUI::Gui* mGUI)
+InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top)
 {
-	inventW = mGUI->createWidget<MyGUI::Window>("WindowC", 
-			0, 0, 200, 100, MyGUI::Align::Default, "Main", "inventorywindow");
-	inventW->setCaption("inventory goes here");
+	mWindow = mGUI->createWidget<MyGUI::Window>("WindowC", 
+		left, top, 300, 400, MyGUI::Align::Default, "Main", "iWindow");
+	mWindow->setCaption("Inventory Window");
+
+	mItemBox = mGUI->createWidget<MyGUI::ItemBox>("WindowC",
+		left, top+200, 300, 200, MyGUI::Align::Default, "Main", "itembox");
 
 	backB = mGUI->createWidget<MyGUI::Button>("Button", 
-		444, 555, 200, 50, MyGUI::Align::Default, "Main", "back");
+		left, top-50, 100, 50, MyGUI::Align::Default, "Main", "back");
 	backB->setCaption("<- Back");
 
-	mItemBox;
 }
 
 InventoryView::~InventoryView(void)
 {
-
+	
 }
 
-void InventoryView::open()
+void
+InventoryView::addItem(UsableItems* item)
+{
+	mItemBox->addItem(item);
+}
+
+void 
+InventoryView::open(bool visible)
 {
 	// show all elements
-	inventW->setVisible(true);
-	backB->setVisible(true);
-	mItemBox->setVisible(true);
+	mWindow->setVisible(visible);
+	backB->setVisible(visible);
+	mItemBox->setVisible(visible);
 }
 
-void update();			// update rendering of window
-void updateInventory();		// update the contents of our inventory
-void updatePlayer();
+// update rendering of window
+void 
+InventoryView::update()
+{
+	updateInventory();
+}
 
-void buttonHit(MyGUI::WidgetPtr _sender);
+// update the contents of our inventory
+void 
+InventoryView::updateInventory()
+{
+
+}
+
+// changes in inventory should update player stats
+void 
+InventoryView::updatePlayer()
+{
+
+}
+
+// hide inventory if back button hit
+void 
+InventoryView::buttonHit(MyGUI::WidgetPtr _sender)
+{
+	if (_sender->getName() == "back")
+	{
+		std::cout << "close inventory." << std::endl;
+		this->open(false);
+	}
+}

@@ -8,10 +8,12 @@
 #include "UsableItems.h"
 #include "NPC.h"
 #include "Rat.h"
+#include "InventoryView.h"
 
 class Grid;  //okay whatever
 class LoaderClass;
 class Environment;
+class InventoryView;
 
 class GameApplication : public BaseApplication
 {
@@ -29,6 +31,7 @@ private:
 	MyGUI::ButtonPtr inventoryB;		// button to access inventory from pause menu
 	MyGUI::ButtonPtr charRecordB;		// button to acces character records from pause menu
 	MyGUI::ButtonPtr exitB;				// button to exit from pause menu
+	InventoryView* inventory;			// inventory window for gear and items
 
 	std::list<Ogre::SceneNode*> wallList;
 	std::list<Ogre::SceneNode*> borderWalls;
@@ -93,6 +96,7 @@ public:
 
 	void toggleState(GameState s);	// toggle to game state s
 
+	InventoryView* getInventory() { return inventory; }
 	Grid* getGrid(){ return grid; } //get it
 	GameController* getController(){ return gameCont; }
 

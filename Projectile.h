@@ -11,6 +11,8 @@ private:
 
 	enum AnimID;	// depends on projectile?
 
+	bool isActive;
+
 	double mSpeed;		// speed of the orb
 	double mDmg;		// damage to deal
 	double mHeight;

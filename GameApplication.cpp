@@ -115,6 +115,8 @@ GameApplication::toggleState(GameState s)
 	else if(s == PLAYING)		// mode where player interacts with world
 	{
 		// hide menu and inventory
+		mGUI->hidePointer();
+		openInventory(false);
 		openMenu(false);
 		gameState = s;
 	}
@@ -124,6 +126,7 @@ GameApplication::toggleState(GameState s)
 		// for testing, show all gui menus
 		gameState = s;
 		playerPointer->setMovement(false);	// movement locks up when you pause during movement
+		mGUI->showPointer();
 		openMenu(true);
 		for (UsableItems* thing : playerPointer->getInventory()){
 			std::cout << thing->getName() << " for testing - press Y to equip " << thing->getStat(UsableItems::DAMAGE) << std::endl;
@@ -147,16 +150,19 @@ void GameApplication::createGUI(void)
 	mGUI->initialise();  //don't intialize until after resources have been loaded
 	
 	double wWidth, wHeight;
+	int wMiddlish, hMiddlish;
 	wWidth = mWindow->getWidth();
 	wHeight = mWindow->getHeight();
+	wMiddlish = wWidth/3+50;
+	hMiddlish = wHeight/3+50;
 
 	questWin = mGUI->createWidget<MyGUI::Window>("WindowC", 
-			0, 0, 200, 100, MyGUI::Align::Default, "Main", "quest");
+		0, 0, 200, 100, MyGUI::Align::Default, "Main", "quest");
 	questWin->setCaption("Quest/Debug Window?");
 
 	// supposed to display ogre head, not working :/
 	playerImage = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
-			0, wHeight-200, 200, 200, MyGUI::Align::Default, "Main", "face");
+		0, wHeight-200, 200, 200, MyGUI::Align::Default, "Main", "face");
 	playerImage->setImageTexture("thumb_cel.png"); // can't get player face here, player doesn't exist yet
 	// this is assuming a set image size...
     playerImage->setImageCoord(MyGUI::IntCoord(0, 0, std::min(128, (int)wWidth), std::min(128, (int)wHeight)));
@@ -165,21 +171,25 @@ void GameApplication::createGUI(void)
 	// progress bar to track health, update this in addtime
 	// skin		pos			size		alignment			layer
 	healthBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 
-			200, wHeight-50, 200, 50, MyGUI::Align::Default, "Main", "health");
+		200, wHeight-50, 200, 50, MyGUI::Align::Default, "Main", "health");
 	manaBar = mGUI->createWidget<MyGUI::ProgressBar>("ProgressBar", 
-			200, wHeight-100, 200, 30, MyGUI::Align::Default, "Main", "mana");
+		200, wHeight-100, 200, 30, MyGUI::Align::Default, "Main", "mana");
+	
 	// menu buttons
 	inventoryB = mGUI->createWidget<MyGUI::Button>("Button", 
-		wWidth/3+50, wHeight/3+50, 200, 50, MyGUI::Align::Default, "Main", "inventory");
+		wMiddlish, hMiddlish, 200, 50, MyGUI::Align::Default, "Main", "inventory");
 	inventoryB->setCaption("Inventory");
 
 	charRecordB = mGUI->createWidget<MyGUI::Button>("Button", 
-		wWidth/3+50, wHeight/3+100, 200, 50, MyGUI::Align::Default, "Main", "records");
+		wMiddlish, hMiddlish+50, 200, 50, MyGUI::Align::Default, "Main", "records");
 	charRecordB->setCaption("Character Records");
 
 	exitB = mGUI->createWidget<MyGUI::Button>("Button", 
-		wWidth/3+50, wHeight/3+150, 200, 50, MyGUI::Align::Default, "Main", "exit");
+		wMiddlish, hMiddlish+100, 200, 50, MyGUI::Align::Default, "Main", "exit");
 	exitB->setCaption("Exit Game");
+
+	// inventory window
+	inventory = new InventoryView(mGUI, wMiddlish, hMiddlish);
 	
 	// set callbacks
 	inventoryB->eventMouseButtonClick += MyGUI::newDelegate(this, &GameApplication::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
@@ -196,6 +206,7 @@ void GameApplication::createGUI(void)
 	inventoryB->setVisible(false);
 	charRecordB->setVisible(false);
 	exitB->setVisible(false);
+	inventory->open(false);
 	//popMenu->setVisible(false);
 	mGUI->hidePointer();
 
@@ -209,7 +220,7 @@ void GameApplication::buttonHit(MyGUI::WidgetPtr _sender)
 {
 	std::cout << "I'm a MyGUI button!" << std::endl;
 	if (_sender->getName() == "inventory")
-		std::cout << "Open dat inventory!" << std::endl;
+		openInventory(true);
 	else if(_sender->getName() == "records")
 		std::cout << "Char records here" << std::endl;
 	else if (_sender->getName() == "exit")
@@ -220,7 +231,8 @@ void GameApplication::buttonHit(MyGUI::WidgetPtr _sender)
 }
 
 //open in-game menu screen
-void GameApplication::openMenu(bool visible){
+void GameApplication::openMenu(bool visible)
+{
 	//This will be replaced by GUI code
 	//popMenu->setVisible(visible);
 	inventoryB->setVisible(visible);
@@ -228,7 +240,6 @@ void GameApplication::openMenu(bool visible){
 	exitB->setVisible(visible);
 	if (visible)
 	{
-		mGUI->showPointer();
 		std::cout << "This is the main Menu, do this things:" << std::endl;
 		std::cout << "Enter Inventory" << std::endl;
 		std::cout << "Enter Character Record" << std::endl;
@@ -236,13 +247,15 @@ void GameApplication::openMenu(bool visible){
 	}
 	else
 	{
-		mGUI->hidePointer();
 		std::cout << "close menu" << std::endl;
 	}
 }
 
 //open inventory menu
-void GameApplication::openInventory(bool visible){
+void GameApplication::openInventory(bool visible)
+{
+	openMenu(false);
+	inventory->open(visible);
 	if (visible)
 	{
 		std::cout << "Helm: " << playerPointer->getHelm()->getName() << std::endl;
