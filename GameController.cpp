@@ -134,6 +134,11 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 			interactWith = NULL;
 		}
 	}
+	else if (arg.key == OIS::KC_F)
+	{
+		std::cout << "fire?" << std::endl;
+		player->shoot();
+	}
 	else if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || OIS::KC_D) {
 		
 		if (app->getGameState() == GameApplication::PLAYING){
@@ -146,6 +151,7 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 		if(!player->doingStuff){
 			player->buttonAnimation(arg.key, true);
 			player->doingStuff = true;
+				
 		}
 	}
 

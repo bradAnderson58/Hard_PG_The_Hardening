@@ -63,6 +63,11 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 
 	inventory.push_back(new UsableItems(UsableItems::WEAPON, 20, 0, 0, 0, 0, "The Allocator!", 5000));  //Super Awesome weapon for testing
 
+	// some projectile to throw
+	mFireball = new Projectile(SceneManager, "fireball", "geosphere4500.mesh",
+		height, scale, a); 
+
+
 	srand(time(NULL));  //seed for random number generation
 
 	//intialize stats with update stats function
@@ -110,6 +115,7 @@ void Player::update(Ogre::Real deltaTime){
 	this->updateLocomote(deltaTime);	// Update Locomotion
 	this->collisionRobots();			//DELETE or refurbish
 
+	this->mFireball->update(deltaTime);	// update projectile 
 }
 
 // change face img file based on current status
@@ -341,6 +347,7 @@ void Player::buttonAnimation(int en, bool start){
 	else if (en == OIS::MB_Left ) setAnimation(ATTACK_THREE, true);	//use sword
 	else if (en == OIS::MB_Right && start) setAnimation(BLOCK, true);		  //Blocking
 	else if (en == OIS::MB_Right) setAnimation(IDLE_THREE, true);
+	else if (en == OIS::KC_F) setAnimation(ATTACK_TWO, true);
 }
 
 //Player checks the robot list to see if any robots are close enough to hit
@@ -397,11 +404,16 @@ void Player::getHurt(int damage){
 
 }
 
-// create and fire a projectile
+// show and fire a projectile
 void
-Player::shoot(Ogre::Real deltaTime)
+Player::shoot()
 {
-
+	if (!mFireball->isActive())
+	{
+		std::cout << "Fireball!" << std::endl;
+		mFireball->fire(mDirection[0], mDirection[1]+10.0, mDirection[2],
+						getPosition());
+	}
 }
 
 //Expand to cover collisions with all NPCs

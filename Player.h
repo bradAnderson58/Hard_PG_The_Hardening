@@ -49,6 +49,8 @@ public:
 	void getHurt(int dam);		// code for when your getting hurt
 	void setBlocking(bool y) { isBlocking = y; }
 
+	void shoot();	//shoot a projectile
+
 	UsableItems* getWpn(){ return equippedWpn; }		// The weapon you are using
 	UsableItems* getShield(){ return equippedShield; }
 	UsableItems* getHelm(){	return equippedHelm; }
@@ -136,14 +138,14 @@ private:
 	UsableItems *equippedPants;
 	UsableItems *equippedNeck;
 
+	Projectile* mFireball;
+
 	double mDamage;
 	double mDefense;
-
 
 	std::string mFace;			// filename for img to represent character status
 	// will either hard code additional faces or have a list of them
 
-	void shoot(Ogre::Real deltaTime);	//shoot a projectile
 	void dealDamage(NPC *enemy);	// deal damage to an enemy
 	bool isBlocking;				// whether the player is currently blocking
 
