@@ -4,6 +4,7 @@
 #define _USE_MATH_DEFINES   
 #include <math.h>
 
+
 Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a):
 	Agent(SceneManager, name, filename, height, scale, a)
 {
@@ -113,7 +114,6 @@ void Player::updateDamDef(){
 void Player::update(Ogre::Real deltaTime){
 	this->updateAnimations(deltaTime);	// Update animation playback
 	this->updateLocomote(deltaTime);	// Update Locomotion
-	this->collisionRobots();			//DELETE or refurbish
 
 	this->mFireball->update(deltaTime);	// update projectile 
 }
@@ -169,35 +169,8 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 	else if(newPos[2] < -maxZ + .5){
 		newPos[2] = -maxZ + .5;
 	}
-
-	//doing collisions with the house - this is too specific, will need to be changed - KEEP FOR REFERENCE?
-	//house xcoords -18 from center to 15
-	/*house z coords -18 from center to 18
-	Ogre::Vector3 hp = app->getHousePointer()->getPosition();
-	hp[1] = 0;
-	if (newPos.distance(hp) < 25){
-		float xvals = newPos[0] - hp[0];
-		float zvals = newPos[2] - hp[2];
-		if ((xvals < 15 && xvals > -18) && (zvals < 18 && zvals > -18)){
-			if (abs(xvals) > abs(zvals)){
-				if(xvals > 0){
-					newPos[0] = hp[0] + 15;
-				}
-				else{
-					newPos[0] = hp[0] - 18;
-				}
-			}
-			else{
-				if (zvals > 0){
-					newPos[2] = hp[2] + 18;
-				}
-				else{
-					newPos[2] = hp[2] - 18;
-				}
-			}
-		}
-	}*/
-
+	newPos = collisionWalls(newPos);
+	newPos = collisionRobots(newPos);
 	mBodyNode->setPosition(newPos);
 }
 
@@ -418,12 +391,54 @@ Player::shoot()
 
 //Expand to cover collisions with all NPCs
 //robots will push yoshimi out of the way
-void Player::collisionRobots(){
-	//Repurpose
+Ogre::Vector3 Player::collisionRobots(Ogre::Vector3 myPos){
+	std::list<NPC*> npcs = app->getNPCs();
+	double vX;
+	double vY;
+	double magV;
+	double aX;
+	double aY;
+	for (NPC* n : npcs){
+		if (myPos.distance(n->getPosition()) < 2){
+			vX = getPosition()[0] - n->getPosition()[0];
+			vY = getPosition()[2] - n->getPosition()[2];
+			magV = sqrt(vX * vX + vY * vY);
+			aX = n->getPosition()[0] + vX / magV * 2.5;
+			aY = n->getPosition()[2] + vY / magV * 2.5;
+			return Ogre::Vector3(aX, getPosition()[1], aY);
+		}
+	}
+	return myPos;
 }
 
 //moved into updatelocomote - will probably be added back in
-void Player::collisionWalls(){
+Ogre::Vector3 Player::collisionWalls(Ogre::Vector3 myPos){
+	std::list<Ogre::SceneNode*> walls = app->getWallList();
+	//Ogre::Vector3 myPos = mBodyNode->getPosition();
+
+	for (Ogre::SceneNode* w : walls){
+		Ogre::Vector3 wPos = w->getPosition();
+		if ((myPos[0] >= (wPos[0] - 7) && myPos[0] <= (wPos[0] + 7)) && (myPos[2] >= (wPos[2] - 7) && myPos[2] <= (wPos[2] + 7))){
+			if(abs(myPos[0] - wPos[0]) < abs(myPos[2] - wPos[2])){
+				if (abs(myPos[2] - (wPos[2] +7 )) < abs(myPos[2]-(wPos[2] - 7))){
+					myPos[2] = wPos[2] + 7;
+				}
+				else{
+					myPos[2] = wPos[2] - 7;
+				}
+			}
+			else{
+				if (abs(myPos[0] - (wPos[0] + 7)) < abs(myPos[0] - (wPos[0] - 7))){
+					myPos[0] = wPos[0] + 7;
+				}
+				else{
+					myPos[0] = wPos[0] - 7;
+				}
+			}
+			return myPos;
+		}
+	}
+	return myPos;
 	//Repurpose
 }
 

@@ -26,6 +26,7 @@ public:
 	void setMovement(char dir, bool on); //set the movemnt
 
 	void getHurt(int d);
+	Ogre::Vector3 getPosition(){return mBodyNode->getPosition();}
 	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }
 
 protected:
