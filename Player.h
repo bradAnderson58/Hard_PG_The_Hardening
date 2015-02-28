@@ -109,8 +109,8 @@ private:
 	void fadeAnimations(Ogre::Real deltaTime);				// blend from one animation to another
 	void updateAnimations(Ogre::Real deltaTime);			// update the animation frame
 	void setAnimation(AnimID id, bool reset = false);
-	void collisionRobots();
-	void collisionWalls();
+	Ogre::Vector3 collisionRobots(Ogre::Vector3 myPos);
+	Ogre::Vector3 collisionWalls(Ogre::Vector3 myPos);
 
 	//Stats for player
 	double criticalStat;	// chance to cause critical hit
