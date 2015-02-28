@@ -47,9 +47,11 @@ public:
     virtual ~BaseApplication(void);
 
 	Ogre::RenderWindow* getWindow(){ return mWindow; }  //give my window to the controller (or whoever)
+	Ogre::SceneManager* getSceneMgr(){ return mSceneMgr; }  //getter scene manager
 
     virtual void go(void);
 
+	GameController* getGameCont(){ return gameCont; }
 	//Ogre::Camera* mCamera;
 
 protected:
@@ -79,10 +81,6 @@ protected:
 
 	//Fix for 1.9
 	Ogre::OverlaySystem *mOverlaySystem;
-
-	//GUI stuffs?
-	MyGUI::Gui* mGUI;
-	MyGUI::OgrePlatform* mPlatform;
 
     // OgreBites
     OgreBites::SdkTrayManager* mTrayMgr;

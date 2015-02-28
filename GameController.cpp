@@ -1,6 +1,7 @@
 
 #include "GameController.h"
 #include "Environment.h"
+#include "GUIController.h"
 
 //Contructor requires use of GameApps mWindow for binding
 GameController::GameController(GameApplication* a)
@@ -128,7 +129,7 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 			player->pushInventory(interactWith->getItem());
 
 			// add to inventory gui
-			app->getInventory()->addItem(interactWith->getItem());
+			//app->getInventory()->addItem(interactWith->getItem());
 			
 			app->removeNulls(interactWith);
 			interactWith = NULL;
@@ -332,12 +333,12 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 		if (button == 0){
 			//toggleState(INVENTORY);
 			//just show inventory and hide others
-			app->openInventory(true);
+			mGUICont->openInventory(true);
 		}
 		else if (button == 2){
 			//toggleState(CHAR_RECORD);
 			//show record and hide others
-			app->openCharRecord(true);
+			mGUICont->openCharRecord(true);
 		}
 		// need buttons to toggle back to menu
 		// need buttons prompt exit game window

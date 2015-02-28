@@ -12,6 +12,7 @@
 class GameApplication;  //Why do I need to do this?
 class Player;
 class Environment;
+class GUIController;
 
 class GameController : public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener, public Ogre::WindowEventListener
 {
@@ -25,6 +26,8 @@ public:
 
 	void setInteractible(Environment* i){interactWith = i;}  //Make sure to do NULL checking
 
+	void setGUICont(GUIController* g){ mGUICont = g; }
+
 private:
 	OgreBites::InputContext mInputContext;  //for Ogre 1.9
 	OIS::InputManager* mInputManager;
@@ -35,6 +38,7 @@ private:
 
 	GameApplication* app;	//point to main app
 	Player* player;			//point to main player
+	GUIController* mGUICont;
 
 	//Key Handler stuffs
 	bool keyW;
