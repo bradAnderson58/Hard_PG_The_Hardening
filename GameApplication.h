@@ -8,12 +8,11 @@
 #include "UsableItems.h"
 #include "NPC.h"
 #include "Rat.h"
-#include "InventoryView.h"
 
 class Grid;  //okay whatever
 class LoaderClass;
 class Environment;
-class InventoryView;
+class GUIController;
 
 class GameApplication : public BaseApplication
 {
@@ -22,16 +21,7 @@ private:
 	std::list<NPC*> NPClist;
 
 	Player* playerPointer;				//This is our heroic savior
-
-	// gui stuff decl's
-	MyGUI::WindowPtr questWin;			// Window to contain quest text/debug info
-	MyGUI::ImageBox* playerImage;		// image representing player status
-	MyGUI::ProgressPtr healthBar;		// progress bar to track health
-	MyGUI::ProgressPtr manaBar;			// progress bar to track mana
-	MyGUI::ButtonPtr inventoryB;		// button to access inventory from pause menu
-	MyGUI::ButtonPtr charRecordB;		// button to acces character records from pause menu
-	MyGUI::ButtonPtr exitB;				// button to exit from pause menu
-	InventoryView* inventory;			// inventory window for gear and items
+	GUIController* mGUICont;			//point to th controller
 
 	std::list<Ogre::SceneNode*> wallList;
 	std::list<Ogre::SceneNode*> borderWalls;
@@ -66,11 +56,6 @@ public:
     GameApplication(void);
     virtual ~GameApplication(void);
 
-	//menu code stuff - 
-	void openMenu(bool visible);
-	void openInventory(bool visible);
-	void openCharRecord(bool visible);
-
 	//setter for player shits
 	void setPlayer(Player* p);
 
@@ -96,7 +81,6 @@ public:
 
 	void toggleState(GameState s);	// toggle to game state s
 
-	InventoryView* getInventory() { return inventory; }
 	Grid* getGrid(){ return grid; } //get it
 	GameController* getController(){ return gameCont; }
 
