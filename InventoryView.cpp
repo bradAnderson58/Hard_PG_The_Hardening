@@ -1,19 +1,48 @@
 #include "InventoryView.h"
 
+#define INVCELLSIZE 50
+#define EQPCELLSIZE 100
+
 InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top)
 {
-	mWindow = mGUI->createWidget<MyGUI::Window>("WindowC", 
-		left, top, 300, 400, MyGUI::Align::Default, "Main", "iWindow");
-	mWindow->setCaption("Inventory Window");
+	// set initial items to all be NULL
+	int mLeft = left;
+	int mTop = top;
+	int number = 0;
 
-	mItemBox = mGUI->createWidget<MyGUI::ItemBox>("WindowC",
-		left, top+200, 300, 200, MyGUI::Align::Default, "Main", "itembox");
+	selectedRow = 0;
+	selectedCol = 0;
 
 	backB = mGUI->createWidget<MyGUI::Button>("Button", 
-		left, top-50, 100, 50, MyGUI::Align::Default, "Main", "back");
+		left, top, 75, 50, MyGUI::Align::Default, "Main", "back");
 	backB->setCaption("<- Back");
-
 	backB->eventMouseButtonClick += MyGUI::newDelegate(this, &InventoryView::buttonHit);
+
+	head = new Cell(mGUI, mLeft + 100	, mTop		, EQPCELLSIZE, "head");
+	body = new Cell(mGUI, mLeft + 100	, mTop + 100, EQPCELLSIZE, "body");
+	legs = new Cell(mGUI, mLeft + 100	, mTop + 200, EQPCELLSIZE, "legs");
+	weapon = new Cell(mGUI, mLeft		, mTop + 100, EQPCELLSIZE, "weapon");
+	shield = new Cell(mGUI, mLeft + 200	, mTop + 100, EQPCELLSIZE, "shield");
+	necklace = new Cell(mGUI, mLeft + 200, mTop		, EQPCELLSIZE, "neck");
+
+	mTop += 300;
+	mLeft += 25;
+	for(int i = 0; i < 4; i++)
+	{
+		for(int j = 0; j < 5; j++)
+		{
+			std::string name = static_cast<std::ostringstream*>( &(std::ostringstream() << number) )->str();
+			inventoryGrid[i][j] = new Cell(mGUI, mLeft, mTop, INVCELLSIZE, name);
+			inventoryGrid[i][j]->getImageBox()->setAlpha(0.70);
+			inventoryGrid[i][j]->getImageBox()->eventMouseButtonClick 
+				+=  MyGUI::newDelegate(this, &InventoryView::buttonHit);
+			mLeft += INVCELLSIZE;
+			number++;
+		}
+		mLeft = left +25;
+		mTop += INVCELLSIZE;
+	}
+
 }
 
 InventoryView::~InventoryView(void)
@@ -24,19 +53,25 @@ InventoryView::~InventoryView(void)
 void
 InventoryView::addItem(UsableItems* item)
 {
-	std::cout << mItemBox->getItemCount() << std::endl;
-	mItemBox->addItem(item);
-	std::cout << mItemBox->getItemCount() << std::endl;
-	// gets added, but doesn't display it...
+
 }
 
 void 
-InventoryView::open(bool visible)
+InventoryView::show(bool visible)
 {
-	// show all elements
-	mWindow->setVisible(visible);
+	// show all inventory elements
+	for(int i = 0; i < 4; i++)
+		for(int j = 0; j < 5; j++)
+			inventoryGrid[i][j]->show(visible);
+
+	head->show(visible);
+	body->show(visible);
+	legs->show(visible);
+	weapon->show(visible);
+	shield->show(visible);
+	necklace->show(visible);
+
 	backB->setVisible(visible);
-	mItemBox->setVisible(visible);
 }
 
 // update rendering of window
@@ -53,22 +88,35 @@ InventoryView::updateInventory()
 
 }
 
-// changes in inventory should update player stats
-void 
-InventoryView::updatePlayer()
+// get current equipment of player, and update equipment images
+void
+InventoryView::updateEquipment()
 {
 
 }
+
 
 // hide inventory if back button hit
 void 
 InventoryView::buttonHit(MyGUI::WidgetPtr _sender)
 {
-	std::cout << "inventory button hit." << std::endl;
+	std::cout << "I'm a MyGUI button!" << std::endl;
 	if (_sender->getName() == "back")
 	{
-		std::cout << "close inventory." << std::endl;
-		open(false);
-		
+		show(false);
 	}
+	// what inv item is selected
+	else 
+	{
+		// select item, and up its alpha to show which is selected visually
+		inventoryGrid[selectedRow][selectedCol]->getImageBox()->setAlpha(0.70);
+		std::cout << "clicking inv item" << std::endl;
+		std::cout << _sender->getName() << std::endl;
+		int myInt = std::stoi(_sender->getName());
+		selectedRow = myInt / 5;
+		selectedCol = myInt % 5;
+		std::cout << "Row " << selectedRow << " Col " << selectedCol << std::endl;
+		inventoryGrid[selectedRow][selectedCol]->getImageBox()->setAlpha(1.00);
+	}
+
 }
