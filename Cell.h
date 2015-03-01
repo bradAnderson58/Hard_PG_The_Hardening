@@ -13,9 +13,12 @@ public:
 	virtual ~Cell(void);
 
 	void show(bool visible);
-	
-	UsableItems* getItem() { return mItem; }
+	void click();
+	void unClick();
+
+	UsableItems* getItem() { return mItem; } // maybe remove this and adjust scope
 	MyGUI::ImageBox* getImageBox() { return mImgBox; }
+
 	void setItem(UsableItems* item);
 	bool isSelected() { return selected; }
 private:

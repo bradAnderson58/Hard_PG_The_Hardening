@@ -109,14 +109,11 @@ InventoryView::buttonHit(MyGUI::WidgetPtr _sender)
 	else 
 	{
 		// select item, and up its alpha to show which is selected visually
-		inventoryGrid[selectedRow][selectedCol]->getImageBox()->setAlpha(0.70);
-		std::cout << "clicking inv item" << std::endl;
-		std::cout << _sender->getName() << std::endl;
+		inventoryGrid[selectedRow][selectedCol]->unClick();
 		int myInt = std::stoi(_sender->getName());
 		selectedRow = myInt / 5;
 		selectedCol = myInt % 5;
-		std::cout << "Row " << selectedRow << " Col " << selectedCol << std::endl;
-		inventoryGrid[selectedRow][selectedCol]->getImageBox()->setAlpha(1.00);
+		inventoryGrid[selectedRow][selectedCol]->click();
 	}
 
 }

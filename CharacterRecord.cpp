@@ -31,6 +31,9 @@ CharacterRecord::CharacterRecord(MyGUI::Gui* mGUI, int left, int top, GUIControl
 		left + 200, top / 2, 300, 200, MyGUI::Align::Default, "Main", "questdisplay");
 	vQuests->setCaption("Quest Log");
 	*/
+	mSkillTree = new SkillTree(mGUI, left+200, top*3);
+	mSkillTree->reset();
+
 	backB = mGUI->createWidget<MyGUI::Button>("Button", 
 		left + 75, top - 250, 100, 25, MyGUI::Align::Default, "Main", "back");
 	backB->setCaption("<- Back");
@@ -51,6 +54,7 @@ void CharacterRecord::open(bool visible){
 	charFace->setVisible(visible);
 	vStats->setVisible(visible);
 	//vQuests->setVisible(visible);
+	mSkillTree->show(visible);
 }
 
 //called for updating stats or quests?

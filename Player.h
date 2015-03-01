@@ -12,6 +12,16 @@ class UsableItems;
 class Player : public Agent{
 
 public:
+	enum skillID
+	{
+		ABSORB,
+		BASH,
+		HAMSTRING,
+		MASSIVEBLOW,
+		FIREBALL,
+		FREEZE,
+		SHOCK
+	};
 
 	Player(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a);
 	~Player();
