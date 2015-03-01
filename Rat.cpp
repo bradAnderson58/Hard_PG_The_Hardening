@@ -21,6 +21,30 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
 	setupAnimations();
+
+	Ogre::ManualObject* myManualObject =  mSceneMgr->createManualObject("manual1"); 
+	Ogre::SceneNode* myManualObjectNode = mBodyNode->createChildSceneNode("manual1_node"); 
+ 
+	// NOTE: The second parameter to the create method is the resource group the material will be added to.
+	// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
+	Ogre::MaterialPtr myManualObjectMaterial = Ogre::MaterialManager::getSingleton().create("manual1Material","General"); 
+	myManualObjectMaterial->setReceiveShadows(false); 
+	myManualObjectMaterial->getTechnique(0)->setLightingEnabled(true); 
+	myManualObjectMaterial->getTechnique(0)->getPass(0)->setDiffuse(1,0,0,0); 
+	myManualObjectMaterial->getTechnique(0)->getPass(0)->setAmbient(0,0,1); 
+	myManualObjectMaterial->getTechnique(0)->getPass(0)->setSelfIllumination(0,0,1); 
+
+	//myManualObjectMaterial->dispose();  // dispose pointer, not the material
+ 
+	myManualObject->begin("manual1Material", Ogre::RenderOperation::OT_LINE_LIST); 
+	myManualObject->position(mBodyNode->getPosition()[0], 2, mBodyNode->getPosition()[2]);
+	myManualObject->position(Ogre::Vector3(40,2,0)); 
+	// etc 
+	myManualObject->end(); 
+ 
+	myManualObjectNode->attachObject(myManualObject);
+
+	
 }
 
 Rat::~Rat(void)
@@ -60,6 +84,9 @@ void Rat::update(Ogre::Real deltaTime){
 	else if (state == SEEK){
 		seek();
 		lastPlayerPos = p->getPosition();
+		if (!checkInFront()){
+			state = LOST;
+		}
 		if (p->getPosition().distance(mBodyNode->getPosition()) < 5){
 			attackPlayer(p);
 		}
@@ -359,15 +386,40 @@ bool Rat::checkInFront(){
 	//get line between fish direction and player. check angle between 2 vectors
 	//vision calculated by doing the distance between 2 vectors and getting the angle between.
 	Ogre::Vector3 inbetween = mBodyNode->getPosition() - app->getPlayerPointer()->getPosition();
+
 	Ogre::Radian angleBetween;
-	if (mDirection != Ogre::Vector3::ZERO){
-		angleBetween = mDirection.angleBetween(inbetween);
-	}
-	else{
-		angleBetween = lookDir.angleBetween(inbetween);
-	}
+	std::list<Ogre::Entity*> walls = app->getWallEntities();
+	std::pair<bool, Ogre::Real> temp;
+	Ogre::AxisAlignedBox box;
+
+	int inCount = 0;
+	int outCount = 0;
+
+	Ogre::Ray test = Ogre::Ray(mBodyNode->getPosition(), inbetween * -1);
+	//temp = test.intersects(app->getPlayerPointer()->getBoundingBox());
+
 	if (mBodyNode->getPosition().distance(app->getPlayerPointer()->getPosition()) <= 40){
+		if (mDirection != Ogre::Vector3::ZERO){
+			angleBetween = mDirection.angleBetween(inbetween);
+		}
+		else{
+			angleBetween = lookDir.angleBetween(inbetween);
+		}
+		//std::cout << "pos:: " << mBodyNode->getPosition() << std::endl;
 		if (angleBetween.valueDegrees() >= 150 && angleBetween.valueDegrees() <= 180){//will have to change when real model gets in
+			Ogre::Ray ratRay = Ogre::Ray(mBodyNode->getPosition(), inbetween * -1);
+			//std::cout << "ORIGIN: " << mBodyNode->getPosition() << " DIR: " << inbetween << std::endl;
+			for (Ogre::Entity* w : walls){
+				box = w->getWorldBoundingBox(true);
+				temp = ratRay.intersects(box);
+				if (temp.first = true){
+					std::cout << "intersects" << std::endl;
+					if (ratRay.getPoint(temp.second).length() < inbetween.length()){
+						std::cout << "blocked by a wall===========================================================" << std::endl;
+						return false;
+					}
+				}
+			}
 			std::cout << "I see you!!!" << std::endl;
 			return true;
 		}
