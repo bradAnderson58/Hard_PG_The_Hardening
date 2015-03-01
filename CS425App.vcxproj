@@ -52,13 +52,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\boost;$(OGRE_HOME)\Samples\Common\include;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OIS;$(OGRE_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\boost;$(OGRE_HOME)\Samples\Common\include;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OIS;$(OGRE_HOME)\include;C:\MyGUI_3.2.0\Platforms\Ogre\OgrePlatform\include;C:\MyGUI_3.2.0\MyGUIEngine\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OGRE_HOME)\boost\lib;$(OGRE_HOME)\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OgreMain_d.lib;OIS_d.lib;OgreOverlay_d.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\MYGUI_HOME\Release;C:\MYGUI_HOME\Debug;$(OGRE_HOME)\boost\lib;$(OGRE_HOME)\lib\debug;$(OGRE_HOME)\lib\Release;$(OGRE_HOME)\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OgreMain_d.lib;OIS_d.lib;OgreOverlay_d.lib;Winmm.lib;MyGUIEngine_d.lib;MyGUI.OgrePlatform_d.lib;MyGUIEngine.lib;MyGUI.OgrePlatform.lib;freetype.lib;freetype_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(OutDir)\$(TargetFileName)" "$(OGRE_HOME)\Bin\$(Configuration)"</Command>
@@ -73,15 +73,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\boost;$(OGRE_HOME)\Samples\Common\include;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OIS;$(OGRE_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\boost;$(OGRE_HOME)\Samples\Common\include;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OIS;$(OGRE_HOME)\include;C:\MyGUI_3.2.0\MyGUIEngine\include;C:\MyGUI_3.2.0\Platforms\Ogre\OgrePlatform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(OGRE_HOME)\boost\lib;$(OGRE_HOME)\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OgreMain.lib;OIS.lib;OgreOverlay.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\OgreSDK_vc11_v1-9-0\lib\Release;C:\OgreSDK_vc11_v1-9-0\lib\debug;$(OGRE_HOME)\boost\lib;$(OGRE_HOME)\lib\$(Configuration);C:\MYGUI_HOME\Release;C:\MYGUI_HOME\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OgreMain.lib;OIS.lib;OgreOverlay.lib;MyGUIEngine_d.lib;MyGUIEngine.lib;MyGUI.OgrePlatform_d.lib;MyGUI.OgrePlatform.lib;freetype.lib;freetype_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(OutDir)\$(TargetFileName)" "$(OGRE_HOME)\Bin\$(Configuration)"</Command>
@@ -93,11 +93,16 @@
     <ClInclude Include="BaseApplication.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="GameApplication.h" />
+    <ClInclude Include="GameController.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="GUIController.h" />
+    <ClInclude Include="InventoryView.h" />
     <ClInclude Include="IteractableObj.h" />
+    <ClInclude Include="loaderClass.h" />
     <ClInclude Include="NPC.h" />
     <ClInclude Include="Objects.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="Rat.h" />
     <ClInclude Include="StaticObj.h" />
     <ClInclude Include="UsableItems.h" />
@@ -108,12 +113,17 @@
     <ClCompile Include="BaseApplication.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="GameApplication.cpp" />
+    <ClCompile Include="GameController.cpp" />
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="GUIController.cpp" />
     <ClCompile Include="InteractableObj.cpp" />
+    <ClCompile Include="InventoryView.cpp" />
+    <ClCompile Include="LoaderClass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NPC.cpp" />
     <ClCompile Include="Objects.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Rat.cpp" />
     <ClCompile Include="StaticObj.cpp" />
     <ClCompile Include="UsableItems.cpp" />
