@@ -24,6 +24,7 @@ public:
 	void update(Ogre::Real deltaTime);
 	void updateLocomote(Ogre::Real deltaTime);
 	void setMovement(char dir, bool on); //set the movemnt
+	void setStartPos(){startPos = mBodyNode->getPosition();}
 
 	bool canHit;
 	Ogre::Real lastHit;
@@ -44,9 +45,11 @@ private:
 	void updateAnimations(Ogre::Real deltaTime);			// update the animation frame
 	void setAnimation(AnimID id, bool reset = false);
 
-
+	RatStates startState;
+	Ogre::Vector3 startPos;
 	double wanderAngle;
 	Ogre::Vector3 lastPlayerPos;
+	Ogre::Vector3 lookDir;
 
 	void attackPlayer(Player* mainPlayer);
 	void attack(NPC* otherGuys);

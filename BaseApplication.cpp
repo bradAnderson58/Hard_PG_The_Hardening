@@ -42,14 +42,6 @@ BaseApplication::~BaseApplication(void)
     if (mCameraMan) delete mCameraMan;
 	if (mOverlaySystem) delete mOverlaySystem;
 
-	mGUI->shutdown();
-	delete mGUI;
-	mGUI = 0;   
-	mPlatform->shutdown();
-	delete mPlatform;
-	mPlatform = 0;
-	
-
     //Remove ourself as a Window listener
 	gameCont->removeSelf();
     

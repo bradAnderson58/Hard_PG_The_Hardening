@@ -17,6 +17,9 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	defense = level * 1;
 	canHit = true;
 	lastHit = 0;
+	startState = s;
+	lookDir = Ogre::Vector3(1,0,0);
+	//startPos = mBodyNode->getPosition();
 	setupAnimations();
 }
 
@@ -27,11 +30,21 @@ Rat::~Rat(void)
 
 void Rat::update(Ogre::Real deltaTime){
 	Player* p = app->getPlayerPointer();
-	//std::cout << "DELTATIME: " << deltaTime << std::endl;
 	if (state == GUARD){
-		mDirection = Ogre::Vector3::ZERO;
 		if (checkInFront()){
-			state = SEEK;
+				state = SEEK;
+		}
+
+		if (startPos.distance(getPosition()) < 2){
+			if (mDirection != Ogre::Vector3::ZERO){
+				lookDir = mDirection;
+			}
+			mDirection = Ogre::Vector3::ZERO;
+		}
+		else{
+			mDirection = startPos - mBodyNode->getPosition();
+			mDirection.normalise();
+			mDirection *= RAT_SPEED;
 		}
 	}
 	else if (state == WANDER){
@@ -48,11 +61,7 @@ void Rat::update(Ogre::Real deltaTime){
 		seek();
 		lastPlayerPos = p->getPosition();
 		if (p->getPosition().distance(mBodyNode->getPosition()) < 5){
-			if (canHit){
-				p->getHurt(damage);
-				canHit = false;
-				lastHit = 2;
-			}
+			attackPlayer(p);
 		}
 		else if (p->getPosition().distance(mBodyNode->getPosition()) > 50){
 			state = LOST;
@@ -60,9 +69,12 @@ void Rat::update(Ogre::Real deltaTime){
 	}
 	else if(state == LOST){
 		if (lastPlayerPos.distance(mBodyNode->getPosition()) < 2){
-			state = WANDER;
+			state = startState;
 		}
 		else{
+			if (checkInFront()){
+				state = SEEK;
+			}
 			mDirection = lastPlayerPos - mBodyNode->getPosition();
 			mDirection.normalise();
 			mDirection *= RAT_SPEED;
@@ -76,8 +88,11 @@ void Rat::update(Ogre::Real deltaTime){
 		return;
 	}
 	else{
+		lookDir = mDirection;
 		mDirection = Ogre::Vector3::ZERO;
 	}
+
+
 	if (health <= 0 && !(state == DEAD || state == NONE)){
 		state=DEAD;
 	}
@@ -88,95 +103,28 @@ void Rat::update(Ogre::Real deltaTime){
 	else if (state != DEAD){
 		lastHit -= deltaTime;
 	}
-	
-	if (mDirection != Ogre::Vector3::ZERO){//if the velocity isnt zero set up animations
-		//if (ratAnim != WALK){
-		//	setAnimation(WALK);
-		//}
-		mTimer = 0;
-
-		//check wall issues
-		//checkBoundaryCollision();  
-		float xBound = (app->getXmax() * 10) - 5;
-		float zBound = (app->getZmax() * 10) - 5;
-		Ogre::Vector3 myPos = mBodyNode->getPosition();
-		//Ogre::Vector3 house = app->getHousePointer()->getPosition();
-		//house.y = 0;  //to prevent crazies
-
-		if (myPos.x <= -xBound){
-			//hit bounds in x direction
-			mBodyNode->setPosition(-xBound + 2, myPos.y, myPos.z);
-			mDirection.x = -0;
-			wanderAngle -= M_PI;
-		}else if ( myPos.x >= xBound){
-	
-			mBodyNode->setPosition(xBound - 2, myPos.y, myPos.z);
-			mDirection.x = 0;
-			wanderAngle -= M_PI;
-		}
-		if (myPos.z <= -zBound){
-			//hit bounds in z direction
-			mBodyNode->setPosition( myPos.x, myPos.y, -zBound + 2);
-			mDirection.z = 0;
-			wanderAngle -= M_PI;
-			
-		}else if (myPos.z >= zBound){
-			
-			mBodyNode->setPosition( myPos.x, myPos.y, zBound - 2);
-			mDirection.z = 0;
-			wanderAngle -= M_PI;
-		}
-
-		if (p->getPosition().distance(mBodyNode->getPosition()) < 2.5){
-			Ogre::Vector3 playerpos = p->getPosition();
-
-			if (playerpos[0] >= mBodyNode->getPosition()[0]){
-				if (mDirection[0] > 0){
-					mDirection[0] = 0;
-				}
-			}
-			else{
-				if (mDirection[0] < 0){
-					mDirection[0] = 0;
-				}
-			}
-			if (playerpos[2] >= mBodyNode->getPosition()[2]){
-				if (mDirection[2] > 0){
-					mDirection[2] = 0;
-				}
-			}
-			else{
-				if (mDirection[2] < 0){
-					mDirection[2] = 0;
-				}
-			}
-		}
-
-		//always rotating
-		Ogre::Vector3 src = mBodyNode->getOrientation() * Ogre::Vector3::UNIT_X;//rotate for first location
-		if ((1.0f + src.dotProduct(mDirection)) < 0.0001f) 
-		{
-			mBodyNode->yaw(Ogre::Degree(180));
-		}
-		else
-		{
-			Ogre::Quaternion quat = src.getRotationTo(mDirection.normalisedCopy());
-			mBodyNode->rotate(quat);
-		}
-		//mDirection = mDirection * 100;
-		mBodyNode->translate(mDirection);
-	}
 	else{//when velocity is zero set idle animations
-		//if(rarAnim != IDLE ){
-			//setAnimation(IDLE);
-		//}
 		mTimer = 0;
 	}
 
+	checkHit();
+	updateLocomote(deltaTime);
 }
 
 void Rat::updateLocomote(Ogre::Real deltaTime){
-	//will overwrite
+	//always rotating
+	Ogre::Vector3 src = mBodyNode->getOrientation() * Ogre::Vector3::UNIT_X;//rotate for first location
+	if ((1.0f + src.dotProduct(mDirection)) < 0.0001f) 
+	{
+		mBodyNode->yaw(Ogre::Degree(180));
+	}
+	else
+	{
+		Ogre::Quaternion quat = src.getRotationTo(mDirection.normalisedCopy());
+		mBodyNode->rotate(quat);
+	}
+	//mDirection = mDirection * 100;
+	mBodyNode->translate(mDirection);
 }
 
 
@@ -264,11 +212,19 @@ void Rat::setAnimation(AnimID id, bool reset){
 }
 
 void Rat::attackPlayer(Player* mainPlayer){
-	//possibly change to something else
+	if (canHit){
+		dealDamagePlayer(mainPlayer);
+		canHit = false;
+		lastHit = 2;
+	}
 }
 
 void Rat::attack(NPC* otherGuys){
-	//possibly change to something else
+	if (canHit){
+		dealDamage(otherGuys);
+		canHit = false;
+		lastHit = 2;
+	}
 }
 
 void Rat::interact(){
@@ -276,15 +232,127 @@ void Rat::interact(){
 }
 
 void Rat::dealDamage(NPC* guy){
-	//hitting any Rat
+	double randVal = (double)(rand()%100)/100;
+	if (randVal <= crit){
+		guy->getHurt(damage*1.5);
+	}
+	else{
+		guy->getHurt(damage);
+	}
 }
 
 void Rat::dealDamagePlayer(Player* player){
-	//hitting the player
+	double randVal = (double)(rand()%100)/100;
+	if (randVal <= crit){
+		player->getHurt(damage*1.5);
+	}
+	else{
+		player->getHurt(damage);
+	}
 }
 
 void Rat::checkHit(){
-	//look through gameapp to see if something was hit
+	Player* p = app->getPlayerPointer();
+	std::list<Ogre::SceneNode*> walls = app->getWallList();
+	std::list<NPC*> rats = app->getNPCs();
+	if (mDirection != Ogre::Vector3::ZERO){//if the velocity isnt zero set up animations
+		mTimer = 0;
+
+		float xBound = (app->getXmax() * 10) - 5;
+		float zBound = (app->getZmax() * 10) - 5;
+		Ogre::Vector3 myPos = mBodyNode->getPosition();
+
+		if (myPos.x <= -xBound){
+			//hit bounds in x direction
+			mBodyNode->setPosition(-xBound + 2, myPos.y, myPos.z);
+			mDirection.x = -0;
+			wanderAngle -= M_PI;
+		}else if ( myPos.x >= xBound){
+	
+			mBodyNode->setPosition(xBound - 2, myPos.y, myPos.z);
+			mDirection.x = 0;
+			wanderAngle -= M_PI;
+		}
+		if (myPos.z <= -zBound){
+			//hit bounds in z direction
+			mBodyNode->setPosition( myPos.x, myPos.y, -zBound + 2);
+			mDirection.z = 0;
+			wanderAngle -= M_PI;
+			
+		}else if (myPos.z >= zBound){
+			
+			mBodyNode->setPosition( myPos.x, myPos.y, zBound - 2);
+			mDirection.z = 0;
+			wanderAngle -= M_PI;
+		}
+	}
+	
+	if (p->getPosition().distance(mBodyNode->getPosition()) < 2.5){
+		Ogre::Vector3 playerpos = p->getPosition();
+
+		if (playerpos[0] >= mBodyNode->getPosition()[0]){
+			if (mDirection[0] > 0){
+				mDirection[0] = 0;
+			}
+		}
+		else{
+			if (mDirection[0] < 0){
+				mDirection[0] = 0;
+			}
+		}
+		if (playerpos[2] >= mBodyNode->getPosition()[2]){
+			if (mDirection[2] > 0){
+				mDirection[2] = 0;
+			}
+		}
+		else{
+			if (mDirection[2] < 0){
+				mDirection[2] = 0;
+			}
+		}
+	}
+
+	Ogre::Vector3 myPos = mBodyNode->getPosition();
+
+	for (Ogre::SceneNode* w : walls){
+		Ogre::Vector3 wPos = w->getPosition();
+		if ((myPos[0] >= (wPos[0] - 7) && myPos[0] <= (wPos[0] + 7)) && (myPos[2] >= (wPos[2] - 7) && myPos[2] <= (wPos[2] + 7))){
+			if(abs(myPos[0] - wPos[0]) < abs(myPos[2] - wPos[2])){
+				if (abs(myPos[2] - (wPos[2] +7 )) < abs(myPos[2]-(wPos[2] - 7))){
+					myPos[2] = wPos[2] + 7;
+				}
+				else{
+					myPos[2] = wPos[2] - 7;
+				}
+			}
+			else{
+				if (abs(myPos[0] - (wPos[0] + 7)) < abs(myPos[0] - (wPos[0] - 7))){
+					myPos[0] = wPos[0] + 7;
+				}
+				else{
+					myPos[0] = wPos[0] - 7;
+				}
+			}
+			mBodyNode->setPosition(myPos);
+		}
+	}
+	double vX;
+	double vY;
+	double magV;
+	double aX;
+	double aY;
+	for (NPC* r : rats){
+		if (r != this){
+			if (r->getPosition().distance(getPosition()) < 8){
+				vX = getPosition()[0] - r->getPosition()[0];
+				vY = getPosition()[2] - r->getPosition()[2];
+				magV = sqrt(vX * vX + vY * vY);
+				aX = r->getPosition()[0] + vX / magV * 8;
+				aY = r->getPosition()[2] + vY / magV * 8;
+				mBodyNode->setPosition(aX, getPosition()[1], aY);
+			}
+		}
+	}
 }
 
 bool Rat::checkInFront(){
@@ -296,9 +364,8 @@ bool Rat::checkInFront(){
 		angleBetween = mDirection.angleBetween(inbetween);
 	}
 	else{
-		angleBetween = Ogre::Vector3(1,0,0).angleBetween(inbetween);
+		angleBetween = lookDir.angleBetween(inbetween);
 	}
-	//std::cout << "angleBetween: " << angleBetween.valueDegrees() << std::endl;
 	if (mBodyNode->getPosition().distance(app->getPlayerPointer()->getPosition()) <= 40){
 		if (angleBetween.valueDegrees() >= 150 && angleBetween.valueDegrees() <= 180){//will have to change when real model gets in
 			std::cout << "I see you!!!" << std::endl;
@@ -306,86 +373,6 @@ bool Rat::checkInFront(){
 		}
 	}
 	return false;
-
-	//I dont want to remove this yet. Its the vision using rays
-
-	//double rad = 0.1309;
-	////rad*=2;
-	//double cosRad = cos(rad);
-	//double sinRad = sin(rad);
-	//Ogre::Matrix3 rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
-
-	//Ogre::Vector3 startPos = Ogre::Vector3(mBodyNode->getPosition());
-	//startPos[1] = 5;
-	//Ogre::Vector3 ray1Dir ;
-	//Ogre::Vector3 ray2Dir ;
-	//Ogre::Vector3 ray3Dir ;
-	//Ogre::Vector3 ray4Dir ;
-	//Ogre::Vector3 ray5Dir ;
-	//if (mDirection != Ogre::Vector3::ZERO){
-	//	ray5Dir = Ogre::Vector3(mDirection);
-	//	ray1Dir = Ogre::Vector3(mDirection * rotMat);
-	//	
-	//	cosRad = cos(-rad);
-	//	sinRad = sin(-rad);
-	//	rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
-	//	ray2Dir = Ogre::Vector3(mDirection * rotMat);
-	//	cosRad = cos(2*rad);
-	//	sinRad = sin(2*rad);
-	//	rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
-	//	ray3Dir = Ogre::Vector3(mDirection * rotMat);
-	//	cosRad = cos(-2*rad);
-	//	sinRad = sin(-2*rad);
-	//	rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
-	//	ray4Dir = Ogre::Vector3(mDirection * rotMat);
-	//}
-	//else{
-	//	ray5Dir = Ogre::Vector3(1, 0, 0);
-
-	//	ray1Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * rotMat);
-	//	
-	//	cosRad = cos(-rad);
-	//	sinRad = sin(-rad);
-	//	rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
-	//	ray2Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * rotMat);
-	//	
-	//	cosRad = cos(2*rad);
-	//	sinRad = sin(2*rad);
-	//	rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
-	//	ray3Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * rotMat);
-	//	
-	//	cosRad = cos(-2*rad);
-	//	sinRad = sin(-2*rad);
-	//	rotMat = Ogre::Matrix3(cosRad, 0, -sinRad ,0,1,0,sinRad,0,cosRad);
-	//	ray4Dir = Ogre::Vector3(Ogre::Vector3(1,0,0) * rotMat);
-	//}
-	//
-	//Ogre::Ray ray1 = Ogre::Ray(startPos, ray1Dir);
-	//Ogre::Ray ray2 = Ogre::Ray(startPos, ray2Dir);
-	//Ogre::Ray ray3 = Ogre::Ray(startPos, ray3Dir);
-	//Ogre::Ray ray4 = Ogre::Ray(startPos, ray4Dir);
-	//Ogre::Ray ray5 = Ogre::Ray(startPos, ray5Dir);
-	//std::list<Ogre::Ray> rayList;
-	//rayList.push_back(ray1);
-	//rayList.push_back(ray2);
-	//rayList.push_back(ray3);
-	//rayList.push_back(ray4);
-	//rayList.push_back(ray5);
-	////rayNode->setPosition(ray5.getPoint(36));
-	//Player *p = app->getPlayerPointer();
-	//if (p->getPosition().distance(mBodyNode->getPosition()) <= 40){
-	//	for (Ogre::Ray ray : rayList){
-	//		if(ray.intersects(p->getBoundingBox()).first){
-	//			std::cout << "intersects at " << ray.getDirection() * ray.intersects(p->getBoundingBox()).second << std::endl;
-	//			std::cout << "I see you!!" << std::endl;
-	//			return true;
-	//		}
-	//	}
-	//}
-	//else{ 
-	//}
-	//return false;
-
 }
 
 void Rat::wander(){
