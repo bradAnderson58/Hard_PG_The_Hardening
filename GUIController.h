@@ -10,6 +10,7 @@
 
 class GameApplication;
 class InventoryView;
+class CharacterRecord;
 
 class GUIController{
 public:
@@ -32,6 +33,8 @@ public:
 	void openInventory(bool visible);
 	void openCharRecord(bool visible);
 
+	void recordUpdator();
+
 private:
 
 	MyGUI::OgrePlatform* mPlatform;	//this is the base platform for the mygui stuffs
@@ -48,6 +51,7 @@ private:
 	MyGUI::ButtonPtr charRecordB;		// button to acces character records from pause menu
 	MyGUI::ButtonPtr exitB;				// button to exit from pause menu
 	InventoryView* inventory;			// inventory window for gear and items
+	CharacterRecord* charRecord;		//character records (stats, quests, ect...)
 
 	void buttonHit(MyGUI::WidgetPtr _sender);
 

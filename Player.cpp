@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "GameApplication.h"
+#include "GUIController.h"
 #include "NPC.h"
 #define _USE_MATH_DEFINES   
 #include <math.h>
@@ -73,6 +74,8 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 
 	//intialize stats with update stats function
 	updateStats();
+	updateGUI = a->getGUICont();
+	//updateGUI->recordUpdator();
 	
 	setupAnimations();
 }

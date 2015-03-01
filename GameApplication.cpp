@@ -76,6 +76,7 @@ GameApplication::addTime(Ogre::Real deltaTime)
 		}
 		mGUICont->setHealth(playerPointer->getHealthNow()); //healthBar->setProgressPosition(playerPointer->getHealthNow()); //American Association of Highway Officials, Litigators, and Engineers 
 		mGUICont->setManaBar(playerPointer->getManaNow());  //manaBar->setProgressPosition(playerPointer->getManaNow());
+		mGUICont->recordUpdator();
 	}
 }
 
