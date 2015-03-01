@@ -5,6 +5,7 @@
 #include "Projectile.h"
 
 class GameApplication;
+class GUIController;
 class NPC;
 class UsableItems;
 
@@ -57,6 +58,15 @@ public:
 	UsableItems* getBoobs(){ return equippedBoobs; }	// really?
 	UsableItems* getPants(){ return equippedPants; }
 	UsableItems* getNeck(){ return equippedNeck; }
+
+	//get Attributes for player
+	int getStrength(){ return strengthAtt; }
+	int getDex(){ return dexterityAtt; }
+	int getConstitution(){ return constitutionAtt; }
+	int getIntel(){ return intelligenceAtt; }
+	int getEvil(){ return evilAtt; }
+
+	GUIController* updateGUI;		//need a pointer to the GUIController for updating
 
 	void updateFace();			// change face img file based on status
 	std::string getFace() { return mFace; }

@@ -86,6 +86,7 @@ public:
 
 	Grid* getGrid(){ return grid; } //get it
 	GameController* getController(){ return gameCont; }
+	GUIController* getGUICont(){ return mGUICont; }
 
 	void setShutDown(bool s){ mShutDown = s; }		//to shutdown the game
 	GameState getGameState(){ return gameState; }	//To get the current GameState

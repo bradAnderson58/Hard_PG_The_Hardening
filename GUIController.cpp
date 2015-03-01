@@ -3,6 +3,7 @@
 #include "GameApplication.h"
 #include "GameController.h"
 #include "InventoryView.h"
+#include "CharacterRecord.h"
 
 
 GUIController::GUIController(GameApplication* a){
@@ -25,14 +26,16 @@ GUIController::GUIController(GameApplication* a){
 	wMiddlish = wWidth/3+50;
 	hMiddlish = wHeight/3+50;
 
+	//This is for the quest log - stylize later
 	questWin = mGUI->createWidget<MyGUI::Window>("WindowC", 
 		0, 0, 200, 100, MyGUI::Align::Default, "Main", "quest");
 	questWin->setCaption("Quest/Debug Window?");
 
-	// supposed to display ogre head, not working :/
+	// supposed to display ogre head, working
 	playerImage = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
 		0, wHeight-200, 200, 200, MyGUI::Align::Default, "Main", "face");
 	playerImage->setImageTexture("thumb_cel.png"); // can't get player face here, player doesn't exist yet
+
 	// this is assuming a set image size...
     playerImage->setImageCoord(MyGUI::IntCoord(0, 0, std::min(128, (int)wWidth), std::min(128, (int)wHeight)));
     playerImage->setImageTile(MyGUI::IntSize(std::min(128, (int)wWidth), std::min(128, (int)wHeight)));
@@ -57,15 +60,17 @@ GUIController::GUIController(GameApplication* a){
 		wMiddlish, hMiddlish+100, 200, 50, MyGUI::Align::Default, "Main", "exit");
 	exitB->setCaption("Exit Game");
 
+	
+	//character record window
+	charRecord = new CharacterRecord(mGUI, wMiddlish, hMiddlish, this);
+	
 	// inventory window
 	inventory = new InventoryView(mGUI, wMiddlish+100, hMiddlish-200);
 	
 	// set callbacks
 	inventoryB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
-	charRecordB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit);	
+	charRecordB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit);
 	exitB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit);
-
-	//inventoryB->attachToWidget(popMenu, popMenu->getWidgetStyle(), "Main");
 
 	// hide guis to reveal later
 	questWin->setVisible(false);
@@ -75,8 +80,9 @@ GUIController::GUIController(GameApplication* a){
 	inventoryB->setVisible(false);
 	charRecordB->setVisible(false);
 	exitB->setVisible(false);
+
+	charRecord->open(false);
 	inventory->show(false);
-	//popMenu->setVisible(false);
 	mGUI->hidePointer();
 
 }
@@ -92,16 +98,12 @@ GUIController::~GUIController(){
 
 void GUIController::buttonHit(MyGUI::WidgetPtr _sender)
 {
-	std::cout << "I'm a MyGUI button!" << std::endl;
 	if (_sender->getName() == "inventory")
 		openInventory(true);
 	else if(_sender->getName() == "records")
-		std::cout << "Char records here" << std::endl;
+		openCharRecord(true);
 	else if (_sender->getName() == "exit")
-	{
-		std::cout << "exit dis game now!" << std::endl;
 		app->setShutDown(true);   //app shutdown
-	}
 }
 
 //open in-game menu screen
@@ -128,27 +130,15 @@ void GUIController::openMenu(bool visible)
 //open inventory menu
 void GUIController::openInventory(bool visible)
 {
-	openMenu(false);
+	openMenu(!visible);
 	inventory->show(visible);
-	if (visible)
-	{
-	}
-	else
-	{
-		std::cout << "close inventory" << std::endl;
-	}
+	
 }
 
+//toggle character records
 void GUIController::openCharRecord(bool visible){
-	if (visible)
-	{
-		std::cout << "Player Name: Mat Cauthon" << std::endl;
-		std::cout << "stats: blah blah" << std::endl;
-	}
-	else
-	{
-		std::cout << "close records" << std::endl;
-	}
+	openMenu(!visible);
+	charRecord->open(visible);
 }
 
 void GUIController::revealHUD(double health, double mana){
@@ -164,4 +154,8 @@ void GUIController::revealHUD(double health, double mana){
 	manaBar->setProgressRange(mana);
 	manaBar->setProgressPosition(mana);
 	manaBar->setVisible(true);
+}
+
+void GUIController::recordUpdator(){
+	charRecord->update(app->getPlayerPointer());
 }
