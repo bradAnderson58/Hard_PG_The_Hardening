@@ -1,6 +1,8 @@
 #include "Projectile.h"
 #include "GameApplication.h"
 
+#define FORWARDVEL 10.0
+
 Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name, 
 	std::string filename, float height, float scale, GameApplication* app):
 	Agent(SceneManager, name, filename, height, scale, app)
@@ -14,7 +16,7 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 	mMass = 2.5;
 	mHeight = height;	// pass shooters mBodyNode position
 	mDirection = Ogre::Vector3(0,0,0);
-	mSpeed = 5.0;
+	mSpeed = 4.0;
 
 	mModelEntity->setCastShadows(false);
 	mModelEntity->setVisible(false);
@@ -62,9 +64,9 @@ Projectile::fire(Ogre::Real vx, Ogre::Real vy, Ogre::Real vz,
 	mModelEntity->setVisible(true);
 	// set up the initial state
 	mBodyNode->setPosition(pos);
-	this->vel.x = vx;
+	this->vel.x = vx * FORWARDVEL;
 	this->vel.y = vy;
-	this->vel.z = vz;
+	this->vel.z = vz * FORWARDVEL;
 	gravity.x = 0;
 	gravity.y = Ogre::Real(-9.81);
 	gravity.z = 0;
