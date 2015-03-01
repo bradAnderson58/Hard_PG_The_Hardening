@@ -174,6 +174,8 @@ void LoaderClass::loadEnv(){
 					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
 					mNode->setPosition(grid->getPosition(i,j).x, 10.0f, grid->getPosition(i,j).z);
 					app->pushWalls(mNode);
+					//mNode->showBoundingBox(true);
+					app->pushWallEntity(ent);
 				}
 				else if (c == 'i') // create a invisible wall
 				{
