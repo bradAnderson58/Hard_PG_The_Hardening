@@ -65,7 +65,7 @@ GUIController::GUIController(GameApplication* a){
 	charRecord = new CharacterRecord(mGUI, wMiddlish, hMiddlish, this);
 	
 	// inventory window
-	inventory = new InventoryView(mGUI, wMiddlish+100, hMiddlish-200);
+	inventory = new InventoryView(mGUI, wMiddlish+100, hMiddlish-200, this);
 	
 	// set callbacks
 	inventoryB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')

@@ -9,10 +9,12 @@
 #include <MyGUI.h>
 #include <MyGUI_OgrePlatform.h>
 
+class GUIController;
+
 class InventoryView
 {
 public:
-	InventoryView(MyGUI::Gui* mGUI, int left, int top);
+	InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController* gc);
 	virtual ~InventoryView(void);
 
 	void addItem(UsableItems* item);
@@ -22,6 +24,8 @@ public:
 private:
 	int selectedRow;
 	int selectedCol;
+
+	GUIController* mainMenu;	//this is for turning control back over the the main menu at the end
 
 	Cell* inventoryGrid[4][5];		// 20 items
 	Cell* head;

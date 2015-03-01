@@ -22,29 +22,29 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	//startPos = mBodyNode->getPosition();
 	setupAnimations();
 
-	//Ogre::ManualObject* myManualObject =  mSceneMgr->createManualObject("manual1"); 
-	//Ogre::SceneNode* myManualObjectNode = mBodyNode->createChildSceneNode("manual1_node"); 
- //
-	//// NOTE: The second parameter to the create method is the resource group the material will be added to.
-	//// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
-	//Ogre::MaterialPtr myManualObjectMaterial = Ogre::MaterialManager::getSingleton().create("manual1Material","General"); 
-	//myManualObjectMaterial->setReceiveShadows(false); 
-	//myManualObjectMaterial->getTechnique(0)->setLightingEnabled(true); 
-	//myManualObjectMaterial->getTechnique(0)->getPass(0)->setDiffuse(1,0,0,0); 
-	//myManualObjectMaterial->getTechnique(0)->getPass(0)->setAmbient(0,0,1); 
-	//myManualObjectMaterial->getTechnique(0)->getPass(0)->setSelfIllumination(0,0,1); 
+	/*   FOR KEVIN TESTING
+	Ogre::ManualObject* myManualObject =  mSceneMgr->createManualObject("manual1"); 
+	Ogre::SceneNode* myManualObjectNode = mBodyNode->createChildSceneNode("manual1_node"); 
+ 
+	// NOTE: The second parameter to the create method is the resource group the material will be added to.
+	// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
+	Ogre::MaterialPtr myManualObjectMaterial = Ogre::MaterialManager::getSingleton().create("manual1Material","General"); 
+	myManualObjectMaterial->setReceiveShadows(false); 
+	myManualObjectMaterial->getTechnique(0)->setLightingEnabled(true); 
+	myManualObjectMaterial->getTechnique(0)->getPass(0)->setDiffuse(1,0,0,0); 
+	myManualObjectMaterial->getTechnique(0)->getPass(0)->setAmbient(0,0,1); 
+	myManualObjectMaterial->getTechnique(0)->getPass(0)->setSelfIllumination(0,0,1); 
 
-	////myManualObjectMaterial->dispose();  // dispose pointer, not the material
- //
-	//myManualObject->begin("manual1Material", Ogre::RenderOperation::OT_LINE_LIST); 
-	//myManualObject->position(mBodyNode->getPosition()[0], 2, mBodyNode->getPosition()[2]);
-	//myManualObject->position(Ogre::Vector3(40,2,0)); 
-	//// etc 
-	//myManualObject->end(); 
- //
-	//myManualObjectNode->attachObject(myManualObject);
-
-	//
+	//myManualObjectMaterial->dispose();  // dispose pointer, not the material
+ 
+	myManualObject->begin("manual1Material", Ogre::RenderOperation::OT_LINE_LIST); 
+	myManualObject->position(mBodyNode->getPosition()[0], 2, mBodyNode->getPosition()[2]);
+	myManualObject->position(Ogre::Vector3(40,2,0)); 
+	// etc 
+	myManualObject->end(); 
+ 
+	myManualObjectNode->attachObject(myManualObject);
+	*/
 }
 
 Rat::~Rat(void)
