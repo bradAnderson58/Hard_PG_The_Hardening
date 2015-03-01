@@ -21,7 +21,7 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
 	setupAnimations();
-
+	/*   FOR KEVIN TESTING
 	Ogre::ManualObject* myManualObject =  mSceneMgr->createManualObject("manual1"); 
 	Ogre::SceneNode* myManualObjectNode = mBodyNode->createChildSceneNode("manual1_node"); 
  
@@ -43,7 +43,7 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	myManualObject->end(); 
  
 	myManualObjectNode->attachObject(myManualObject);
-
+	*/
 	
 }
 
