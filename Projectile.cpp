@@ -11,11 +11,10 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 	
 	mTarget = NULL;
 	mDmg = 1.0;
-	mMass = 1.0;
+	mMass = 2.5;
 	mHeight = height;	// pass shooters mBodyNode position
 	mDirection = Ogre::Vector3(0,0,0);
 	mSpeed = 5.0;
-
 
 	mModelEntity->setCastShadows(false);
 	mModelEntity->setVisible(false);
@@ -53,7 +52,7 @@ void Projectile::updateAnimations(Ogre::Real deltaTime)
 }
 
 //intializes the initial velocities and toggles the agent to shoot
-//also give shooters's current position.
+//also pass in shooters's current position. Fire from that position
 void
 Projectile::fire(Ogre::Real vx, Ogre::Real vy, Ogre::Real vz,
 				 Ogre::Vector3 pos)
@@ -77,16 +76,15 @@ Projectile::fire(Ogre::Real vx, Ogre::Real vy, Ogre::Real vz,
 //updates the current velocity and position of the agent
 //sets a new position according to math
 //agent stops when he touches the ground
-//need to adjust for barrel collision
+//need to adjust for collision
 void
-Projectile::shoot(Ogre::Real deltaTime) // lecture 12 call for every frame of the animation
+Projectile::shoot(Ogre::Real deltaTime) 
 {
 	using namespace Ogre;
-	std::cout << "Firing Captain!" << std::endl;
 	Vector3 pos = this->mBodyNode->getPosition();
 	vel = vel + (mMass*gravity * deltaTime);
-	pos = pos + (vel * mSpeed * deltaTime); // velocity
-	pos = pos + 0.5 * mMass*gravity * deltaTime * deltaTime; // acceleration
+	pos = pos + (vel * mSpeed * deltaTime);	
+	pos = pos + 0.5 * mMass*gravity * deltaTime * deltaTime;
 
 	this->mBodyNode->setPosition(pos);
 	//this->mBodyNode->pitch(Ogre::Degree(20));
@@ -97,8 +95,8 @@ Projectile::shoot(Ogre::Real deltaTime) // lecture 12 call for every frame of th
 	}
 }
 
-// reset the agent to starting position
 // ready to fire again!
+// disable projectile
 void
 Projectile::reload()
 {
