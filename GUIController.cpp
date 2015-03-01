@@ -58,7 +58,7 @@ GUIController::GUIController(GameApplication* a){
 	exitB->setCaption("Exit Game");
 
 	// inventory window
-	inventory = new InventoryView(mGUI, wMiddlish, hMiddlish);
+	inventory = new InventoryView(mGUI, wMiddlish+100, hMiddlish-100);
 	
 	// set callbacks
 	inventoryB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
@@ -75,7 +75,7 @@ GUIController::GUIController(GameApplication* a){
 	inventoryB->setVisible(false);
 	charRecordB->setVisible(false);
 	exitB->setVisible(false);
-	inventory->open(false);
+	inventory->show(false);
 	//popMenu->setVisible(false);
 	mGUI->hidePointer();
 
@@ -129,7 +129,7 @@ void GUIController::openMenu(bool visible)
 void GUIController::openInventory(bool visible)
 {
 	openMenu(false);
-	inventory->open(visible);
+	inventory->show(visible);
 	if (visible)
 	{
 	}

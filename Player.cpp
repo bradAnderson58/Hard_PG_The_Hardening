@@ -66,7 +66,7 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 
 	// some projectile to throw
 	mFireball = new Projectile(SceneManager, "fireball", "geosphere4500.mesh",
-		height, scale, a); 
+		height, scale/4, a); 
 
 
 	srand(time(NULL));  //seed for random number generation
@@ -112,10 +112,12 @@ void Player::updateDamDef(){
 }
 
 void Player::update(Ogre::Real deltaTime){
-	this->updateAnimations(deltaTime);	// Update animation playback
-	this->updateLocomote(deltaTime);	// Update Locomotion
 
-	this->mFireball->update(deltaTime);	// update projectile 
+	this->updateAnimations(deltaTime);		// Update animation playback
+	this->updateLocomote(deltaTime);		// Update Locomotion
+
+	this->mFireball->update(deltaTime);		// update projectile 
+
 }
 
 // change face img file based on current status
@@ -381,7 +383,7 @@ void Player::getHurt(int damage){
 void
 Player::shoot()
 {
-	if (!mFireball->isActive())
+	if (!mFireball->isActive() && !doingStuff)
 	{
 		std::cout << "Fireball!" << std::endl;
 		mFireball->fire(mDirection[0], mDirection[1]+10.0, mDirection[2],

@@ -53,11 +53,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\boost;$(OGRE_HOME)\Samples\Common\include;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OIS;$(OGRE_HOME)\include;C:\MyGUI_3.2.0\Platforms\Ogre\OgrePlatform\include;C:\MyGUI_3.2.0\MyGUIEngine\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\boost;$(OGRE_HOME)\Samples\Common\include;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OIS;$(OGRE_HOME)\include;C:\MyGUI_3.2.0\Platforms\Ogre\OgrePlatform\include;C:\MyGUI_3.2.0\MyGUIEngine\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\MYGUI_HOME\Release;C:\MYGUI_HOME\Debug;$(OGRE_HOME)\boost\lib;$(OGRE_HOME)\lib\debug;$(OGRE_HOME)\lib\Release;$(OGRE_HOME)\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OGRE_HOME)\boost\lib;$(OGRE_HOME)\lib\$(Configuration);C:\MyGUI_home\MyGUIEngine\Debug;C:\MyGUI_home\MyGUIEngine\Release;C:\OgreSDK_vc11_v1-9-0\lib\debug;C:\OgreSDK_vc11_v1-9-0\lib\Release;C:\MyGUI_home\Debug;C:\MyGUI_home\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>OgreMain_d.lib;OIS_d.lib;OgreOverlay_d.lib;Winmm.lib;MyGUIEngine_d.lib;MyGUI.OgrePlatform_d.lib;MyGUIEngine.lib;MyGUI.OgrePlatform.lib;freetype.lib;freetype_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -91,6 +93,7 @@
     <ClInclude Include="Agent.h" />
     <ClInclude Include="BadNPC.h" />
     <ClInclude Include="BaseApplication.h" />
+    <ClInclude Include="Cell.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="GameApplication.h" />
     <ClInclude Include="GameController.h" />
@@ -103,6 +106,7 @@
     <ClInclude Include="Objects.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Rat.h" />
     <ClInclude Include="StaticObj.h" />
     <ClInclude Include="UsableItems.h" />
@@ -111,6 +115,7 @@
     <ClCompile Include="Agent.cpp" />
     <ClCompile Include="BadNPC.cpp" />
     <ClCompile Include="BaseApplication.cpp" />
+    <ClCompile Include="Cell.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="GameApplication.cpp" />
     <ClCompile Include="GameController.cpp" />
