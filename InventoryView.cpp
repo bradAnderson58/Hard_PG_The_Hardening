@@ -1,10 +1,12 @@
 #include "InventoryView.h"
+#include "GUIController.h"
 
 #define INVCELLSIZE 50
 #define EQPCELLSIZE 100
 
-InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top)
+InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController* gc)
 {
+	mainMenu = gc;
 	// set initial items to all be NULL
 	int mLeft = left;
 	int mTop = top;
@@ -104,6 +106,7 @@ InventoryView::buttonHit(MyGUI::WidgetPtr _sender)
 	if (_sender->getName() == "back")
 	{
 		show(false);
+		mainMenu->openMenu(true);
 	}
 	// what inv item is selected
 	else 
