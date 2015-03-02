@@ -31,7 +31,7 @@ CharacterRecord::CharacterRecord(MyGUI::Gui* mGUI, int left, int top, GUIControl
 		left + 200, top / 2, 300, 200, MyGUI::Align::Default, "Main", "questdisplay");
 	vQuests->setCaption("Quest Log");
 	*/
-	mSkillTree = new SkillTree(mGUI, left+200, top*3);
+	mSkillTree = new SkillTree(mGUI, left+100, top*1.2);
 	mSkillTree->reset();
 
 	backB = mGUI->createWidget<MyGUI::Button>("Button", 
