@@ -30,6 +30,8 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	doingStuff = false;  //starts not doing anything
 	speed = 2;	//You're a quick one - DELETE?
 
+	carrying = NULL;	//default not carrying
+
 	//mBodyNode->showBoundingBox(true);				//for testing purposes Player box
 
 	//attack space
@@ -179,6 +181,12 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 	newPos = collisionRobots(newPos);
 	newPos = collisionObjects(newPos);
 	mBodyNode->setPosition(newPos);
+
+	//if we carrying things do calculations for carrying
+	if (carrying != NULL && fForward){
+		Ogre::Vector3 stuff = getPosition() + (side * -2.5);
+		carrying->setPosition(stuff.x, newPos.y + 2, stuff.z);
+	}
 }
 
 //Set movement flag
@@ -529,4 +537,27 @@ void Player::switchEquipment(int ind){
 
 	//apply changes for new weapons
 	updateDamDef();
+}
+
+void Player::carryMe(Environment* env){
+	carrying = env;
+
+	//rotate from current direction
+	Ogre::Quaternion q;
+	q.FromAngleAxis(Ogre::Radian(M_PI) / 2, Ogre::Vector3(0,1,0));
+	Ogre::Vector3 offset = q*mDirection;
+
+	Ogre::Vector3 stuff = getPosition() + (offset * -2.5);
+	carrying->setPosition(stuff.x, 2, stuff.z);
+}
+
+//lil bool checker
+bool Player::isCarrying(){
+	return (carrying == NULL) ? false : true;
+}
+
+void Player::dropMe(){
+	Ogre::Vector3 stuff = carrying->getPosition();
+	carrying->setPosition(stuff.x, 0, stuff.z);
+	carrying = NULL;
 }

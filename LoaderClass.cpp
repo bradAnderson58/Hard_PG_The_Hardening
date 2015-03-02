@@ -155,6 +155,10 @@ void LoaderClass::loadEnv(){
 					else if (c == 'd'){  //I'm a door
 						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::DOOR);
 					}
+					else if (c == 'p'){  //I'm a pushable object
+						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::MOVEABLE);
+					}
+
 
 					//set position and put in list of interactable objects
 					obj->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);

@@ -8,6 +8,7 @@ class GameApplication;
 class GUIController;
 class NPC;
 class UsableItems;
+class Environment;
 
 class Player : public Agent{
 
@@ -87,6 +88,10 @@ public:
 
 	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }
 	Ogre::SceneNode* getMBodyNode(){return mModelNode;}
+
+	void carryMe(Environment* obj);  //pick up an object
+	void dropMe();
+	bool isCarrying();
 
 private:
 	bool fForward;		//how am I moving? Each flag indicates a direction
@@ -171,6 +176,8 @@ private:
 	bool isBlocking;				// whether the player is currently blocking
 
 	std::vector<UsableItems*> inventory;
+
+	Environment* carrying;		//This is a pointer to a moveable object that we may carry
 
 };
 

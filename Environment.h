@@ -48,6 +48,8 @@ public:
 	void setPosition(float x, float y, float z);
 	Ogre::Vector3 getPosition(){ return mBodyNode->getPosition(); };
 
+	Ogre::SceneNode* getNode(){ return mBodyNode; }	//for picking up objects
+
 	UsableItems* getItem(){ return inner; }  //give this to player for picked up items
 
 	bool checkWithPlayer();  //checking to see if player is nearbyto interact

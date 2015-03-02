@@ -71,6 +71,16 @@ Environment::EnvType Environment::handleInteraction(Player* pl){
 	if (mType == DOOR){
 		animate = true;
 	}
+	if (mType == MOVEABLE){
+		if (!pl->isCarrying()){
+			pl->carryMe(this);
+			passable = true;
+		}
+		else{
+			pl->dropMe();
+			passable = false;
+		}
+	}
 
 	return mType;
 }
