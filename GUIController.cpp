@@ -51,7 +51,10 @@ GUIController::GUIController(GameApplication* a){
 	inventoryB = mGUI->createWidget<MyGUI::Button>("Button", 
 		wMiddlish, hMiddlish, 200, 50, MyGUI::Align::Default, "Main", "inventory");
 	inventoryB->setCaption("Inventory");
-	std::cout << inventoryB->getStateSelected() << std::endl;
+
+	//for xbox - set focus on top thing, we can switch these out using setCurrentActive
+	inventoryB->_setMouseFocus(true);
+	currentActive = INV_B;
 
 	charRecordB = mGUI->createWidget<MyGUI::Button>("Button", 
 		wMiddlish, hMiddlish+50, 200, 50, MyGUI::Align::Default, "Main", "records");
@@ -159,4 +162,42 @@ void GUIController::revealHUD(double health, double mana){
 
 void GUIController::recordUpdator(){
 	charRecord->update(app->getPlayerPointer());
+}
+
+void GUIController::setCurrentActive(bool up){
+	
+	//set based on current active, and whether up or down
+	if (currentActive == INV_B){
+		//if we are on inventory we can only move down
+		if (!up){
+			currentActive = CHAR_B;
+			inventoryB->_setMouseFocus(false);
+			charRecordB->_setMouseFocus(true);
+		}
+	
+	//charrecord in the middle, can move up or down
+	}else if (currentActive == CHAR_B){
+		charRecordB->_setMouseFocus(false);
+		currentActive = (up) ? INV_B : EXIT_B;
+		(up) ? inventoryB->_setMouseFocus(true) : exitB->_setMouseFocus(true);
+
+	//if we are on Exit, we can only move up
+	}else if (currentActive == EXIT_B){
+		if(up){
+			currentActive = CHAR_B;
+			exitB->_setMouseFocus(false);
+			charRecordB->_setMouseFocus(true);
+		}
+	}
+	if (currentActive == INV_B){
+
+	}
+}
+
+//manually call buttonhit on the active button
+void GUIController::xBoxSelect(){
+	(currentActive == INV_B) ? buttonHit(inventoryB) :
+		(currentActive == CHAR_B) ? buttonHit(charRecordB) :
+		(currentActive == EXIT_B) ? buttonHit(exitB) :
+		std::cout << "Something wrong with xBoxSelect?" << std::endl;
 }

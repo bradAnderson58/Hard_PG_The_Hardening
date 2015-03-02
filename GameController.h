@@ -66,6 +66,8 @@ private:
 	void GameController::windowClosed(Ogre::RenderWindow* rw);
 
 	Environment* interactWith;
+
+	bool alreadyPicked;		//prevent super fast scrolling
 };
 
 #endif
