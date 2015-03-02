@@ -1,6 +1,6 @@
 #include "SkillTree.h"
 
-#define NODESIZE 25
+#define NODESIZE 40
 
 SkillTree::SkillTree(MyGUI::Gui* mGUI, int left, int top)
 {
