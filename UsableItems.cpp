@@ -13,7 +13,6 @@ UsableItems::UsableItems(itemType mt, int damstat, int defstat, int critstat, in
 
 	name = n;
 	imgFile = "";
-	std::cout << name << std::endl;
 }
 
 //return a specific stat from this usable item

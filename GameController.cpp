@@ -126,13 +126,10 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 			}
 		}else{
 			//interact with
-			player->pushInventory(interactWith->getItem());
-
-			// add to inventory gui
-			//app->getInventory()->addItem(interactWith->getItem());
-			
-			app->removeNulls(interactWith);
-			interactWith = NULL;
+			if (Environment::LOOT == interactWith->handleInteraction(player)){
+				app->removeNulls(interactWith);
+				interactWith = NULL;
+			}
 		}
 	}
 	else if (arg.key == OIS::KC_F)
@@ -278,6 +275,7 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 	if (app->getGameState() == GameApplication::PLAYING){
 		//A button is 0
 		if (button == 0){
+
 			if (interactWith == NULL){
 				if(!player->doingStuff){
 					player->changeSpeed(.6);  //jump should be slower
@@ -286,10 +284,10 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 				}
 			}else{
 				//interact with
-				player->pushInventory(interactWith->getItem());
-				
-				app->removeNulls(interactWith);
-				interactWith = NULL;
+				if (Environment::LOOT == interactWith->handleInteraction(player)){
+					app->removeNulls(interactWith);
+					interactWith = NULL;
+				}
 			}
 		}
 		//X button is 2

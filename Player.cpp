@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "GameApplication.h"
 #include "GUIController.h"
+#include "Environment.h"
 #include "NPC.h"
 #define _USE_MATH_DEFINES   
 #include <math.h>
@@ -176,6 +177,7 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 	}
 	newPos = collisionWalls(newPos);
 	newPos = collisionRobots(newPos);
+	newPos = collisionObjects(newPos);
 	mBodyNode->setPosition(newPos);
 }
 
@@ -342,7 +344,6 @@ void Player::checkHits(){
 
 		if (aRange.intersects(rRange)){
 			dealDamage(enemy);	//hit em
-			std::cout << "hit this bitch" << std::endl;
 		}
 	}
 	//ADD MORE
@@ -354,10 +355,8 @@ void Player::dealDamage(NPC *enemy){
 	//base damage plus weapon damage
 	int damage = mDamage;
 	float critPerc = (float)(rand() % 100) / 100.0;
-	std::cout << criticalStat << " " << critPerc << std::endl;
 	if (critPerc <= criticalStat){ //critical strike - extra damages!
 		damage = 1.5 * damage;
-		std::cout << "Critical Strike! " << critPerc << std::endl;
 	}
 
 	enemy->getHurt(damage);
@@ -378,7 +377,6 @@ void Player::getHurt(int damage){
 		healthNow = 0;
 		app->toggleState(GameApplication::DEAD_STATE);
 	}
-	std::cout << healthNow << std::endl;
 
 }
 
@@ -445,6 +443,40 @@ Ogre::Vector3 Player::collisionWalls(Ogre::Vector3 myPos){
 	}
 	return myPos;
 	//Repurpose
+}
+
+//hacky copy-paste.  Can probably refactor.
+//This checks to see if we are colliding with an Environment objects
+Ogre::Vector3 Player::collisionObjects(Ogre::Vector3 myPos){
+	std::vector<Environment*> objs = app->getEnvObj();
+
+	for (Environment* ob : objs){
+		if (!ob->isPassable()){
+			Ogre::Vector3 wPos = ob->getPosition();
+
+			//some magic numbers in hur son!
+			if ((myPos[0] >= (wPos[0] - 7) && myPos[0] <= (wPos[0] + 7)) && (myPos[2] >= (wPos[2] - 7) && myPos[2] <= (wPos[2] + 7))){
+				if(abs(myPos[0] - wPos[0]) < abs(myPos[2] - wPos[2])){
+					if (abs(myPos[2] - (wPos[2] +7 )) < abs(myPos[2]-(wPos[2] - 7))){
+						myPos[2] = wPos[2] + 7;
+					}
+					else{
+						myPos[2] = wPos[2] - 7;
+					}
+				}
+				else{
+					if (abs(myPos[0] - (wPos[0] + 7)) < abs(myPos[0] - (wPos[0] - 7))){
+						myPos[0] = wPos[0] + 7;
+					}
+					else{
+						myPos[0] = wPos[0] - 7;
+					}
+				}
+				return myPos;
+			}
+		}
+	}
+	return myPos;
 }
 
 //reset player to the initial position and reset initialize variables - will need again eventually

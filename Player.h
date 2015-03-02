@@ -131,6 +131,7 @@ private:
 	void setAnimation(AnimID id, bool reset = false);
 	Ogre::Vector3 collisionRobots(Ogre::Vector3 myPos);
 	Ogre::Vector3 collisionWalls(Ogre::Vector3 myPos);
+	Ogre::Vector3 collisionObjects(Ogre::Vector3 myPos);
 
 	//Stats for player
 	double criticalStat;	// chance to cause critical hit

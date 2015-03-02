@@ -24,7 +24,7 @@ public:
 	void removeSelf();								//on shutdown
 	void setPlayer(Player* p){ player = p; }		//set player (done from gameApp)
 
-	void setInteractible(Environment* i){interactWith = i;}  //Make sure to do NULL checking
+	void setInteractible(Environment* i){ interactWith = i; }  //Make sure to do NULL checking
 
 	void setGUICont(GUIController* g){ mGUICont = g; }
 

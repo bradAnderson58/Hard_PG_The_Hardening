@@ -405,10 +405,9 @@ bool Rat::checkInFront(){
 		else{
 			angleBetween = lookDir.angleBetween(inbetween);
 		}
-		//std::cout << "pos:: " << mBodyNode->getPosition() << std::endl;
 		if (angleBetween.valueDegrees() >= 150 && angleBetween.valueDegrees() <= 180){//will have to change when real model gets in
 			Ogre::Ray ratRay = Ogre::Ray(mBodyNode->getPosition(), inbetween * -1);
-			//std::cout << "ORIGIN: " << mBodyNode->getPosition() << " DIR: " << inbetween << std::endl;
+
 			for (Ogre::Entity* w : walls){
 				box = w->getWorldBoundingBox(true);
 				temp = ratRay.intersects(box);

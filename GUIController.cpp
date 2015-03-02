@@ -51,6 +51,7 @@ GUIController::GUIController(GameApplication* a){
 	inventoryB = mGUI->createWidget<MyGUI::Button>("Button", 
 		wMiddlish, hMiddlish, 200, 50, MyGUI::Align::Default, "Main", "inventory");
 	inventoryB->setCaption("Inventory");
+	std::cout << inventoryB->getStateSelected() << std::endl;
 
 	charRecordB = mGUI->createWidget<MyGUI::Button>("Button", 
 		wMiddlish, hMiddlish+50, 200, 50, MyGUI::Align::Default, "Main", "records");

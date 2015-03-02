@@ -102,7 +102,6 @@ InventoryView::updateEquipment()
 void 
 InventoryView::buttonHit(MyGUI::WidgetPtr _sender)
 {
-	std::cout << "I'm a MyGUI button!" << std::endl;
 	if (_sender->getName() == "back")
 	{
 		show(false);
