@@ -35,6 +35,19 @@ NPC::~NPC(void)
 }
 
 void NPC::update(Ogre::Real deltaTime){
+	if (type == GOOD){
+		updateGood(deltaTime);
+	}
+	else{
+		updateBad(deltaTime);
+	}
+}
+
+void NPC::updateGood(Ogre::Real deltaTime){
+	//does nothing yet. NO GOOD GUYS
+}
+
+void NPC::updateBad(Ogre::Real deltaTime){
 	Player* p = app->getPlayerPointer();
 	if (state == GUARD){
 		if (checkInFront()){

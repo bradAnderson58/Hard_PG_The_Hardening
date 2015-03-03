@@ -91,6 +91,8 @@ protected:
 	void walkToGN(GridNode* n);
 	void moveTo(GridNode* n);
 
+	void updateBad(Ogre::Real deltaTime);
+	void updateGood(Ogre::Real deltaTime);
 	bool nextLocation();
 };
 
