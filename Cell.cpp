@@ -41,6 +41,13 @@ Cell::unClick()
 	mImgBox->setAlpha(0.70);
 }
 
+void
+Cell::removeItem()
+{
+	free(mItem);	// do we need to free usableItems, or does ogre handle?
+	mItem = NULL;
+}
+
 // assign new item and update img
 void
 Cell::setItem(UsableItems* item)
