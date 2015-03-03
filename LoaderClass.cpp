@@ -140,7 +140,7 @@ void LoaderClass::loadEnv(){
 						agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						((Player*)agent)->setInitPos(((Player*)agent)->getPosition());		//casting magics
 					}else if (c == 'f'){
-						Rat* rat = new Rat(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, 1, NPC::BAD, Rat::GUARD);
+						Rat* rat = new Rat(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, 1, NPC::BAD, NPC::GUARD);
 						rat->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						rat->setStartPos();
 						app->pushNPCs(rat);

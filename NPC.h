@@ -18,12 +18,24 @@ public:
 		BAD
 	};
 
-	NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, GoodBad t);
+	enum States{
+		WANDER,
+		GUARD,
+		FLEE,
+		DEAD,
+		SEEK,
+		LOST,
+		SEARCH,
+		NONE
+	};
+
+	NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, GoodBad t, States s);
 	~NPC();
 
-	virtual void update(Ogre::Real deltaTime) = 0;
-	virtual void updateLocomote(Ogre::Real deltaTime);
+	void update(Ogre::Real deltaTime);
+	void updateLocomote(Ogre::Real deltaTime);
 	void setMovement(char dir, bool on); //set the movemnt
+	void setStartPos(){startPos = mBodyNode->getPosition();}
 
 	void getHurt(int d);
 	Ogre::Vector3 getPosition(){return mBodyNode->getPosition();}
@@ -35,12 +47,28 @@ protected:
 	};
 
 	GoodBad type;
+
+	States state;
+	States prevState;
+	States startState;
+	Ogre::Vector3 startPos;
+	double wanderAngle;
+	Ogre::Vector3 lastPlayerPos;
+	Ogre::Vector3 lookDir;
+
+	Ogre::Real lookAngle;
+	int lookRange;
+
+
 	//stats
 	int level;
 	int health;
 	double crit;
 	int damage;
 	int defense;
+
+	bool canHit;
+	Ogre::Real lastHit;
 		
 	void setupAnimations();									// load this character's animations
 	void fadeAnimations(Ogre::Real deltaTime);				// blend from one animation to another
@@ -53,6 +81,15 @@ protected:
 	void dealDamage(NPC* guy);
 	void dealDamagePlayer(Player* player);
 	void checkHit();
+
+	bool checkInFront();
+	void wander();
+	void seek();
+	void flee();
+
+	void searchMove(Ogre::Real deltaTime);
+	void walkToGN(GridNode* n);
+	void moveTo(GridNode* n);
 
 	bool nextLocation();
 };
