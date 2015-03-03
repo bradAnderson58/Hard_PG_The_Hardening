@@ -13,6 +13,7 @@ SkillNode::SkillNode(MyGUI::Gui* mGUI, int left, int top, int size,
 	// this is assuming a set image size...
     mIcon->setImageCoord(MyGUI::IntCoord(0, 0, 128,128));
     mIcon->setImageTile(MyGUI::IntSize(128, 128));
+	mIcon->eventMouseButtonClick += MyGUI::newDelegate(this, &SkillNode::buttonHit);
 
 	selected = false;
 }
@@ -44,12 +45,13 @@ void
 SkillNode::unClick()
 {
 	selected = false;
-	mIcon->setAlpha(0.70);
+	mIcon->setAlpha(0.60);
 }
 
 void
 SkillNode::buttonHit(MyGUI::WidgetPtr _sender)
 {
+	std::cout << "skill icon hit!" << std::endl;
 	if (selected)
 		unClick();
 	else

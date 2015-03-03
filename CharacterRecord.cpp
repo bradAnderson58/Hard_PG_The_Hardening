@@ -9,7 +9,7 @@ CharacterRecord::CharacterRecord(MyGUI::Gui* mGUI, int left, int top, GUIControl
 
 	//This is the same size as the Inventory window
 	mWindow = mGUI->createWidget<MyGUI::Window>("WindowC", 
-		left - 100, top - 225, 450, 500, MyGUI::Align::Default, "Main", "iWindow");
+		left - 100, top - 225, 450, 500, MyGUI::Align::Default, "Overlapped", "iWindow");
 	mWindow->setCaption("Character Record");
 	mWindow->setProperty("Text", "Test the Text?");
 
