@@ -12,6 +12,7 @@ CharacterRecord::CharacterRecord(MyGUI::Gui* mGUI, int left, int top, GUIControl
 		left - 100, top - 225, 450, 500, MyGUI::Align::Default, "Overlapped", "iWindow");
 	mWindow->setCaption("Character Record");
 	mWindow->setProperty("Text", "Test the Text?");
+	mWindow->setMovable(false);
 
 	//set up character face
 	charFace = mGUI->createWidget<MyGUI::ImageBox>("ImageBox",

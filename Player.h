@@ -70,6 +70,13 @@ public:
 	UsableItems* getPants(){ return equippedPants; }
 	UsableItems* getNeck(){ return equippedNeck; }
 
+	void setWpn(UsableItems* wpn);
+	void setShield(UsableItems* shld);
+	void setHelm(UsableItems* helm);
+	void setBoobs(UsableItems* boobs);
+	void setPants(UsableItems* pants);
+	void setNeck(UsableItems* neck);
+
 	//get Attributes for player
 	int getStrength(){ return strengthAtt; }
 	int getDex(){ return dexterityAtt; }
@@ -157,12 +164,12 @@ private:
 	int intelligenceAtt;	// affects mana, dam
 	
 	//equipment for player
-	UsableItems *equippedWpn;	//The weapon you are using
-	UsableItems *equippedShield;
-	UsableItems *equippedHelm;
-	UsableItems *equippedBoobs;
-	UsableItems *equippedPants;
-	UsableItems *equippedNeck;
+	UsableItems* equippedWpn;		//The weapon you are using
+	UsableItems* equippedShield;
+	UsableItems* equippedHelm;
+	UsableItems* equippedBoobs;
+	UsableItems* equippedPants;
+	UsableItems* equippedNeck;
 
 	Projectile* mFireball;
 

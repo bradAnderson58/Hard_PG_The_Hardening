@@ -17,9 +17,9 @@ public:
 	InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController* gc);
 	virtual ~InventoryView(void);
 
-	void addItem(UsableItems* item);
-	void show(bool visible);	// open the inventory window
-	void update();				// update rendering of window
+	void addItem(UsableItems* item);	// add item to next available slot
+	void show(bool visible);			// open the inventory window
+	void update(Player* p);	
 	
 private:
 	int selectedRow;
@@ -35,10 +35,13 @@ private:
 	Cell* shield;
 	Cell* necklace;
 
+	MyGUI::WindowPtr mWindow;	// window for background of inventory
 	MyGUI::ButtonPtr backB;		// button to go back to menu
 
-	void updateInventory();		// update the contents of our inventory
-	void updateEquipment();		// update the equipment slots
+	void swap(Cell* a, Cell* b);		// swap items between two cells
+
+	void updateInventory(Player* p);	// update the contents of our inventory
+	void updateEquipment(Player* p);	// update the equipment slots
 
 protected:
 

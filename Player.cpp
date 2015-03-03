@@ -561,3 +561,46 @@ void Player::dropMe(){
 	carrying->setPosition(stuff.x, 0, stuff.z);
 	carrying = NULL;
 }
+
+// set equipment slots below and update stats	------
+void 
+Player::setWpn(UsableItems* wpn)
+{
+	equippedWpn = wpn;
+	updateStats();
+}
+
+void 
+Player::setShield(UsableItems* shld)
+{
+	equippedShield = shld;
+	updateStats();
+}
+
+void 
+Player::setHelm(UsableItems* helm)
+{
+	equippedHelm = helm;
+	updateStats();
+}
+
+void
+Player::setBoobs(UsableItems* boobs)
+{
+	equippedBoobs = boobs;
+	updateStats();
+}
+
+void
+Player::setPants(UsableItems* pants)
+{
+	equippedPants = pants;
+	updateStats();
+}
+
+void
+Player::setNeck(UsableItems* neck)
+{
+	equippedNeck = neck;
+	updateStats();
+}

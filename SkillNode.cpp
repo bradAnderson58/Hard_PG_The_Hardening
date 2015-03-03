@@ -38,6 +38,7 @@ SkillNode::click()
 	{
 		selected = true;
 		mIcon->setAlpha(1.00);
+		std::cout << "Activate " << mIcon->getName() << std::endl;
 	}
 }
 
@@ -51,7 +52,6 @@ SkillNode::unClick()
 void
 SkillNode::buttonHit(MyGUI::WidgetPtr _sender)
 {
-	std::cout << "skill icon hit!" << std::endl;
 	if (selected)
 		unClick();
 	else

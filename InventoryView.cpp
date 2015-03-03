@@ -7,7 +7,7 @@
 InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController* gc)
 {
 	mainMenu = gc;
-	// set initial items to all be NULL
+
 	int mLeft = left;
 	int mTop = top;
 	int number = 0;
@@ -15,11 +15,18 @@ InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController*
 	selectedRow = 0;
 	selectedCol = 0;
 
+	mWindow = mGUI->createWidget<MyGUI::Window>("WindowC", 
+		left-25, top-30, 350, 550, MyGUI::Align::Default, "Overlapped", "invWindow");
+	mWindow->setCaption("Inventory");
+	mWindow->setProperty("Text", "Test the Text?");
+	mWindow->setMovable(false);	// don't want to drag it.
+
 	backB = mGUI->createWidget<MyGUI::Button>("Button", 
 		left, top, 75, 50, MyGUI::Align::Default, "Main", "back");
 	backB->setCaption("<- Back");
 	backB->eventMouseButtonClick += MyGUI::newDelegate(this, &InventoryView::buttonHit);
 
+	// slots for equipment, also empty on construction
 	head = new Cell(mGUI, mLeft + 100	, mTop		, EQPCELLSIZE, "head");
 	body = new Cell(mGUI, mLeft + 100	, mTop + 100, EQPCELLSIZE, "body");
 	legs = new Cell(mGUI, mLeft + 100	, mTop + 200, EQPCELLSIZE, "legs");
@@ -33,6 +40,7 @@ InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController*
 	{
 		for(int j = 0; j < 5; j++)
 		{
+			// creates a bunch of empty cells, with ogre heads for now
 			std::string name = static_cast<std::ostringstream*>( &(std::ostringstream() << number) )->str();
 			inventoryGrid[i][j] = new Cell(mGUI, mLeft, mTop, INVCELLSIZE, name);
 			inventoryGrid[i][j]->getImageBox()->setAlpha(0.70);
@@ -73,30 +81,76 @@ InventoryView::show(bool visible)
 	shield->show(visible);
 	necklace->show(visible);
 
+	mWindow->setVisible(visible);
 	backB->setVisible(visible);
+}
+
+// swap items between two cells
+void
+InventoryView::swap(Cell* a, Cell* b)
+{
+	UsableItems* itemA; 
+	UsableItems* itemB;
+
+	itemA = a->getItem();
+	itemB = b->getItem();
+
+	if (itemA && itemB)
+	{
+		UsableItems* temp = itemA;
+		a->setItem(itemB);
+		b->setItem(temp);
+	}
+	else if (!itemA && itemB)
+	{
+		a->setItem(itemB);
+		b->removeItem();
+	}
+	else if (itemA && !itemB)
+	{
+		b->setItem(itemA);
+		a->removeItem();
+	}
+	// else both are null, do nothing
 }
 
 // update rendering of window
 void 
-InventoryView::update()
+InventoryView::update(Player* p)
 {
-	updateInventory();
+	updateInventory(p);
 }
 
 // update the contents of our inventory
 void 
-InventoryView::updateInventory()
+InventoryView::updateInventory(Player* p)
 {
+	// update inventory view
+	for(int i = 0; i < 4; i++)
+		for(int j = 0; j < 5; j++)
+			inventoryGrid[i][j]->setItem(&p->getInventory()[i][j]);
 
+	// update equipment view
+	head->setItem(p->getHelm());
+	body->setItem(p->getBoobs());
+	legs->setItem(p->getPants());
+	weapon->setItem(p->getWpn());
+	shield->setItem(p->getShield());
+	necklace->setItem(p->getNeck());
 }
 
-// get current equipment of player, and update equipment images
+// update player's equipment base on equipment view
 void
-InventoryView::updateEquipment()
+InventoryView::updateEquipment(Player* p)
 {
-
+	p->setHelm(head->getItem());
+	p->setBoobs(body->getItem());
+	p->setPants(legs->getItem());
+	p->setWpn(weapon->getItem());
+	p->setShield(shield->getItem());
+	p->setNeck(necklace->getItem());
+	// not efficient, but was quick to write lol
 }
-
 
 // hide inventory if back button hit
 void 

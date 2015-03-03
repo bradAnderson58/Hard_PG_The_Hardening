@@ -16,7 +16,9 @@ public:
 	void click();
 	void unClick();
 
-	UsableItems* getItem() { return mItem; } // maybe remove this and adjust scope
+	void removeItem();			// remove (and delete?) item from a cell
+
+	UsableItems* getItem() { return mItem; }
 	MyGUI::ImageBox* getImageBox() { return mImgBox; }
 
 	void setItem(UsableItems* item);
