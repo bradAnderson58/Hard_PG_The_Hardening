@@ -17,6 +17,13 @@ GridNode::GridNode(int nID, int row, int column, bool isC)
 		this->contains = '.';
 	else
 		this->contains = 'B';
+
+	this->parent = NULL;
+	this->cost = -1;
+	this->dist = -1;
+	this->onPath = false;
+
+	this->inList = NONE;
 }
 
 // default constructor
@@ -151,59 +158,174 @@ Grid::getNode(int r, int c)
 
 ////////////////////////////////////////////////////////////////
 // get adjacent nodes;
+
+//all the cardinal directions test for null and returns the right node
 GridNode* 
 Grid::getNorthNode(GridNode* n)
 {
+	if (n != NULL){
+		GridNode* temp = getNode(n->getRow()-1, n->getColumn());
+		if (temp != NULL && temp->isClear()){
+			return temp;
+		}
+	}
 	return NULL;
 }
 
 GridNode* 
 Grid::getSouthNode(GridNode* n)
 {
+	if (n != NULL){
+		GridNode* temp = getNode(n->getRow()+1, n->getColumn());
+		if (temp != NULL && temp->isClear()){
+			return temp;
+		}
+	}
 	return NULL;
 }
 
 GridNode* 
 Grid::getEastNode(GridNode* n)
 {
+	if (n != NULL){
+		GridNode* temp = getNode(n->getRow(), n->getColumn()+1);
+		if (temp != NULL && temp->isClear()){
+			return temp;
+		}
+	}
 	return NULL;
 }
 
 GridNode* 
 Grid::getWestNode(GridNode* n)
 {
+	if (n != NULL){
+		GridNode* temp = getNode(n->getRow(), n->getColumn()-1);
+		if (temp != NULL && temp->isClear()){
+			return temp;
+		}
+	}
 	return NULL;
 }
 
+
+//the four diagonals use the previous cardinal directions to get the right neighbor
+//and checks for valid diagonals to avoid wall clipping on corners.
 GridNode* 
 Grid::getNENode(GridNode* n)  
 {
+	if (getNorthNode(n) == NULL || getEastNode(n) == NULL){
+		return NULL;
+	}
+	GridNode* temp = getNorthNode(getEastNode(n));
+	if (temp != NULL && temp->isClear()){
+		return temp;
+	}
 	return NULL;
 }
 
 GridNode* 
 Grid::getNWNode(GridNode* n) 
 {
+	if (getNorthNode(n) == NULL || getWestNode(n) == NULL){
+		return NULL;
+	}
+	GridNode* temp = getNorthNode(getWestNode(n));
+	if (temp != NULL && temp->isClear()){
+		return temp;
+	}
 	return NULL;
 }
 
 GridNode* 
 Grid::getSENode(GridNode* n) 
 {
+	if (getSouthNode(n) == NULL || getEastNode(n) == NULL){
+		return NULL;
+	}
+	GridNode* temp = getSouthNode(getEastNode(n));
+	if (temp != NULL && temp->isClear()){
+		return temp;
+	}
 	return NULL;
 }
 
 GridNode* 
 Grid::getSWNode(GridNode* n) 
 {
+	if (getSouthNode(n) == NULL || getWestNode(n) == NULL){
 		return NULL;
+	}
+	GridNode* temp = getSouthNode(getWestNode(n));
+	if (temp != NULL && temp->isClear()){
+		return temp;
+	}
+	return NULL;
+}
+
+//puts all the valid neighbors into a list for returns
+std::list<GridNode*> Grid::getNeighbors(GridNode* n){
+	std::list<GridNode*> neighbors;
+	GridNode* temp = getNorthNode(n);
+	if (temp != NULL){
+		neighbors.push_back(temp);
+	}
+	temp = getSouthNode(n);
+	if (temp != NULL){
+		neighbors.push_back(temp);
+	}
+	temp = getEastNode(n);
+	if (temp != NULL){
+		neighbors.push_back(temp);
+	}
+	temp = getWestNode(n);
+	if (temp != NULL){
+		neighbors.push_back(temp);
+	}
+	temp = getNENode(n);
+	if (temp != NULL){
+		neighbors.push_back(temp);
+	}
+	temp = getNWNode(n);
+	if (temp != NULL){
+		neighbors.push_back(temp);
+	}
+	temp = getSENode(n);
+	if (temp != NULL){
+		neighbors.push_back(temp);
+	}
+	temp = getSWNode(n);
+	if (temp != NULL){
+		neighbors.push_back(temp);
+	}
+	return neighbors;
 }
 ////////////////////////////////////////////////////////////////
 //get distance between between two nodes
+//Manhattan distance including diagonals
+
 int 
 Grid::getDistance(GridNode* node1, GridNode* node2)
 {
-	return -1;
+	if (node1 == NULL || node2 == NULL){ //test for NULLs and return a default high value incase it hits in Astar
+		return 99999;
+	}
+	//initialize variables for easier reading
+	int dist = 0;
+	int row1 = node1->getRow();
+	int col1 = node1->getColumn();
+
+	int row2 = node2->getRow();
+	int col2 = node2->getColumn();
+
+	if (row1 == row2 && col1 == col2){ return 0;}//check if node1 and node2 are the same
+
+	if(abs(row1-row2) == abs(col1-col2)){return abs(row1-row2) *14;} //check if node1 is diagonal from node2
+
+	if(abs(row1-row2) < abs(col1-col2)){//check for which difference is greater
+		return (abs(row1-row2)*14 + (abs(col1-col2)-abs(row1-row2)) * 10); //calculate the distance including diagonals plus row or column
+	}
+	return (abs(col1-col2)*14 + (abs(row1-row2)-abs(col1-col2))*10);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -275,4 +397,85 @@ Grid::getPosition(int r, int c)
 	t.y = 0; 
 	t.x = (c * NODESIZE) - (this->nCols * NODESIZE)/2.0 + NODESIZE/2.0; 
 	return t;
+}
+
+std::list<GridNode*>
+Grid::aStar(GridNode* start, GridNode* goal){
+
+	//initialize needed variables
+	std::vector<GridNode*> open;
+	
+	std::list<GridNode*> neighbors;
+	std::list<GridNode*>::iterator neighborIter;
+
+	std::list<GridNode*> rList;
+
+	int testDist;
+
+	int minindex;
+	GridNode* curr = NULL;
+	GridNode* temp;
+
+	//reset all the values of for each node
+	for(int i = 0; i < this->getRows(); i++){
+		for(int j = 0; j < this->getCols();j++){
+			temp = this->getNode(i,j);
+			temp->setCost(-1);
+			temp->setDist(-1);
+			temp->setInList(GridNode::NONE);
+			temp->setParent(NULL);
+		}
+	}
+	
+	//set the distance of start
+	start->setDist(0);
+	start->setInList(GridNode::OPEN); //put start on the list
+	open.push_back(start); //put start on the list
+
+	while (open.size() != 0){//loop while open list is not empty
+		for(int i = 0; i < open.size(); i++){//find min in the openlist
+			if (curr == NULL){
+				curr = open[i];
+				minindex = i;
+			}
+			else if (curr->getDist() > open[i]->getDist()){
+				curr = open[i];
+				minindex = i;
+			}
+		}
+		open.erase(open.begin() + minindex);//take out min node from openlist
+
+		if (curr == goal){//check if current node is the goal
+			while (curr->getParent() != NULL){//back track for the path
+				rList.push_front(curr);
+				curr = curr->getParent();
+			}
+			return rList;//return the path
+		}
+		neighbors = getNeighbors(getNode(curr->getRow(),curr->getColumn()));//get all the neighbors of current
+		for (neighborIter = neighbors.begin(); neighborIter != neighbors.end(); neighborIter++){//loop through every neighbor
+			if ((*neighborIter)->getInList() == GridNode::NONE){//if neighbor is in no list
+				(*neighborIter)->setInList(GridNode::OPEN);//set it in the open list
+				(*neighborIter)->setDist(curr->getDist() + getDistance(curr, (*neighborIter)));//calculate the distance
+				(*neighborIter)->setCost((*neighborIter)->getDist() + getDistance((*neighborIter), goal));//add the heuristic for cost
+				(*neighborIter)->setParent(curr);//put it in the openlist
+				open.push_back((*neighborIter));
+			}
+			else if ((*neighborIter)->getInList() == GridNode::OPEN){//check if node is in openlist
+				testDist = curr->getDist() + getDistance(curr, (*neighborIter));
+				if (testDist < (*neighborIter)->getDist()){//test if new values are less than old
+					//updating values
+					(*neighborIter)->setDist(testDist);
+					(*neighborIter)->setParent(curr);
+					(*neighborIter)->setCost((*neighborIter)->getDist() + getDistance((*neighborIter), goal));
+					open.push_back((*neighborIter));
+				}
+			}
+		}
+		curr->setInList(GridNode::CLOSED);//put current in the closed list
+		curr = NULL;//set current to NULL
+	}
+
+	return rList; //return an empty list if no solution was found
+	
 }

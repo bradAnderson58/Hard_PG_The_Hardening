@@ -53,6 +53,8 @@ protected:
 	void dealDamage(NPC* guy);
 	void dealDamagePlayer(Player* player);
 	void checkHit();
+
+	bool nextLocation();
 };
 
 #endif

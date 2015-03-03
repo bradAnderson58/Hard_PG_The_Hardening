@@ -18,7 +18,21 @@ private:
 	int cCoord;			// column coordinate
 	bool clear;			// is the node walkable?
 			
+	int cost;
+	int dist;
+	bool onPath;
+	GridNode* parent;
+
 public:
+
+	enum listID
+	{
+		NONE,
+		OPEN,
+		CLOSED	
+	};
+	listID inList;
+
 	Ogre::Entity *entity;	// a pointer to the entity in this node
 	char contains;		// For printing... B = blocked, S = start, G = goal, numbers = path
 	GridNode();			// default constructor
@@ -35,6 +49,19 @@ public:
 	void setClear();		// set the node as walkable
 	void setOccupied();		// set the node as occupied
 	bool isClear();			// is the node walkable
+
+	void setCost(int c){cost = c;}
+	const int getCost(){return cost;}
+	void setParent(GridNode* p){parent = p;}
+	GridNode* getParent(){return parent;}
+	void setDist(int d){dist = d;}
+	const int getDist(){return dist;}
+	void setInList(listID l){inList = l;}
+	listID getInList(){return inList;}
+	bool isOnPath(){return onPath;}
+	void setOnPath(){onPath = !onPath;}
+
+	bool operator<(const GridNode &a){return cost < a.cost;}
 };
 
 class GridRow {  // helper class
@@ -64,6 +91,7 @@ public:
 	GridNode* getNWNode(GridNode* n);
 	GridNode* getSENode(GridNode* n);
 	GridNode* getSWNode(GridNode* n);
+	std::list<GridNode*> getNeighbors(GridNode* n);
 
 	int getDistance(GridNode* node1, GridNode* node2);  // get Manhattan distance between between two nodes
 	
@@ -76,6 +104,9 @@ public:
 
 	int getRows() { return nRows; }   //needed for world bounds
 	int getCols() { return nCols; }
+
+	std::list<GridNode*> aStar(GridNode* start, GridNode* goal);	//aStar algorithm for path finding and avoiding walls/objects
+
 };
 
 #endif

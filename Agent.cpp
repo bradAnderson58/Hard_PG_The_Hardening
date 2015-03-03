@@ -1,5 +1,6 @@
 #include "Agent.h"
 #include "GameApplication.h"
+#include "Grid.h"
 
 #define _USE_MATH_DEFINES   //for some reason
 #include <math.h>

@@ -6,7 +6,8 @@
 
 #pragma once
 class GameApplication;
-
+class GridNode;
+class Grid;
 class Agent
 {
 protected:

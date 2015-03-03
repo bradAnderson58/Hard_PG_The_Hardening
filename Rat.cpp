@@ -14,37 +14,14 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	mBodyNode->setPosition(mBodyNode->getPosition()[0], 0, mBodyNode->getPosition()[2]);
 	wanderAngle = 0;
 	state = s;
+	prevState = NONE;
 	defense = level * 1;
 	canHit = true;
 	lastHit = 0;
 	startState = s;
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
-	setupAnimations();
-
-	Ogre::ManualObject* myManualObject =  mSceneMgr->createManualObject("manual1"); 
-	Ogre::SceneNode* myManualObjectNode = mBodyNode->createChildSceneNode("manual1_node"); 
- 
-	// NOTE: The second parameter to the create method is the resource group the material will be added to.
-	// If the group you name does not exist (in your resources.cfg file) the library will assert() and your program will crash
-	Ogre::MaterialPtr myManualObjectMaterial = Ogre::MaterialManager::getSingleton().create("manual1Material","General"); 
-	myManualObjectMaterial->setReceiveShadows(false); 
-	myManualObjectMaterial->getTechnique(0)->setLightingEnabled(true); 
-	myManualObjectMaterial->getTechnique(0)->getPass(0)->setDiffuse(1,0,0,0); 
-	myManualObjectMaterial->getTechnique(0)->getPass(0)->setAmbient(0,0,1); 
-	myManualObjectMaterial->getTechnique(0)->getPass(0)->setSelfIllumination(0,0,1); 
-
-	//myManualObjectMaterial->dispose();  // dispose pointer, not the material
- 
-	myManualObject->begin("manual1Material", Ogre::RenderOperation::OT_LINE_LIST); 
-	myManualObject->position(mBodyNode->getPosition()[0], 2, mBodyNode->getPosition()[2]);
-	myManualObject->position(Ogre::Vector3(40,2,0)); 
-	// etc 
-	myManualObject->end(); 
- 
-	myManualObjectNode->attachObject(myManualObject);
-
-	
+	setupAnimations();	
 }
 
 Rat::~Rat(void)
@@ -56,7 +33,8 @@ void Rat::update(Ogre::Real deltaTime){
 	Player* p = app->getPlayerPointer();
 	if (state == GUARD){
 		if (checkInFront()){
-				state = SEEK;
+			prevState = state;
+			state = SEEK;
 		}
 
 		if (startPos.distance(getPosition()) < 2){
@@ -65,15 +43,20 @@ void Rat::update(Ogre::Real deltaTime){
 			}
 			mDirection = Ogre::Vector3::ZERO;
 		}
+		else if (prevState == SEARCH){
+			lookDir = mDirection;
+			mDirection = Ogre::Vector3::ZERO;
+		}
 		else{
-			mDirection = startPos - mBodyNode->getPosition();
-			mDirection.normalise();
-			mDirection *= RAT_SPEED;
+			mDistance = -6.0;
+			prevState = state;
+			state = SEARCH;
 		}
 	}
 	else if (state == WANDER){
 		wander();
 		if (checkInFront()){
+			prevState = state;
 			state = SEEK;
 		}
 	}
@@ -85,29 +68,58 @@ void Rat::update(Ogre::Real deltaTime){
 		seek();
 		lastPlayerPos = p->getPosition();
 		if (!checkInFront()){
+			prevState = state;
 			state = LOST;
 		}
 		if (p->getPosition().distance(mBodyNode->getPosition()) < 5){
 			attackPlayer(p);
 		}
 		else if (p->getPosition().distance(mBodyNode->getPosition()) > 50){
+			prevState = state;
 			state = LOST;
 		}
 	}
 	else if(state == LOST){
-		if (lastPlayerPos.distance(mBodyNode->getPosition()) < 2){
+		if (lastPlayerPos.distance(mBodyNode->getPosition()) < 10){
+			prevState = state;
+			state = startState;
+		}
+		else if (prevState == SEARCH){
+			prevState = state;
 			state = startState;
 		}
 		else{
 			if (checkInFront()){
+				prevState = state;
 				state = SEEK;
 			}
-			mDirection = lastPlayerPos - mBodyNode->getPosition();
-			mDirection.normalise();
-			mDirection *= RAT_SPEED;
+			mDistance = -6.0;
+			prevState = state;
+			state = SEARCH;
 		}
 	}
+	else if (state == SEARCH){
+		if (mWalkList.empty() && mDistance <= -5.0){
+			if (prevState == LOST){
+				Ogre::Vector3 temp = lastPlayerPos + ((app->getGrid()->getCols() * 5)) - 5;
+				temp[1] = 0;
+				GridNode* dest = app->getGrid()->getNode((int)temp[2] / 10, (int)temp[0] / 10);
+				moveTo(dest);
+			}
+			else if(prevState == GUARD){
+				Ogre::Vector3 temp = startPos + (app->getGrid()->getCols() * 5) - 5;
+				temp[1] = 0;
+				GridNode* dest = app->getGrid()->getNode((int)temp[2] / 10, (int)temp[0] / 10);
+				moveTo(dest);
+			}
+		}
+		if (checkInFront()){
+			mWalkList.clear();
+		}
+		searchMove(deltaTime);
+	}
 	else if (state == DEAD){
+		prevState = state;
 		state = NONE;
 		mBodyNode->roll(Ogre::Degree(180));
 	}
@@ -135,10 +147,12 @@ void Rat::update(Ogre::Real deltaTime){
 	}
 
 	checkHit();
+
 	updateLocomote(deltaTime);
 }
 
 void Rat::updateLocomote(Ogre::Real deltaTime){
+	
 	//always rotating
 	Ogre::Vector3 src = mBodyNode->getOrientation() * Ogre::Vector3::UNIT_X;//rotate for first location
 	if ((1.0f + src.dotProduct(mDirection)) < 0.0001f) 
@@ -385,18 +399,12 @@ void Rat::checkHit(){
 bool Rat::checkInFront(){
 	//get line between fish direction and player. check angle between 2 vectors
 	//vision calculated by doing the distance between 2 vectors and getting the angle between.
-	Ogre::Vector3 inbetween = mBodyNode->getPosition() - app->getPlayerPointer()->getPosition();
+	Ogre::Vector3 inbetween = app->getPlayerPointer()->getPosition() - getPosition();
+	inbetween[1] = 0;
 
 	Ogre::Radian angleBetween;
-	std::list<Ogre::Entity*> walls = app->getWallEntities();
-	std::pair<bool, Ogre::Real> temp;
-	Ogre::AxisAlignedBox box;
-
-	int inCount = 0;
-	int outCount = 0;
-
-	Ogre::Ray test = Ogre::Ray(mBodyNode->getPosition(), inbetween * -1);
-	//temp = test.intersects(app->getPlayerPointer()->getBoundingBox());
+	std::list<Ogre::SceneNode*> walls = app->getWallList();
+	Ogre::Vector3 distFromWall;
 
 	if (mBodyNode->getPosition().distance(app->getPlayerPointer()->getPosition()) <= 40){
 		if (mDirection != Ogre::Vector3::ZERO){
@@ -405,22 +413,17 @@ bool Rat::checkInFront(){
 		else{
 			angleBetween = lookDir.angleBetween(inbetween);
 		}
-		//std::cout << "pos:: " << mBodyNode->getPosition() << std::endl;
-		if (angleBetween.valueDegrees() >= 150 && angleBetween.valueDegrees() <= 180){//will have to change when real model gets in
-			Ogre::Ray ratRay = Ogre::Ray(mBodyNode->getPosition(), inbetween * -1);
-			//std::cout << "ORIGIN: " << mBodyNode->getPosition() << " DIR: " << inbetween << std::endl;
-			for (Ogre::Entity* w : walls){
-				box = w->getWorldBoundingBox(true);
-				temp = ratRay.intersects(box);
-				if (temp.first = true){
-					std::cout << "intersects" << std::endl;
-					if (ratRay.getPoint(temp.second).length() < inbetween.length()){
-						std::cout << "blocked by a wall===========================================================" << std::endl;
+		if (angleBetween.valueDegrees() >= 0 && angleBetween.valueDegrees() <= 30){//will have to change when real model gets in
+			for (Ogre::SceneNode* w : walls){
+				distFromWall = w->getPosition();
+				distFromWall[1] = 0;
+				distFromWall = distFromWall - getPosition();
+				if (distFromWall.angleBetween(inbetween).valueDegrees() <= 5){
+					if (distFromWall.length() < inbetween.length()){
 						return false;
 					}
 				}
 			}
-			std::cout << "I see you!!!" << std::endl;
 			return true;
 		}
 	}
@@ -466,4 +469,68 @@ void Rat::flee(){
 	/*Ogre::Vector3 steer = desired - mDirection;
 	steer[1] = 0;
 	steer += mDirection*/							//if you wanna make it impossible to catch the guy;
+}
+
+
+
+
+void Rat::searchMove(Ogre::Real deltaTime){
+	if (mDistance <= 0.0f){
+		mBodyNode->setPosition(mDestination);
+		if (!nextLocation()){
+			state = prevState;
+			prevState = SEARCH;
+		}
+		else{
+			mDestination = mWalkList.front();  // this gets the front of the deque
+			mWalkList.pop_front();             // this removes the front of the deque
+			
+			
+			Ogre::Vector3 mPos = getPosition();
+			mDirection = mDestination - mPos;// getPosition();
+			mDirection[1] = 0;
+			mDistance = mDirection.normalise();
+			mDirection *= RAT_SPEED;
+
+		}
+	}
+	mDistance -= mDirection.length();
+}
+
+
+void Rat::walkToGN(GridNode* n){
+	//puts a new destination on walklist
+		Ogre::Vector3 temp = n->getPosition(app->getGrid()->getRows(), app->getGrid()->getCols());
+		temp[1] = height;
+		if (!(mDestination.positionEquals(temp, 0.001f))){
+			mWalkList.push_back(temp);
+		}
+}
+
+void Rat::moveTo(GridNode* n){
+	std::list<GridNode*> path;
+	std::list<GridNode*>::iterator pathIter;
+	Grid* grid = app->getGrid();
+	Ogre::Vector3 myPos = mBodyNode->getPosition();
+	myPos[0] += ((grid->getRows()) * 5) + 5;
+	myPos[2] += ((grid->getCols()) * 5) + 5;
+	int zVal = (int)(Ogre::Math::Floor(myPos[0])) / 10;
+	int xVal = (int)(Ogre::Math::Floor(myPos[2])) / 10;
+
+	GridNode* pos = grid->getNode(xVal, zVal);
+
+	mDestination = pos->getPosition(grid->getRows(), grid->getCols());
+	mDistance = 0.0;
+	Ogre::Vector3 temp;
+	path = app->getGrid()->aStar(pos,n);//get the optimal path
+	if (!path.empty()){
+		for(pathIter = path.begin(); pathIter != path.end(); pathIter++){//put the path at the end of the current walkList to prevent jumping in space
+			temp = (*pathIter)->getPosition(app->getGrid()->getRows(), app->getGrid()->getCols());
+			temp[1] = height;//assign the height of the destination so OGRE doesn't rotate
+			mWalkList.push_back(temp);
+		}
+		pos = n; //set position of the agent to goal for when its done moving
+	}
+
+
 }

@@ -73,6 +73,7 @@ public:
 	std::list<Ogre::SceneNode*> getWallList(){return wallList;}
 	std::vector<Environment*> getEnvObj(){ return interactableObjs; }
 	std::list<Ogre::Entity*> getWallEntities(){return wallEntities;}
+	void setGrid(Grid* g){grid = g;}
 
 	void pushNPCs(NPC* npc) { NPClist.push_back(npc); }
 	void pushBorder(Ogre::SceneNode* wall){ borderWalls.push_back(wall); }

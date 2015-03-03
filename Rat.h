@@ -16,6 +16,7 @@ public:
 		DEAD,
 		SEEK,
 		LOST,
+		SEARCH,
 		NONE
 	};
 	Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::GoodBad t, Rat::RatStates s);
@@ -39,6 +40,7 @@ private:
 	
 	AnimID ratAnim;
 	RatStates state;
+	RatStates prevState;
 
 	void setupAnimations();									// load this character's animations
 	void fadeAnimations(Ogre::Real deltaTime);				// blend from one animation to another
@@ -61,6 +63,10 @@ private:
 	void wander();
 	void seek();
 	void flee();
+
+	void searchMove(Ogre::Real deltaTime);
+	void walkToGN(GridNode* n);
+	void moveTo(GridNode* n);
 
 };
 

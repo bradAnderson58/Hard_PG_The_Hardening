@@ -72,3 +72,14 @@ void NPC::getHurt(int d){
 	}
 }
 
+
+
+
+bool 
+NPC::nextLocation()
+{
+	if (mWalkList.empty()){
+		return false;
+	}
+	return true;
+}

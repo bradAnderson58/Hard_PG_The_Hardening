@@ -78,6 +78,8 @@ void LoaderClass::loadEnv(){
 	uSceneMgr->getRootSceneNode()->attachObject(floor);
 
 	grid = new Grid(uSceneMgr, z, x); // Set up the grid. z is rows, x is columns
+
+	app->setGrid(grid);
 	
 	string buf;
 	inputfile >> buf;	// Start looking for the Objects section
