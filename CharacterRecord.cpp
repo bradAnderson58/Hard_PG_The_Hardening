@@ -31,6 +31,9 @@ CharacterRecord::CharacterRecord(MyGUI::Gui* mGUI, int left, int top, GUIControl
 		left + 200, top / 2, 300, 200, MyGUI::Align::Default, "Main", "questdisplay");
 	vQuests->setCaption("Quest Log");
 	*/
+	mSkillTree = new SkillTree(mGUI, left+100, top*1.2);
+	mSkillTree->reset();
+
 	backB = mGUI->createWidget<MyGUI::Button>("Button", 
 		left + 75, top - 250, 100, 25, MyGUI::Align::Default, "Main", "back");
 	backB->setCaption("<- Back");
@@ -51,6 +54,7 @@ void CharacterRecord::open(bool visible){
 	charFace->setVisible(visible);
 	vStats->setVisible(visible);
 	//vQuests->setVisible(visible);
+	mSkillTree->show(visible);
 }
 
 //called for updating stats or quests?
@@ -59,7 +63,7 @@ void CharacterRecord::update(Player* pl){
 	updateQuests();
 }
 
-//TODO
+//change stats on level up or what have you
 void CharacterRecord::updateStats(Player* pl){
 	//Clear out old stats
 	vStats->removeAllItems();
@@ -72,13 +76,6 @@ void CharacterRecord::updateStats(Player* pl){
 	vStats->addItem("Constitution:  " + std::to_string(pl->getConstitution()));
 	vStats->addItem("Intelligence:  " + std::to_string(pl->getIntel()));
 	vStats->addItem("Evil:          " + std::to_string(pl->getEvil()));
-	/*
-	int evilAtt;			// affects crit, mana
-	int strengthAtt;		// affects dam, def
-	int dexterityAtt;		// affects heal, crit
-	int constitutionAtt;	// affects def, heal
-	int intelligenceAtt;	// affects mana, dam
-	*/
 }
 void CharacterRecord::updateQuests(){}
 

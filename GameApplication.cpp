@@ -16,8 +16,6 @@ GameApplication::GameApplication(void):
 {
 	gameState = MAINSCREEN;
 	level = 0;
-
-	checkDebug = true;
 }
 //-------------------------------------------------------------------------------------
 GameApplication::~GameApplication(void)
@@ -70,9 +68,19 @@ GameApplication::addTime(Ogre::Real deltaTime)
 			guy->update(deltaTime);
 		}
 		if (!interactableObjs.empty()){
+
+			bool something = false; //check if anything is close to the player
+
 			for (Environment* env : interactableObjs){
-				if (checkDebug) env->checkWithPlayer();
+
+				if (env->checkWithPlayer()) something = true;  //something is close to the player
+
+				//animate doors opening
+				if (env->isAnimating()){
+					env->update(deltaTime);
+				}
 			}
+			if (!something) gameCont->setInteractible(NULL);   //nothing closeby is interactible
 		}
 		mGUICont->setHealth(playerPointer->getHealthNow()); //healthBar->setProgressPosition(playerPointer->getHealthNow()); //American Association of Highway Officials, Litigators, and Engineers 
 		mGUICont->setManaBar(playerPointer->getManaNow());  //manaBar->setProgressPosition(playerPointer->getManaNow());

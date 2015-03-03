@@ -3,6 +3,7 @@
 #define __CharacterRecord_h_
 #include "Player.h"
 #include "GameApplication.h"
+#include "SkillTree.h"
 
 #include <MyGUI.h>
 #include <MyGUI_OgrePlatform.h>
@@ -25,10 +26,11 @@ private:
 	MyGUI::ImageBox* charFace;	// look at yourself
 	MyGUI::ListBox* vStats;		//display the characters stats
 	MyGUI::TextBox* vQuests;	//display the active quests
-
+	
 	GUIController* mainMenu;	//we want to be able to set the main menu back
 
 	MyGUI::ImageBox* getItemBox(){ return charFace; }  //need this?
+	SkillTree* mSkillTree;
 
 	void updateStats(Player* pl);			// update the contents of our inventory
 	void updateQuests();					// update player upon changing equipment

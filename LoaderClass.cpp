@@ -44,8 +44,6 @@ void LoaderClass::loadEnv(){
 	};
 
 	//PlaySound(music.c_str(), NULL, SND_FILENAME|SND_ASYNC);  //Game sound
-	
-	GridNode *temp;
 
 	ifstream inputfile;		// Holds a pointer into the file
 
@@ -152,15 +150,21 @@ void LoaderClass::loadEnv(){
 				}
 				else	// Load objects - non-agents will go in here
 				{
+					Environment* obj;
 					if (c == 's'){  //test our shield barrel
-						Environment* obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app);
-						obj->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
-						app->pushEnvObj(obj);
-						
+						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::LOOT);
 					}
-					else {//The temp object holds a pointer to the barrel node, which we need for bounding box access
-						temp = grid->loadObject(getNewName(), rent->filename, i, rent->y, j, rent->scale);
+					else if (c == 'd'){  //I'm a door
+						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::DOOR);
 					}
+					else if (c == 'p'){  //I'm a pushable object
+						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::MOVEABLE);
+					}
+
+
+					//set position and put in list of interactable objects
+					obj->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
+					app->pushEnvObj(obj);
 				}
 					
 			}

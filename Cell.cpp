@@ -25,6 +25,22 @@ Cell::show(bool visible)
 	mImgBox->setVisible(visible); 
 }
 
+// click this cell, making img box more visible
+// and represent as selected
+void
+Cell::click()
+{
+	selected = true;
+	mImgBox->setAlpha(1.00);
+}
+
+void
+Cell::unClick()
+{
+	selected = false;
+	mImgBox->setAlpha(0.70);
+}
+
 // assign new item and update img
 void
 Cell::setItem(UsableItems* item)

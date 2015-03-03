@@ -13,6 +13,7 @@ GameController::GameController(GameApplication* a)
 	app = a;
 	uWindow = a->getWindow();		//It will be nice to hav a pointer to the main window
 	interactWith = NULL;
+	alreadyPicked = false;
 
 	Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
     OIS::ParamList pl;
@@ -126,13 +127,10 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 			}
 		}else{
 			//interact with
-			player->pushInventory(interactWith->getItem());
-
-			// add to inventory gui
-			//app->getInventory()->addItem(interactWith->getItem());
-			
-			app->removeNulls(interactWith);
-			interactWith = NULL;
+			if (Environment::LOOT == interactWith->handleInteraction(player)){
+				app->removeNulls(interactWith);
+				interactWith = NULL;
+			}
 		}
 	}
 	else if (arg.key == OIS::KC_F)
@@ -275,9 +273,12 @@ bool GameController::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButton
 //Xbox Controller button functions
 bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 
+	std::cout << button << std::endl;
+
 	if (app->getGameState() == GameApplication::PLAYING){
 		//A button is 0
 		if (button == 0){
+
 			if (interactWith == NULL){
 				if(!player->doingStuff){
 					player->changeSpeed(.6);  //jump should be slower
@@ -286,10 +287,10 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 				}
 			}else{
 				//interact with
-				player->pushInventory(interactWith->getItem());
-				
-				app->removeNulls(interactWith);
-				interactWith = NULL;
+				if (Environment::LOOT == interactWith->handleInteraction(player)){
+					app->removeNulls(interactWith);
+					interactWith = NULL;
+				}
 			}
 		}
 		//X button is 2
@@ -329,21 +330,22 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 	}
 	//in-game options menu
 	else if (app->getGameState() == GameApplication::MENUSCREEN){
-		//A button test
+		//A button selects
 		if (button == 0){
-			//toggleState(INVENTORY);
 			//just show inventory and hide others
-			mGUICont->openInventory(true);
+			mGUICont->xBoxSelect();
 		}
-		else if (button == 2){
-			//toggleState(CHAR_RECORD);
-			//show record and hide others
-			mGUICont->openCharRecord(true);
+		//B button closes current window
+		else if (button == 1){
+			mGUICont->openCharRecord(false);
+			mGUICont->openInventory(false);
 		}
 		// need buttons to toggle back to menu
 		// need buttons prompt exit game window
 		//Select is 6
 		else if (button == 6){
+			mGUICont->openCharRecord(false);
+			mGUICont->openCharRecord(false);
 			app->toggleState(GameApplication::PLAYING);
 		}
 		//Y button is 3
@@ -357,6 +359,9 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 }
 
 bool GameController::buttonReleased( const OIS::JoyStickEvent &arg, int button ){
+
+	std::cout << button << std::endl;
+
 	//Blocking codes
 	if (button == 1){
 		player->doingStuff = false;
@@ -366,7 +371,9 @@ bool GameController::buttonReleased( const OIS::JoyStickEvent &arg, int button )
 	return true;
 }
 
-bool GameController::axisMoved( const OIS::JoyStickEvent &arg, int axis){
+bool GameController::axisMoved( const OIS::JoyStickEvent &arg, int axis){ 
+
+	//control the character during play
 	if (app->getGameState() == GameApplication::PLAYING){
 
 		//first normalize
@@ -400,6 +407,28 @@ bool GameController::axisMoved( const OIS::JoyStickEvent &arg, int axis){
 			else if (xValRight < 0) player->cameraRot(hypotRight);
 		}else{
 			player->cameraRot(0);
+		}
+	}
+	
+	//choose different menu choices
+	else if( app->getGameState() == GameApplication::MENUSCREEN){
+		
+		double stickVal =  ((double)(arg.state.mAxes[0].abs)) / 32800.0; //y axis
+		
+		std::cout << stickVal << std::endl;
+
+		//go down one 
+		if (stickVal > 0.5 && !alreadyPicked){
+			mGUICont->setCurrentActive(false);
+			alreadyPicked = true;
+		//go up one
+		}else if (stickVal < -0.5 && !alreadyPicked){
+			mGUICont->setCurrentActive(true);
+			alreadyPicked = true;
+		
+		//the player can only move one at a time
+		}else if ((stickVal > -0.5 && stickVal < 0.5) && alreadyPicked){
+			alreadyPicked = false;
 		}
 	}
 	return true;

@@ -35,6 +35,11 @@ public:
 
 	void recordUpdator();
 
+	//these used for getting and setting current active choice with xbox controller
+	void setCurrentActive(bool up);		//either moves up or down
+
+	void xBoxSelect();					//for menu stuffs with controller
+
 private:
 
 	MyGUI::OgrePlatform* mPlatform;	//this is the base platform for the mygui stuffs
@@ -55,6 +60,8 @@ private:
 
 	void buttonHit(MyGUI::WidgetPtr _sender);
 
+	enum CurrentActive {INV_B, CHAR_B, EXIT_B};
+	CurrentActive currentActive;
 };
 
 #endif //End GUIController

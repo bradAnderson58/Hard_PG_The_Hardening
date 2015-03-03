@@ -42,7 +42,6 @@ private:
 	LoaderClass* loading;  //Do loading with this shits
 
 public:	
-	bool checkDebug;  //debugging take out
 	enum GameState
 	{
 		MAINSCREEN,
@@ -72,6 +71,7 @@ public:
 	std::list<NPC*> getNPCs(){ return NPClist;}
 	std::list<Ogre::SceneNode*> getWallList(){return wallList;}
 	std::vector<Environment*> getEnvObj(){ return interactableObjs; }
+
 	std::list<Ogre::Entity*> getWallEntities(){return wallEntities;}
 	void setGrid(Grid* g){grid = g;}
 

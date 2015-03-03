@@ -1,10 +1,12 @@
 #include "InventoryView.h"
+#include "GUIController.h"
 
 #define INVCELLSIZE 50
 #define EQPCELLSIZE 100
 
-InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top)
+InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController* gc)
 {
+	mainMenu = gc;
 	// set initial items to all be NULL
 	int mLeft = left;
 	int mTop = top;
@@ -100,23 +102,20 @@ InventoryView::updateEquipment()
 void 
 InventoryView::buttonHit(MyGUI::WidgetPtr _sender)
 {
-	std::cout << "I'm a MyGUI button!" << std::endl;
 	if (_sender->getName() == "back")
 	{
 		show(false);
+		mainMenu->openMenu(true);
 	}
 	// what inv item is selected
 	else 
 	{
 		// select item, and up its alpha to show which is selected visually
-		inventoryGrid[selectedRow][selectedCol]->getImageBox()->setAlpha(0.70);
-		std::cout << "clicking inv item" << std::endl;
-		std::cout << _sender->getName() << std::endl;
+		inventoryGrid[selectedRow][selectedCol]->unClick();
 		int myInt = std::stoi(_sender->getName());
 		selectedRow = myInt / 5;
 		selectedCol = myInt % 5;
-		std::cout << "Row " << selectedRow << " Col " << selectedCol << std::endl;
-		inventoryGrid[selectedRow][selectedCol]->getImageBox()->setAlpha(1.00);
+		inventoryGrid[selectedRow][selectedCol]->click();
 	}
 
 }

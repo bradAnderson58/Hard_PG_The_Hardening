@@ -21,7 +21,9 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	startState = s;
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
-	setupAnimations();	
+
+	setupAnimations();
+
 }
 
 Rat::~Rat(void)
