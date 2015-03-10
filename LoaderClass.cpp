@@ -136,6 +136,7 @@ void LoaderClass::loadEnv(){
 					if (c == 'n') {
 						agent = new Player(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app);
 						app->setPlayer( (Player*) agent );		//access this player
+						app->getPlayerPointer()->doUpdateGUI();
 						
 						agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						((Player*)agent)->setInitPos(((Player*)agent)->getPosition());		//casting magics

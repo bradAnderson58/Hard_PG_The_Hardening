@@ -18,6 +18,7 @@ public:
 	~GUIController();
 
 	InventoryView* getInventory() { return inventory; }
+	CharacterRecord* getCharRecord() { return charRecord; }
 
 	//set health or mana bar
 	void setHealth(double health){ healthBar->setProgressPosition(health); }

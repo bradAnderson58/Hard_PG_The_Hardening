@@ -12,7 +12,14 @@ UsableItems::UsableItems(itemType mt, int damstat, int defstat, int critstat, in
 	resaleVal = resale;
 
 	name = n;
-	imgFile = "";
+	imgFile = (mType == POTION) ? "potion.png" :
+				(mType == WEAPON) ? "weapon.png" :
+				(mType == SHIELD) ? "shield.png" :
+				(mType == BOOBPLATE) ? "plate.png" :
+				(mType == PANTS) ? "pants.png" :
+				(mType == HELM) ? "helm.png" :
+				(mType == NECKLACE) ? "necklace.png" :
+				"emptySlot.png";
 }
 
 //return a specific stat from this usable item

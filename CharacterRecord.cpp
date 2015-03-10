@@ -56,6 +56,8 @@ void CharacterRecord::open(bool visible){
 	vStats->setVisible(visible);
 	//vQuests->setVisible(visible);
 	mSkillTree->show(visible);
+
+	mVisible = visible;
 }
 
 //called for updating stats or quests?

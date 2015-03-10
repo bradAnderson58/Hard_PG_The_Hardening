@@ -88,6 +88,10 @@ Player::~Player(void)
 	
 }
 
+void Player::doUpdateGUI(){
+	updateGUI->recordUpdator();
+}
+
 void Player::updateStats(){
 	//call to quickly update them stats when needed
 	// Brandon NOTE: called when changing gear?
@@ -603,4 +607,9 @@ Player::setNeck(UsableItems* neck)
 {
 	equippedNeck = neck;
 	updateStats();
+}
+
+void Player::pushInventory(UsableItems* i){
+	inventory.push_back(i);
+	updateGUI->recordUpdator();
 }

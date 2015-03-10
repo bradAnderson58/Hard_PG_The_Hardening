@@ -2,6 +2,8 @@
 #include "GameController.h"
 #include "Environment.h"
 #include "GUIController.h"
+#include "InventoryView.h"
+#include "CharacterRecord.h"
 
 //Contructor requires use of GameApps mWindow for binding
 GameController::GameController(GameApplication* a)
@@ -413,23 +415,54 @@ bool GameController::axisMoved( const OIS::JoyStickEvent &arg, int axis){
 	//choose different menu choices
 	else if( app->getGameState() == GameApplication::MENUSCREEN){
 		
-		double stickVal =  ((double)(arg.state.mAxes[0].abs)) / 32800.0; //y axis
-		
-		std::cout << stickVal << std::endl;
+		double yVal =  ((double)(arg.state.mAxes[0].abs)) / 32800.0; //y axis
+		double xVal = ((double)(arg.state.mAxes[1].abs)) / 32800.0;	 //x axis
 
-		//go down one 
-		if (stickVal > 0.5 && !alreadyPicked){
-			mGUICont->setCurrentActive(false);
-			alreadyPicked = true;
-		//go up one
-		}else if (stickVal < -0.5 && !alreadyPicked){
-			mGUICont->setCurrentActive(true);
-			alreadyPicked = true;
+		if (!mGUICont->getInventory()->mVisible && !mGUICont->getCharRecord()->mVisible){ //in main menu
+
+			//go down one 
+			if (yVal > 0.5 && !alreadyPicked){
+				mGUICont->setCurrentActive(false);
+				alreadyPicked = true;
+			//go up one
+			}else if (yVal < -0.5 && !alreadyPicked){
+				mGUICont->setCurrentActive(true);
+				alreadyPicked = true;
 		
-		//the player can only move one at a time
-		}else if ((stickVal > -0.5 && stickVal < 0.5) && alreadyPicked){
-			alreadyPicked = false;
+			//the player can only move one at a time
+			}else if ((yVal > -0.5 && yVal < 0.5) && alreadyPicked){
+				alreadyPicked = false;
+			}
 		}
+		//Inside the inventory menu
+		else if (mGUICont->getInventory()->mVisible){
+
+			//Move selected around in the inventory
+			if (!alreadyPicked){
+				if (yVal > 0.5){
+					mGUICont->getInventory()->switchSelected(1, 0);
+					alreadyPicked = true;
+				}else if (yVal < -0.5){
+					mGUICont->getInventory()->switchSelected(-1 , 0);
+					alreadyPicked = true;
+				}else if (xVal > 0.5){
+					mGUICont->getInventory()->switchSelected(0, 1);
+					alreadyPicked = true;
+				}else if (xVal < -0.5){
+					mGUICont->getInventory()->switchSelected(0, -1);
+					alreadyPicked = true;
+				}
+			//reset the already picked boolean
+			}else{
+				if (yVal > -0.5 && yVal < 0.5 && xVal > -0.5 && xVal < 0.5) alreadyPicked = false;
+			}
+		}
+		//Inside character record
+		else if (mGUICont->getCharRecord()->mVisible){
+
+		}
+		//weird error?
+		else{std::cout << "Something has gone horribly wrong with controller selecting." << std::endl; }
 	}
 	return true;
 }

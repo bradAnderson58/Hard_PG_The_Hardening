@@ -32,6 +32,8 @@ public:
 	void setMovement(bool on);					//set the movemnt
 	void rotationCode(OIS::MouseEvent arg);		//Rotate the hero when we move the mouse
 
+	void doUpdateGUI();
+
 	void rotationCode(double arg);				//Rotate the hero
 	void cameraRot(double arg);					//for rotating camera with RS joystick
 	void playerRot(double arg);					//for rotating player with LS joystick
@@ -90,7 +92,7 @@ public:
 	std::string getFace() { return mFace; }
 
 	std::vector<UsableItems*> getInventory(){ return inventory; }  //return inventory for GUI purposes
-	void pushInventory(UsableItems* i){inventory.push_back(i); }   //push
+	void pushInventory(UsableItems* i);   //push
 	void switchEquipment(int ind);		//switch some inventory item with a current equipped item
 
 	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }

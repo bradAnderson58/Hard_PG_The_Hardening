@@ -18,6 +18,8 @@ public:
 
 	void open(bool visible);	// open the character window
 	void update(Player* pl);				// update rendering of window
+
+	bool mVisible;
 	
 private:
 

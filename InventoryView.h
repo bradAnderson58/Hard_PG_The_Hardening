@@ -20,10 +20,15 @@ public:
 	void addItem(UsableItems* item);	// add item to next available slot
 	void show(bool visible);			// open the inventory window
 	void update(Player* p);	
+
+	bool mVisible;		//is the inventory currently visible?
+	void switchSelected(int row, int col);	//switch with xbox controller
 	
 private:
 	int selectedRow;
 	int selectedCol;
+
+	void updateAll();  //call this to update all the data in the inventory view
 
 	GUIController* mainMenu;	//this is for turning control back over the the main menu at the end
 

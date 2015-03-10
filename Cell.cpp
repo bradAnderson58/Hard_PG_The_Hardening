@@ -8,7 +8,7 @@ Cell::Cell(MyGUI::Gui* mGUI, int left, int top, int size, std::string name)
 	// initially ogre heads!!
 	mImgBox = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
 		left, top, size, size, MyGUI::Align::Default, "Main", name);
-	mImgBox->setImageTexture("thumb_cel.png");
+	mImgBox->setImageTexture("emptySlot.png");
 	// this is assuming a set image size...
     mImgBox->setImageCoord(MyGUI::IntCoord(0, 0, 128,128));
     mImgBox->setImageTile(MyGUI::IntSize(128, 128));
@@ -52,12 +52,21 @@ Cell::removeItem()
 void
 Cell::setItem(UsableItems* item)
 {
-	mItem = item;
+	if (item){
 
-	mImgBox->setImageTexture(item->getImgFile());
-	// this is assuming a set image size...
-    mImgBox->setImageCoord(MyGUI::IntCoord(0, 0, 128,128));
-    mImgBox->setImageTile(MyGUI::IntSize(128, 128));
+		std::cout << "Got an item " << item->getImgFile() << std::endl; 
+
+		mItem = item;
+
+		mImgBox->setImageTexture(item->getImgFile());
+		// this is assuming a set image size...
+		mImgBox->setImageCoord(MyGUI::IntCoord(0, 0, 128,128));
+		mImgBox->setImageTile(MyGUI::IntSize(128, 128));
+	}
+	else{
+		std::cout << "Didnt have an item" << std::endl;
+		mImgBox->setImageTexture("emptySlot.png");
+	}
 }
 
 

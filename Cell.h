@@ -21,6 +21,8 @@ public:
 	UsableItems* getItem() { return mItem; }
 	MyGUI::ImageBox* getImageBox() { return mImgBox; }
 
+	void changeTexture(std::string fname){ mImgBox->setImageTexture(fname); }  //for changing the texture of a slot
+
 	void setItem(UsableItems* item);
 	bool isSelected() { return selected; }
 private:

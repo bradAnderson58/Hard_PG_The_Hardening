@@ -53,6 +53,10 @@ InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController*
 		mTop += INVCELLSIZE;
 	}
 
+	inventoryGrid[selectedRow][selectedCol]->click();  //start in top left
+
+	updateAll();
+
 }
 
 InventoryView::~InventoryView(void)
@@ -64,6 +68,10 @@ void
 InventoryView::addItem(UsableItems* item)
 {
 
+}
+
+void InventoryView::updateAll(){
+	//head->setItem(
 }
 
 void 
@@ -83,6 +91,8 @@ InventoryView::show(bool visible)
 
 	mWindow->setVisible(visible);
 	backB->setVisible(visible);
+
+	mVisible = visible;
 }
 
 // swap items between two cells
@@ -125,11 +135,22 @@ InventoryView::update(Player* p)
 void 
 InventoryView::updateInventory(Player* p)
 {
+	std::vector<UsableItems*> tempvec = p->getInventory();
+	int mSize = tempvec.size();
+	int iter = 0;
+	std::cout << mSize << " " << iter << std::endl;
 	// update inventory view
-	for(int i = 0; i < 4; i++)
-		for(int j = 0; j < 5; j++)
-			inventoryGrid[i][j]->setItem(&p->getInventory()[i][j]);
-
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 5; j++){
+			if (iter < mSize){
+				inventoryGrid[i][j]->setItem(tempvec[iter]);
+				iter++;
+			}else{
+				inventoryGrid[i][j]->setItem(NULL);
+				std::cout << "Sent NULL " << std::endl;
+			}
+		}
+	}
 	// update equipment view
 	head->setItem(p->getHelm());
 	body->setItem(p->getBoobs());
@@ -172,4 +193,14 @@ InventoryView::buttonHit(MyGUI::WidgetPtr _sender)
 		inventoryGrid[selectedRow][selectedCol]->click();
 	}
 
+}
+
+//call this to buttonhit callback move thing yup
+void InventoryView::switchSelected(int row, int col){
+	int newRow = selectedRow + row;
+	int newCol = selectedCol + col;
+
+	if (newRow >= 0 && newRow < 4 && newCol >= 0 && newCol < 5){  //fix magic numbers?
+		buttonHit(inventoryGrid[selectedRow+row][selectedCol+col]->getImageBox());
+	}
 }
