@@ -5,11 +5,11 @@
 
 Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name, 
 	std::string filename, float height, float scale, GameApplication* app):
-	Agent(SceneManager, name, filename, height, scale, app)
+	Spell(SceneManager, name, filename, height, scale, app)
 {
 	// nodes, entities, and other fields handled through inheritance
 
-	projectile = false;
+	active = false;
 	
 	mTarget = NULL;
 	mDmg = 1.0;
@@ -28,7 +28,7 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 void
 Projectile::updateLocomote(Ogre::Real deltaTime)
 {
-	if(projectile)
+	if(active)
 		shoot(deltaTime);
 }
 
@@ -60,7 +60,7 @@ Projectile::fire(Ogre::Real vx, Ogre::Real vy, Ogre::Real vz,
 				 Ogre::Vector3 pos)
 {
 	std::cout << "I Said FIRE!!" << std::endl;
-	projectile = true; // turns on the movement, which will call shoot
+	active = true; // turns on the movement, which will call shoot
 	mModelEntity->setVisible(true);
 	// set up the initial state
 	mBodyNode->setPosition(pos);
@@ -102,6 +102,6 @@ Projectile::shoot(Ogre::Real deltaTime)
 void
 Projectile::reload()
 {
-	projectile = false;
+	active = false;
 	mModelEntity->setVisible(false);
 }

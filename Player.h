@@ -3,6 +3,7 @@
 
 #include "Agent.h"
 #include "Projectile.h"
+#include "AoE.h"
 
 class GameApplication;
 class GUIController;
@@ -63,7 +64,7 @@ public:
 	void getHurt(int dam);		// code for when your getting hurt
 	void setBlocking(bool y) { isBlocking = y; }
 
-	void shoot();	//shoot a projectile
+	void shoot(skillID skill);	//shoot a projectile
 
 	UsableItems* getWpn(){ return equippedWpn; }		// The weapon you are using
 	UsableItems* getShield(){ return equippedShield; }
@@ -174,6 +175,7 @@ private:
 	UsableItems* equippedNeck;
 
 	Projectile* mFireball;
+	AoE* mFreeze;
 
 	double mDamage;
 	double mDefense;

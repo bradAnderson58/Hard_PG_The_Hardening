@@ -1,22 +1,23 @@
-#ifndef __Projectile_h_
-#define __Projectile_h_
+#ifndef __AoE_h_
+#define __AoE_h_
 
 #include "Spell.h"
 
 class GameApplication;
 
-class Projectile : public Spell
+class AoE : public Spell
 {
 private:
 
-	enum AnimID;	// depends on projectile?
+	enum AnimID;
 
-	double mHeight;
-	double mMass;
-	Agent* mTarget;		// use for targeted attackes, else null
+	Ogre::Vector3 mScale;	// starting scale
+	Ogre::Vector3 scaleBy;	// scale up by this much
 
-	Ogre::SceneNode *blastNode;		// use for explosion area
+	double mRadius;			// radius of the effect
+	double cRadius;			// current radius
 
+	// maybe just cycle through textures for AoE animations
 	void setupAnimations();							// load this character's animations
 	void fadeAnimations(Ogre::Real deltaTime);		// blend from one animation to another
 	void updateAnimations(Ogre::Real deltaTime);	// update the animation frame
@@ -28,14 +29,14 @@ private:
 	void updateLocomote(Ogre::Real deltaTime);
 
 public:
-	
-	Projectile(Ogre::SceneManager* SceneManager, std::string name, 
+
+	AoE(Ogre::SceneManager* SceneManager, std::string name, 
 		std::string filename, float height, float scale, 
 		GameApplication* app);
-	~Projectile();
+	~AoE();
 
-	void fire(Ogre::Real vx, Ogre::Real vy, Ogre::Real vz,
-			  Ogre::Vector3 pos);
+	void fire(Ogre::Vector3 pos);
 
 };
+
 #endif

@@ -72,6 +72,9 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	mFireball = new Projectile(SceneManager, "fireball", "geosphere4500.mesh",
 		height, scale/4, a); 
 
+	// set up AoE field around character to activate for freeze attack
+	mFreeze = new AoE(SceneManager, "freeze", "geosphere4500.mesh", 
+		height, scale, a);
 
 	srand(time(NULL));  //seed for random number generation
 
@@ -121,13 +124,13 @@ void Player::updateDamDef(){
 
 }
 
-void Player::update(Ogre::Real deltaTime){
-
+void Player::update(Ogre::Real deltaTime)
+{
 	this->updateAnimations(deltaTime);		// Update animation playback
 	this->updateLocomote(deltaTime);		// Update Locomotion
 
 	this->mFireball->update(deltaTime);		// update projectile 
-
+	this->mFreeze->update(deltaTime);		// update area of effect
 }
 
 // change face img file based on current status
@@ -394,13 +397,18 @@ void Player::getHurt(int damage){
 
 // show and fire a projectile
 void
-Player::shoot()
+Player::shoot(skillID skill)
 {
-	if (!mFireball->isActive() && !doingStuff)
+	if (skill == FIREBALL && !mFireball->isActive() && !doingStuff)
 	{
 		std::cout << "Fireball!" << std::endl;
 		mFireball->fire(mDirection[0], mDirection[1]+10.0, mDirection[2],
 						getPosition());
+	}
+	else if (skill == FREEZE && !mFreeze->isActive() && !doingStuff)
+	{
+		std::cout << "Freeeezzzzee..." << std::endl;
+		mFreeze->fire(getPosition());
 	}
 }
 
