@@ -9,8 +9,6 @@ class Projectile : public Spell
 {
 private:
 
-	enum AnimID;	// depends on projectile?
-
 	double mHeight;
 	double mMass;
 	Agent* mTarget;		// use for targeted attackes, else null

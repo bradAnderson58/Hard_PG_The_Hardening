@@ -4,6 +4,7 @@
 #include "Agent.h"
 
 class GameApplication;
+class Timer;	
 
 class Spell : public Agent
 {
@@ -15,21 +16,20 @@ private:
 
 protected:
 
-	enum AnimID;		// depends on Spell?
+	Timer* cooldown_timer;	// time until next cast is available
 
-	double mSpeed;		// speed of the spell
-	double mDmg;		// damage to deal
+	double mSpeed;			// speed of the spell
+	double mDmg;			// damage to deal
 
 	bool active;
 
 public:
 	
 	Spell(Ogre::SceneManager* SceneManager, std::string name, 
-		std::string filename, float height, float scale, 
-		GameApplication* app);
+		std::string filename, float height, float scale, GameApplication* app);
 	~Spell();
 
 	bool isActive() { return active; }
-
+	void setCoolDown(Ogre::Real time);
 };
 #endif

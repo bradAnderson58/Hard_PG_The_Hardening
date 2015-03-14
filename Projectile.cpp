@@ -1,5 +1,5 @@
 #include "Projectile.h"
-#include "GameApplication.h"
+#include "Timer.h"
 
 #define FORWARDVEL 10.0
 
@@ -18,6 +18,7 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 	mDirection = Ogre::Vector3(0,0,0);
 	mSpeed = 4.0;
 
+	mModelEntity->setMaterialName("Examples/fire");
 	mModelEntity->setCastShadows(false);
 	mModelEntity->setVisible(false);
 }

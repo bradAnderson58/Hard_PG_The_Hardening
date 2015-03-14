@@ -1,12 +1,11 @@
 #include "AoE.h"
+#include "Timer.h"
 
 AoE::AoE(Ogre::SceneManager* SceneManager, std::string name, 
 	std::string filename, float height, float scale, GameApplication* app):
 	Spell(SceneManager, name, filename, height, scale, app)
 {
 	active = false;
-
-	mRadius = 5.0;
 	mDmg = 1.0;
 	mSpeed = 5.0;
 
@@ -14,7 +13,7 @@ AoE::AoE(Ogre::SceneManager* SceneManager, std::string name,
 	mScale = mBodyNode->getScale();
 	scaleBy = Ogre::Vector3(1.05, 1.0, 1.05);
 	
-	mModelEntity->setMaterialName("Examples/Hilite/Yellow");
+	mModelEntity->setMaterialName("Examples/icelake");
 	mModelEntity->setCastShadows(false);
 	mModelEntity->setVisible(false);
 }
@@ -24,6 +23,8 @@ AoE::updateLocomote(Ogre::Real deltaTime)
 {
 	if(active)
 		shoot(deltaTime);
+	else if (cooldown_timer != NULL)
+		cooldown_timer->update(deltaTime);
 }
 
 void 
@@ -55,17 +56,23 @@ AoE::updateAnimations(Ogre::Real deltaTime)
 void
 AoE::fire(Ogre::Vector3 pos)
 {
-	std::cout << "Freeze them all." << std::endl;
-	active = true;
-	mModelEntity->setVisible(true);
-	mBodyNode->setPosition(pos);
+	//FIX HERE
+	if (cooldown_timer->isZero())
+	{
+		std::cout << "Freeze them all." << std::endl;
+		active = true;
+		mModelEntity->setVisible(true);
+		mBodyNode->setPosition(pos);
+	}
 }
 
 // scale the area of effect larger until it reaches max radius
 void
 AoE::shoot(Ogre::Real deltaTime)
 {
-	mBodyNode->scale(scaleBy);
+	double scaleAmt = deltaTime / (deltaTime * 0.98);
+	std::cout << "scale by: " << scaleAmt << std::endl;
+	mBodyNode->scale(scaleAmt, 1.0, scaleAmt);
 	//std::cout << "current scale: " << mBodyNode->getScale() << std::endl;
 	if (mBodyNode->getScale()[0] >= 0.1)
 		reload();
@@ -77,4 +84,5 @@ AoE::reload()
 	active = false;
 	mModelEntity->setVisible(false);
 	mBodyNode->setScale(mScale);
+	scaleBy = Ogre::Vector3(1.05, 1.0, 1.05);
 }

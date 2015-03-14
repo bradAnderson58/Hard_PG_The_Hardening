@@ -9,13 +9,8 @@ class AoE : public Spell
 {
 private:
 
-	enum AnimID;
-
 	Ogre::Vector3 mScale;	// starting scale
 	Ogre::Vector3 scaleBy;	// scale up by this much
-
-	double mRadius;			// radius of the effect
-	double cRadius;			// current radius
 
 	// maybe just cycle through textures for AoE animations
 	void setupAnimations();							// load this character's animations
@@ -36,7 +31,6 @@ public:
 	~AoE();
 
 	void fire(Ogre::Vector3 pos);
-
 };
 
 #endif

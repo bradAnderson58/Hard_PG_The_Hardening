@@ -6,6 +6,8 @@
 #define _USE_MATH_DEFINES   
 #include <math.h>
 
+// cooldowns in milliseconds
+#define FREEZE_COOLDOWN 8000 
 
 Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a):
 	Agent(SceneManager, name, filename, height, scale, a)
@@ -59,12 +61,15 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	constitutionAtt = 1;	// affects def, heal
 	intelligenceAtt = 1;	// affects mana, dam
 
+	// give some starting equipment
 	equippedWpn = new UsableItems(UsableItems::WEAPON, 1, 0, 0, 0, 0, "Bandito Shiv", 1);	//The weapon you are using
 	equippedShield = NULL;
 	equippedHelm = new UsableItems(UsableItems::HELM, 0, 0, 0, 0, 0, "Skull Cap", 1);
 	equippedBoobs = new UsableItems(UsableItems::BOOBPLATE, 0, 0, 0, 0, 0, "Dark Hoodie", 2);
 	equippedPants = new UsableItems(UsableItems::PANTS, 0, 0, 0, 0, 0, "Pantaloons", 2);
 	equippedNeck = new UsableItems(UsableItems::NECKLACE, 0, 0, 0, 0, 0, "Dangling Pointer", 15);
+
+	equippedHelm->setImgFile("helm.png");
 
 	inventory.push_back(new UsableItems(UsableItems::WEAPON, 20, 0, 0, 0, 0, "The Allocator!", 5000));  //Super Awesome weapon for testing
 
@@ -75,6 +80,7 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	// set up AoE field around character to activate for freeze attack
 	mFreeze = new AoE(SceneManager, "freeze", "geosphere4500.mesh", 
 		height, scale, a);
+	mFreeze->setCoolDown(FREEZE_COOLDOWN);
 
 	srand(time(NULL));  //seed for random number generation
 

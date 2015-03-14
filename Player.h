@@ -10,6 +10,9 @@ class GUIController;
 class NPC;
 class UsableItems;
 class Environment;
+class Spell;
+class Projectile;
+class AoE;
 
 class Player : public Agent{
 

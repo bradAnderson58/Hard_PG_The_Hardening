@@ -1,6 +1,6 @@
 #include "SkillTree.h"
 
-#define NODESIZE 40
+#define TREENODESIZE 40
 
 SkillTree::SkillTree(MyGUI::Gui* mGUI, int left, int top)
 {
@@ -16,22 +16,22 @@ SkillTree::SkillTree(MyGUI::Gui* mGUI, int left, int top)
 	SkillNode* freezeBox;
 	SkillNode* shockBox;
 
-	absorbBox = new SkillNode(mGUI, mCenter, mTop, NODESIZE, 
+	absorbBox = new SkillNode(mGUI, mCenter, mTop, TREENODESIZE, 
 		"absorb", Player::ABSORB, NULL);
 
 	int leftBranch = mCenter - 50;
-	bashBox = new SkillNode(mGUI, leftBranch, mTop+50, NODESIZE, 
+	bashBox = new SkillNode(mGUI, leftBranch, mTop+50, TREENODESIZE, 
 		"bash", Player::BASH, absorbBox);
-	hamstringBox = new SkillNode(mGUI, leftBranch, mTop+100, NODESIZE, 
+	hamstringBox = new SkillNode(mGUI, leftBranch, mTop+100, TREENODESIZE, 
 		"hamstring", Player::HAMSTRING, bashBox);
-	massiveBlowBox = new SkillNode(mGUI, leftBranch, mTop+150, NODESIZE, 
+	massiveBlowBox = new SkillNode(mGUI, leftBranch, mTop+150, TREENODESIZE, 
 		"massiveblow", Player::MASSIVEBLOW, hamstringBox);
 
-	fireballBox = new SkillNode(mGUI, mCenter+50, mTop+50, NODESIZE, 
+	fireballBox = new SkillNode(mGUI, mCenter+50, mTop+50, TREENODESIZE, 
 		"fireball", Player::FIREBALL, absorbBox);
-	freezeBox = new SkillNode(mGUI, mCenter+50, mTop+100, NODESIZE, 
+	freezeBox = new SkillNode(mGUI, mCenter+50, mTop+100, TREENODESIZE, 
 		"freeze", Player::FREEZE, fireballBox);
-	shockBox = new SkillNode(mGUI, mCenter+100, mTop+100, NODESIZE, 
+	shockBox = new SkillNode(mGUI, mCenter+100, mTop+100, TREENODESIZE, 
 		"shock", Player::SHOCK, fireballBox);
 
 	skills[0] = absorbBox;
