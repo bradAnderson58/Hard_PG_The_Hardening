@@ -4,18 +4,16 @@
 #include "Agent.h"
 
 class GameApplication;
-class Timer;	
+class Timer;
+class NPC;
 
 class Spell : public Agent
 {
 private:
-
-	virtual void checkCollision();
 	virtual void shoot(Ogre::Real deltatime);
 	virtual void reload();
 
 protected:
-
 	Timer* cooldown_timer;	// time until next cast is available
 
 	double mSpeed;			// speed of the spell
@@ -23,8 +21,9 @@ protected:
 
 	bool active;
 
+	void checkCollision(NPC* enemy);
+
 public:
-	
 	Spell(Ogre::SceneManager* SceneManager, std::string name, 
 		std::string filename, float height, float scale, GameApplication* app);
 	~Spell();

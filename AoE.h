@@ -4,6 +4,7 @@
 #include "Spell.h"
 
 class GameApplication;
+class NPC;
 
 class AoE : public Spell
 {
@@ -17,7 +18,7 @@ private:
 	void fadeAnimations(Ogre::Real deltaTime);		// blend from one animation to another
 	void updateAnimations(Ogre::Real deltaTime);	// update the animation frame
 
-	void checkCollision();
+	void checkCollision(NPC* enemy);
 	void shoot(Ogre::Real deltatime);
 	void reload();
 

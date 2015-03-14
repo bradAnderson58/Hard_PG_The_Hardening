@@ -33,12 +33,6 @@ Projectile::updateLocomote(Ogre::Real deltaTime)
 		shoot(deltaTime);
 }
 
-void 
-Projectile::checkCollision()
-{
-
-}
-
 void Projectile::setupAnimations()
 {
 
@@ -91,6 +85,11 @@ Projectile::shoot(Ogre::Real deltaTime)
 
 	this->mBodyNode->setPosition(pos);
 	//this->mBodyNode->pitch(Ogre::Degree(20));
+
+	for (NPC *enemy : app->getNPCs())
+	{
+		checkCollision(enemy);
+	}
 
 	if (this->mBodyNode->getPosition().y <= -0.5) // if it get close to the ground, stop
 	{

@@ -12,17 +12,16 @@ class GameApplication; //whyyyyyyyyy
 class Timer
 {
 private:
-
+	Ogre::Real mStartTime;
 	Ogre::Real mCountDown;
 	//Ogre::Timer* mPrecisionTimer;
 
 public:
-
 	Timer(Ogre::Real countdown_millsec);
 	~Timer();
 
 	void update(Ogre::Real deltaTime);
-	void reset(Ogre::Real countdown_millsec);
+	void reset();
 	bool isZero();
 };
 #endif

@@ -6,8 +6,8 @@
 #define _USE_MATH_DEFINES   
 #include <math.h>
 
-// cooldowns in milliseconds
-#define FREEZE_COOLDOWN 8000 
+// cooldowns in milliseconds??
+#define FREEZE_COOLDOWN 10
 
 Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a):
 	Agent(SceneManager, name, filename, height, scale, a)

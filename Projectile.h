@@ -19,7 +19,6 @@ private:
 	void fadeAnimations(Ogre::Real deltaTime);		// blend from one animation to another
 	void updateAnimations(Ogre::Real deltaTime);	// update the animation frame
 
-	void checkCollision();
 	void shoot(Ogre::Real deltatime);
 	void reload();
 
