@@ -27,17 +27,6 @@ AoE::updateLocomote(Ogre::Real deltaTime)
 		cooldown_timer->update(deltaTime);
 }
 
-// check if an agent give position is in range of my ice
-//void 
-//AoE::checkCollision(NPC* enemy)
-//{
-//	// just use a distance check to see if agent is within radius
-//	Ogre::AxisAlignedBox aoeBox = mModelEntity->getWorldBoundingBox();
-//	Ogre::AxisAlignedBox enemyBox = enemy->getBoundingBox();
-//	if (aoeBox.intersects(enemyBox))
-//		enemy->getHurt(mDmg);
-//}
-
 void 
 AoE::setupAnimations()
 {
@@ -60,15 +49,16 @@ AoE::updateAnimations(Ogre::Real deltaTime)
 void
 AoE::fire(Ogre::Vector3 pos)
 {
-	//FIX HERE
 	if (!cooldown_timer || cooldown_timer->isZero())
 	{
-		std::cout << "Freeze them all." << std::endl;
 		active = true;
 		mModelEntity->setVisible(true);
 		mBodyNode->setPosition(pos);
 	}
-	else std::cout << "Not off cooldown" << std::endl;
+	else 
+	{
+		std::cout << "Cooling down: " << cooldown_timer->timeLeft_seconds() << "seconds" << std::endl;
+	}
 }
 
 // scale the area of effect larger until it reaches max radius

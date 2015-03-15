@@ -407,13 +407,11 @@ Player::shoot(skillID skill)
 {
 	if (skill == FIREBALL && !mFireball->isActive() && !doingStuff)
 	{
-		std::cout << "Fireball!" << std::endl;
 		mFireball->fire(mDirection[0], mDirection[1]+10.0, mDirection[2],
 						getPosition());
 	}
 	else if (skill == FREEZE && !mFreeze->isActive() && !doingStuff)
 	{
-		std::cout << "Freeeezzzzee..." << std::endl;
 		mFreeze->fire(getPosition());
 	}
 }

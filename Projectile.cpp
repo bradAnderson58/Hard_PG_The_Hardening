@@ -12,7 +12,7 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 	active = false;
 	
 	mTarget = NULL;
-	mDmg = 1.0;
+	mDmg = 10.0;
 	mMass = 2.5;
 	mHeight = height;	// pass shooters mBodyNode position
 	mDirection = Ogre::Vector3(0,0,0);
@@ -21,6 +21,7 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 	mModelEntity->setMaterialName("Examples/fire");
 	mModelEntity->setCastShadows(false);
 	mModelEntity->setVisible(false);
+
 }
 
 // inherit update from agent.cpp
@@ -54,7 +55,6 @@ void
 Projectile::fire(Ogre::Real vx, Ogre::Real vy, Ogre::Real vz,
 				 Ogre::Vector3 pos)
 {
-	std::cout << "I Said FIRE!!" << std::endl;
 	active = true; // turns on the movement, which will call shoot
 	mModelEntity->setVisible(true);
 	// set up the initial state
@@ -84,7 +84,8 @@ Projectile::shoot(Ogre::Real deltaTime)
 	pos = pos + 0.5 * mMass*gravity * deltaTime * deltaTime;
 
 	this->mBodyNode->setPosition(pos);
-	//this->mBodyNode->pitch(Ogre::Degree(20));
+	this->mBodyNode->roll(Ogre::Degree(2));
+	this->mBodyNode->yaw(Ogre::Degree(2));
 
 	for (NPC *enemy : app->getNPCs())
 	{
