@@ -65,9 +65,6 @@ Projectile::fire(Ogre::Real vx, Ogre::Real vy, Ogre::Real vz,
 	gravity.x = 0;
 	gravity.y = Ogre::Real(-9.81);
 	gravity.z = 0;
-	//this->mBodyNode->yaw(Ogre::Degree(180));
-	//this->mBodyNode->pitch(Ogre::Degree(45));
-	this->mBodyNode->showBoundingBox(true); 
 }
 
 //updates the current velocity and position of the agent
@@ -83,13 +80,16 @@ Projectile::shoot(Ogre::Real deltaTime)
 	pos = pos + (vel * mSpeed * deltaTime);	
 	pos = pos + 0.5 * mMass*gravity * deltaTime * deltaTime;
 
+	// move and animate the fireball
 	this->mBodyNode->setPosition(pos);
 	this->mBodyNode->roll(Ogre::Degree(2));
 	this->mBodyNode->yaw(Ogre::Degree(2));
 
+	// if a fireball hits something, explode it and reload
 	for (NPC *enemy : app->getNPCs())
 	{
-		checkCollision(enemy);
+		if (checkCollision(enemy))
+			reload();
 	}
 
 	if (this->mBodyNode->getPosition().y <= -0.5) // if it get close to the ground, stop

@@ -21,7 +21,7 @@ protected:
 
 	bool active;
 
-	void checkCollision(NPC* enemy);
+	bool checkCollision(NPC* enemy);
 
 public:
 	Spell(Ogre::SceneManager* SceneManager, std::string name, 

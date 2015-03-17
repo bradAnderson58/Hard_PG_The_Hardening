@@ -11,6 +11,7 @@
 class GameApplication;
 class InventoryView;
 class CharacterRecord;
+class DialogView;
 
 class GUIController{
 public:
@@ -57,7 +58,8 @@ private:
 	MyGUI::ButtonPtr charRecordB;		// button to acces character records from pause menu
 	MyGUI::ButtonPtr exitB;				// button to exit from pause menu
 	InventoryView* inventory;			// inventory window for gear and items
-	CharacterRecord* charRecord;		//character records (stats, quests, ect...)
+	CharacterRecord* charRecord;		// character records (stats, quests, ect...)
+	DialogView* dialog;					// view for dialog events
 
 	void buttonHit(MyGUI::WidgetPtr _sender);
 

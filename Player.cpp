@@ -75,7 +75,7 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 
 	// some projectile to throw
 	mFireball = new Projectile(SceneManager, "fireball", "geosphere4500.mesh",
-		height, scale/4, a); 
+		height, scale/5, a); 
 
 	// set up AoE field around character to activate for freeze attack
 	mFreeze = new AoE(SceneManager, "freeze", "geosphere4500.mesh", 

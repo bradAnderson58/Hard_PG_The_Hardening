@@ -10,14 +10,18 @@ Spell::Spell(Ogre::SceneManager* SceneManager, std::string name,
 
 Spell::~Spell(){}
 
-void 
+bool 
 Spell::checkCollision(NPC* enemy)
 {
 	// just use a distance check to see if agent is within radius
 	Ogre::AxisAlignedBox spellBox = mModelEntity->getWorldBoundingBox();
 	Ogre::AxisAlignedBox enemyBox = enemy->getBoundingBox();
 	if (spellBox.intersects(enemyBox))
+	{
 		enemy->getHurt(mDmg);
+		return true;
+	}
+	return false;
 }
 
 void 

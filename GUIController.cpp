@@ -4,9 +4,14 @@
 #include "GameController.h"
 #include "InventoryView.h"
 #include "CharacterRecord.h"
+#include "DialogView.h"
 
 
-GUIController::GUIController(GameApplication* a){
+GUIController::GUIController(GameApplication* a)
+{
+	//
+	// TODO: Base dimensions of GUI's based on window size 
+	//
 
 	//some setup required
 	app = a;
@@ -63,13 +68,15 @@ GUIController::GUIController(GameApplication* a){
 	exitB = mGUI->createWidget<MyGUI::Button>("Button", 
 		wMiddlish, hMiddlish+100, 200, 50, MyGUI::Align::Default, "Main", "exit");
 	exitB->setCaption("Exit Game");
-
 	
-	//character record window
+	// character record window
 	charRecord = new CharacterRecord(mGUI, wMiddlish, hMiddlish, this);
 	
 	// inventory window
 	inventory = new InventoryView(mGUI, wMiddlish+100, hMiddlish-200, this);
+
+	// dialog event view window
+	dialog = new DialogView(mGUI, wMiddlish-150, 100, 500, 200, this);
 	
 	// set callbacks
 	inventoryB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
@@ -87,8 +94,8 @@ GUIController::GUIController(GameApplication* a){
 
 	charRecord->open(false);
 	inventory->show(false);
+	dialog->show(false);
 	mGUI->hidePointer();
-
 }
 
 GUIController::~GUIController(){

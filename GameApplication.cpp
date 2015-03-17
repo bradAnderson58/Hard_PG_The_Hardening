@@ -112,13 +112,17 @@ GameApplication::toggleState(GameState s)
 
 		toggleState(PLAYING);
 	}
-	else if(s == PLAYING)		// mode where player interacts with world
+	else if (s == PLAYING)		// mode where player interacts with world
 	{
 		// hide menu and inventory
 		mGUICont->hidePointer();
 		mGUICont->openInventory(false);
 		mGUICont->openMenu(false);
 		gameState = s;
+	}
+	else if (s == DIALOG)	// show dialog view and run through lines, than resume
+	{
+
 	}
 	else if (s == MENUSCREEN)	// pause, main menu
 	{
