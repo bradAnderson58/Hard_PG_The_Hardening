@@ -61,8 +61,8 @@ void
 GameApplication::addTime(Ogre::Real deltaTime)
 {
 	//time updator
-	if (gameState == PLAYING || gameState == DEAD_STATE) {
-
+	if (gameState == PLAYING || gameState == DEAD_STATE) 
+	{
 		playerPointer->update(deltaTime); //Yoshimi has a different update function
 		for (NPC* guy : NPClist){
 			guy->update(deltaTime);
@@ -85,6 +85,10 @@ GameApplication::addTime(Ogre::Real deltaTime)
 		mGUICont->setHealth(playerPointer->getHealthNow()); //healthBar->setProgressPosition(playerPointer->getHealthNow()); //American Association of Highway Officials, Litigators, and Engineers 
 		mGUICont->setManaBar(playerPointer->getManaNow());  //manaBar->setProgressPosition(playerPointer->getManaNow());
 		//mGUICont->recordUpdator();
+	}
+	else if (gameState == DIALOG)
+	{
+
 	}
 }
 
@@ -114,15 +118,16 @@ GameApplication::toggleState(GameState s)
 	}
 	else if (s == PLAYING)		// mode where player interacts with world
 	{
-		// hide menu and inventory
+		// hide menu and inventory and dialog stuff
 		mGUICont->hidePointer();
 		mGUICont->openInventory(false);
 		mGUICont->openMenu(false);
+		mGUICont->openADialog(false);
 		gameState = s;
 	}
 	else if (s == DIALOG)	// show dialog view and run through lines, than resume
 	{
-
+		mGUICont->openADialog(true);
 	}
 	else if (s == MENUSCREEN)	// pause, main menu
 	{

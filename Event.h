@@ -10,7 +10,7 @@
 class Event
 {
 public:
-	Event(GameApplication* app, std::vector<std::string> dialog);
+	Event(GameApplication* app, std::vector<std::string> dialog, bool repeatable);
 	virtual ~Event(void);
 
 	void addDialog(std::string text);			// add a line of dialog

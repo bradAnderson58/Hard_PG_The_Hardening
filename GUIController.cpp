@@ -152,6 +152,12 @@ void GUIController::openCharRecord(bool visible){
 	charRecord->open(visible);
 }
 
+void
+GUIController::openADialog(bool visible)
+{
+	dialog->show(visible);
+}
+
 void GUIController::revealHUD(double health, double mana){
 
 	// reveal HUD and set up gui things

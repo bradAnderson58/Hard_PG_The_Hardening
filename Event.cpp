@@ -1,10 +1,10 @@
 #include "Event.h"
 
-Event::Event(GameApplication* app, std::vector<std::string> dialog)
+Event::Event(GameApplication* app, std::vector<std::string> dialog, bool repeatable)
 {
 	event_dialog = dialog;
 	line = event_dialog.begin();
-	repeat = true;
+	repeat = repeatable;
 	finish = false;
 }
 

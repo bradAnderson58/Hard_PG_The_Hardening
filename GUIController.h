@@ -35,6 +35,10 @@ public:
 	void openInventory(bool visible);
 	void openCharRecord(bool visible);
 
+	//dialog stuff
+	void openADialog(bool visible);
+
+	//
 	void recordUpdator();
 
 	//these used for getting and setting current active choice with xbox controller
