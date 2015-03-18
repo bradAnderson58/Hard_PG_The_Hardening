@@ -1,3 +1,4 @@
+#include "Event.h"
 #include "DialogView.h"
 
 DialogView::DialogView(MyGUI::Gui* mGUI, int left, int top, 
@@ -29,9 +30,20 @@ DialogView::~DialogView(void) {}
 // call this when player hits a button to finish reading current text
 // and at start of dialog
 void
-DialogView::update(Event* e)
+DialogView::update(GameApplication* app)
 {
-	updateText(e->nextLine());
+	if (mEvent->isFinished())
+	{
+		std::cout << "finished dialog" << std::endl;
+		app->toggleState(GameApplication::PLAYING);
+		if (mEvent->isRepeatable())
+			mEvent->reset();
+	}
+	else if (lineRead)
+	{
+		updateText(mEvent->nextLine());
+		std::cout << "updating next line of dialog" << std::endl;
+	}
 }
 
 void
@@ -47,7 +59,7 @@ void
 DialogView::updateText(std::string s)
 {
 	mDialogBox->setCaption(s);
-
+	lineRead = false;
 	//add a transition animation for updating text?
 }
 

@@ -20,16 +20,20 @@ Event::addDialog(std::string text)
 }
 
 // get next string and move iterator,
-// if that was the last line, finish the event and return null to signal end
+// if that was the last line, finish the event and signal end
 std::string
 Event::nextLine()
 {
-	if (finish) return NULL;
-	std::string text = (*line);
-	if (line == event_dialog.end())
-		finish = true;
-	else line++;
-	return text;
+	std::cout << "getting line in event" << std::endl;
+	if (line != event_dialog.end())
+	{
+		std::string text = (*line);
+		line++;
+		return text;
+	}
+	std::cout << "that was the last line of dialog." << std::endl;
+	finish = true;
+	return "end dialog";
 }
 
 // run the event!
@@ -47,4 +51,10 @@ Event::reset()
 {
 	line = event_dialog.begin();
 	finish = false;
+}
+
+bool
+Event::isFinished()
+{
+	return finish;
 }

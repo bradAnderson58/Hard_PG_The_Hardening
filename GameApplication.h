@@ -19,6 +19,7 @@ class GameApplication : public BaseApplication
 private:
 
 	std::list<NPC*> NPClist;
+	std::list<NPC*> goodNPCs;
 
 	Player* playerPointer;				//This is our heroic savior
 	GUIController* mGUICont;			//point to th controller
@@ -70,6 +71,7 @@ public:
 
 	//getters / setters for lists
 	std::list<NPC*> getNPCs(){ return NPClist;}
+	std::list<NPC*> getGoodGuys(){ return goodNPCs; }
 	std::list<Ogre::SceneNode*> getWallList(){return wallList;}
 	std::vector<Environment*> getEnvObj(){ return interactableObjs; }
 
@@ -77,6 +79,7 @@ public:
 	void setGrid(Grid* g){grid = g;}
 
 	void pushNPCs(NPC* npc) { NPClist.push_back(npc); }
+	void pushGoodGuy(NPC* npc) { goodNPCs.push_back(npc); }
 	void pushBorder(Ogre::SceneNode* wall){ borderWalls.push_back(wall); }
 	void pushWalls(Ogre::SceneNode* wall){ wallList.push_back(wall); }
 	void pushEnvObj(Environment* obj){ interactableObjs.push_back(obj); }

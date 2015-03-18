@@ -15,7 +15,8 @@ public:
 
 	void addDialog(std::string text);			// add a line of dialog
 	std::string nextLine();						// get next line of dialog
-
+	bool isFinished();
+	bool isRepeatable() { return repeat; }
 	void run();									// run the event
 	void reset();								// reset the dialog if repeatable
 

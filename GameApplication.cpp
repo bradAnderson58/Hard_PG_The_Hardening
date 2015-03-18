@@ -88,7 +88,9 @@ GameApplication::addTime(Ogre::Real deltaTime)
 	}
 	else if (gameState == DIALOG)
 	{
-
+		//mGUICont->getDialog()->update();
+		//mGUICont->cycleDialog();
+		mGUICont->updateDialog();
 	}
 }
 
@@ -128,6 +130,7 @@ GameApplication::toggleState(GameState s)
 	else if (s == DIALOG)	// show dialog view and run through lines, than resume
 	{
 		mGUICont->openADialog(true);
+		gameState = s;
 	}
 	else if (s == MENUSCREEN)	// pause, main menu
 	{

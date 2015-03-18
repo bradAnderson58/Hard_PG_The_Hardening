@@ -28,6 +28,8 @@ public:
 
 	void setGUICont(GUIController* g){ mGUICont = g; }
 
+	void setConversant(NPC* c) { conversant = c; }
+
 private:
 	OgreBites::InputContext mInputContext;  //for Ogre 1.9
 	OIS::InputManager* mInputManager;
@@ -66,6 +68,7 @@ private:
 	void GameController::windowClosed(Ogre::RenderWindow* rw);
 
 	Environment* interactWith;
+	NPC* conversant;
 
 	bool alreadyPicked;		//prevent super fast scrolling
 };

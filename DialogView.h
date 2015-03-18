@@ -2,7 +2,6 @@
 #define __DialogView_h_
 
 #include "GameApplication.h"
-#include "Event.h"
 
 #include <MyGUI.h>
 #include <MyGUI_OgrePlatform.h>
@@ -21,6 +20,9 @@ private:
 	MyGUI::TextBox* mDialogBox;			// text goes in here
 	MyGUI::WindowPtr mDialogWindow;		// window for background
 
+	Event* mEvent;
+	bool lineRead;						// has the current line been read
+
 	void updateText(std::string s);
 	void updateFace(std::string filename1, std::string filename2);
 
@@ -29,8 +31,10 @@ public:
 				int width, int height, GUIController* gc);
 	virtual ~DialogView(void);
 
-	void update(Event* e);
+	void update(GameApplication* app);
 	void show(bool visible);
+	void setEvent(Event* e) { mEvent = e; }
+	void setLineRead(bool b) { lineRead = b; } 
 };
 
 #endif

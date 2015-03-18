@@ -12,6 +12,7 @@ class GameApplication;
 class InventoryView;
 class CharacterRecord;
 class DialogView;
+class Event;
 
 class GUIController{
 public:
@@ -20,6 +21,7 @@ public:
 
 	InventoryView* getInventory() { return inventory; }
 	CharacterRecord* getCharRecord() { return charRecord; }
+	DialogView* getDialog() { return dialog; }
 
 	//set health or mana bar
 	void setHealth(double health){ healthBar->setProgressPosition(health); }
@@ -37,6 +39,9 @@ public:
 
 	//dialog stuff
 	void openADialog(bool visible);
+	void setDialogEvent(Event* e);
+	void cycleDialog();					// cycle through a line of dialog
+	void updateDialog();
 
 	//
 	void recordUpdator();

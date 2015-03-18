@@ -420,12 +420,24 @@ Player::shoot(skillID skill)
 //robots will push yoshimi out of the way
 Ogre::Vector3 Player::collisionRobots(Ogre::Vector3 myPos){
 	std::list<NPC*> npcs = app->getNPCs();
+	std::list<NPC*> goodNPCs = app->getGoodGuys();
 	double vX;
 	double vY;
 	double magV;
 	double aX;
 	double aY;
 	for (NPC* n : npcs){
+		if (myPos.distance(n->getPosition()) < 2){
+			vX = getPosition()[0] - n->getPosition()[0];
+			vY = getPosition()[2] - n->getPosition()[2];
+			magV = sqrt(vX * vX + vY * vY);
+			aX = n->getPosition()[0] + vX / magV * 2.5;
+			aY = n->getPosition()[2] + vY / magV * 2.5;
+			return Ogre::Vector3(aX, getPosition()[1], aY);
+		}
+	}
+	for (NPC* n : goodNPCs)	// also check good guys, Refactor this
+	{
 		if (myPos.distance(n->getPosition()) < 2){
 			vX = getPosition()[0] - n->getPosition()[0];
 			vY = getPosition()[2] - n->getPosition()[2];
@@ -576,6 +588,27 @@ void Player::dropMe(){
 	Ogre::Vector3 stuff = carrying->getPosition();
 	carrying->setPosition(stuff.x, 0, stuff.z);
 	carrying = NULL;
+}
+
+NPC*
+Player::findConversant(std::list<NPC*> npcs)
+{
+	for(NPC* conversant : npcs)
+	{
+		if (conversant->getEvent())
+		{
+			Ogre::Real xDistance = std::abs(
+				mBodyNode->getPosition()[0] - conversant->getPosition()[0]);
+			Ogre::Real zDistance = std::abs(
+				mBodyNode->getPosition()[2] - conversant->getPosition()[2]);
+			if (xDistance <= 5 && zDistance <= 5)
+			{
+				std::cout << "Found someone to talk to." << std::endl;
+				return conversant;
+			}
+		}
+	}
+	return NULL;
 }
 
 // set equipment slots below and update stats	------

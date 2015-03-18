@@ -9,12 +9,13 @@ s Barrel.mesh 2.5 0.0 1
 
 Characters
 n ninja.mesh 0.0 0.04
+N ninja.mesh 0.0 0.04
 f fish.mesh 0.0 2
 
 World
 bbbbbbbbbbbbbbbbbbbbbbb
 booowooooooooooooooooob
-bwwdwooooooooooooooooob
+bwwdwooooooooooooooNoob
 booooooooooooooooooooob
 booooooooowooooowooooob
 booooooooooooooooooooob

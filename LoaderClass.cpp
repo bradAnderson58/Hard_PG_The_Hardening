@@ -3,6 +3,7 @@
 #include "GameApplication.h"
 #include "Player.h"
 #include "Environment.h"
+#include "Event.h"
 
 LoaderClass::LoaderClass(Ogre::SceneManager* mgr, GameApplication* a){
 	uSceneMgr = mgr;
@@ -49,7 +50,7 @@ void LoaderClass::loadEnv(){
 
 	string path = __FILE__; //gets the current cpp file's path with the cpp file   --THIS NEEDS TO BE REDONE FOR RELEASE
 	path = path.substr(0,1+path.find_last_of('\\')); //removes filename to leave path
-	path+= "level001.txt"; //if txt file is in the same directory as cpp file
+	path+= "demolevel.txt"; //if txt file is in the same directory as cpp file
 	inputfile.open(path);
 
 	//inputfile.open("D:/CS425-2012/Lecture 8/GameEngine-loadLevel/level001.txt"); //explicit path in Release?
@@ -147,7 +148,21 @@ void LoaderClass::loadEnv(){
 						app->pushNPCs(rat);
 						//enemy code will go here	
 					}
-					
+					// added another Ninja to test dialog interaction
+					else if (c == 'N')	
+					{
+						NPC* npcNinja = new NPC(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, 1, NPC::GOOD, NPC::NONE);
+						npcNinja->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
+						npcNinja->setStartPos();
+
+						// set up a test event and give to ninja
+						std::vector<std::string> someDialog;
+						someDialog.push_back("world");
+						someDialog.push_back("hello");
+						npcNinja->setEvent(new Event(app, someDialog, true));
+
+						app->pushGoodGuy(npcNinja);
+					}
 				}
 				else	// Load objects - non-agents will go in here
 				{

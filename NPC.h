@@ -5,6 +5,7 @@
 #include "Player.h"
 
 class GameApplication;
+class Event;
 
 class NPC : public Agent{
 
@@ -41,6 +42,9 @@ public:
 	Ogre::Vector3 getPosition(){return mBodyNode->getPosition();}
 	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }
 
+	Event* getEvent() { return mEvent; }
+	void setEvent(Event* e) { mEvent = e; } 
+
 protected:
 	enum AnimId{
 		ANIM_NONE
@@ -59,7 +63,6 @@ protected:
 	Ogre::Real lookAngle;
 	int lookRange;
 
-
 	//stats
 	int level;
 	int health;
@@ -69,6 +72,8 @@ protected:
 
 	bool canHit;
 	Ogre::Real lastHit;
+
+	Event* mEvent;
 		
 	void setupAnimations();									// load this character's animations
 	void fadeAnimations(Ogre::Real deltaTime);				// blend from one animation to another
@@ -94,6 +99,7 @@ protected:
 	void updateBad(Ogre::Real deltaTime);
 	void updateGood(Ogre::Real deltaTime);
 	bool nextLocation();
+
 };
 
 #endif

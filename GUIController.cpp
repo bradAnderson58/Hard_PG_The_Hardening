@@ -5,6 +5,7 @@
 #include "InventoryView.h"
 #include "CharacterRecord.h"
 #include "DialogView.h"
+#include "Event.h"
 
 
 GUIController::GUIController(GameApplication* a)
@@ -156,6 +157,24 @@ void
 GUIController::openADialog(bool visible)
 {
 	dialog->show(visible);
+}
+
+void
+GUIController::setDialogEvent(Event* e)
+{
+	 dialog->setEvent(e); 
+}
+
+void
+GUIController::cycleDialog()
+{
+	dialog->setLineRead(true);
+}
+
+void
+GUIController::updateDialog()
+{
+	dialog->update(app);
 }
 
 void GUIController::revealHUD(double health, double mana){
