@@ -5,8 +5,8 @@ DialogView::DialogView(MyGUI::Gui* mGUI, int left, int top,
 					   int width, int height, GUIController* gc)
 {
 	int faceWidth, dbWidth, pos_face2;
-	faceWidth = width * 1/4;
-	dbWidth = width * 1/2;
+	faceWidth = width * 1/5;
+	dbWidth = width * 3/5;
 	pos_face2 = left + width - faceWidth;
 
 	// need to figure out getting height and width based on screen size
@@ -14,14 +14,18 @@ DialogView::DialogView(MyGUI::Gui* mGUI, int left, int top,
 		left, top, faceWidth, height, MyGUI::Align::Default, "Main", "leftface");
 	face2 = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
 		pos_face2, top, faceWidth, height, MyGUI::Align::Default, "Main", "rightface");
-	mDialogBox = mGUI->createWidget<MyGUI::TextBox>("TextureBox",
-		left+faceWidth, top, dbWidth, height, MyGUI::Align::Default, "Main", "dialogbox");
 	mDialogWindow = mGUI->createWidget<MyGUI::Window>("Window",
-		left, top, width, height, MyGUI::Align::Default, "Overlapped", "diaWindow");
+		left+faceWidth, top, dbWidth, height, MyGUI::Align::Default, "Overlapped", "diaWindow");
+	mDialogBox = mDialogWindow->createWidget<MyGUI::TextBox>("TextBox", 
+		MyGUI::IntCoord( 0, 0, mDialogWindow->getWidth(), mDialogWindow->getHeight() ), 
+		MyGUI::Align::Default, "Main");
+
+	mDialogBox->setFontHeight(mDialogBox->getFontHeight() + 4);
 
 	face1->setImageTexture("emptySlot.png");
 	face2->setImageTexture("emptySlot.png");
 
+	mDialogWindow->setCaption("Hit space bar for next.");
 	mDialogBox->setCaption("I can't do that dave.");
 }
 
@@ -61,6 +65,7 @@ DialogView::updateText(std::string s)
 	mDialogBox->setCaption(s);
 	lineRead = false;
 	//add a transition animation for updating text?
+	std::cout << "Dialog: " << mDialogBox->getCaption() << std::endl;
 }
 
 void

@@ -163,8 +163,9 @@ void LoaderClass::loadEnv(){
 
 						// set up a test event and give to ninja
 						std::vector<std::string> someDialog;
-						someDialog.push_back("world");
-						someDialog.push_back("hello");
+						someDialog.push_back("A boats a boat,\n but a Mystery box could be anything. \nEven a Boat!!!");
+						someDialog.push_back("You know how much we've wanted one of those.");
+						someDialog.push_back("We'll take the box!");
 						npcNinja->setEvent(new Event(app, someDialog, true));
 
 						app->pushGoodGuy(npcNinja);

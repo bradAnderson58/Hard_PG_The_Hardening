@@ -77,7 +77,7 @@ GUIController::GUIController(GameApplication* a)
 	inventory = new InventoryView(mGUI, wMiddlish+100, hMiddlish-200, this);
 
 	// dialog event view window
-	dialog = new DialogView(mGUI, wMiddlish-150, 100, 500, 200, this);
+	dialog = new DialogView(mGUI, wMiddlish-125, 100, 600, 200, this);
 	
 	// set callbacks
 	inventoryB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
