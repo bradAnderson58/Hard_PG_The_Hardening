@@ -34,10 +34,12 @@ void LoaderClass::loadEnv(){
 	using namespace Ogre;	// use both namespaces
 	using namespace std;
 
-	//StaticGeometry* sgNode;		//used to make walls static objects for faster rendering
-	//Ogre::SceneNode* mNode;			//
-	//Ogre::SceneNode* mTran;			//
-	//Ogre::SceneNode* mTree;			//
+	StaticGeometry* sgNode;		//used to make walls static objects for faster rendering
+	Ogre::SceneNode* mNode;			//
+	Ogre::SceneNode* mTran;			//
+	Ogre::SceneNode* mTree;			//
+	//Ogre::SceneNode* nTree;
+
 
 	class readEntity // need a structure for holding entities
 	{
@@ -127,7 +129,7 @@ void LoaderClass::loadEnv(){
 	}
 	delete rent; // we didn't need the last one
 
-	//mTree = uSceneMgr->getRootSceneNode()->createChildSceneNode("nTree"); // tree for static things
+	mTree = uSceneMgr->getRootSceneNode()->createChildSceneNode("nTree"); // tree for static things
 	// read through the placement map
 	char c;
 	for (int i = 0; i < z; i++)			// down (row)
@@ -196,15 +198,15 @@ void LoaderClass::loadEnv(){
 				{
 					Entity* ent = uSceneMgr->createEntity(getNewName(), Ogre::SceneManager::PT_CUBE);
 					ent->setMaterialName("Examples/RustySteel");
-					Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
-					//Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
+					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
+					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
 					mNode->attachObject(ent);
 					mNode->scale(0.1f,0.2f,0.1f); // cube is 100 x 100
 					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
 					mNode->setPosition(grid->getPosition(i,j).x, 10.0f, grid->getPosition(i,j).z);
-					app->pushWalls(mNode);
+					app->pushWalls(mNode->getPosition());
 					//mNode->showBoundingBox(true);
-					app->pushWallEntity(ent);
+					//app->pushWallEntity(ent);
 				}
 				else if (c == 'i') // create a invisible wall
 				{
@@ -216,20 +218,20 @@ void LoaderClass::loadEnv(){
 					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
 					mNode->setPosition(grid->getPosition(i,j).x, 10.0f, grid->getPosition(i,j).z);
 					mNode->setVisible(false);
-					app->pushWalls(mNode);
+					app->pushWalls(mNode->getPosition());
 				}
 				else if (c == 'b') // create borderwalls
 				{
 					Entity* ent = uSceneMgr->createEntity(getNewName(), Ogre::SceneManager::PT_CUBE);
 					ent->setMaterialName("Examples/RustySteel");
-					Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
-					//Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing
+					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
+					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing
 					mNode->attachObject(ent);
 					mNode->scale(0.1f,0.2f,0.1f); // cube is 100 x 100
 					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
 					mNode->setPosition(grid->getPosition(i,j).x, 10.0f, grid->getPosition(i,j).z);
 					mNode->setVisible(true);
-					app->pushBorder(mNode);
+					app->pushBorder(mNode->getPosition());
 				}
 				else if (c == 'e')
 				{
@@ -243,10 +245,10 @@ void LoaderClass::loadEnv(){
 		}
 
 	//Static geomerty
-	//sgNode = uSceneMgr->createStaticGeometry("StaticTree");
-	//sgNode->addSceneNode(uSceneMgr->getSceneNode("nTree"));
-	//sgNode->build();
-	//mTree->removeAndDestroyAllChildren();
+	sgNode = uSceneMgr->createStaticGeometry("StaticTree");
+	sgNode->addSceneNode(uSceneMgr->getSceneNode("nTree"));
+	sgNode->build();
+	mTree->removeAndDestroyAllChildren();
 
 	// delete all of the readEntities in the objs map
 	rent = objs["s"]; // just so we can see what is going on in memory (delete this later)

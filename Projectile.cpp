@@ -111,9 +111,9 @@ bool
 Projectile::hitsWall()
 {
 	Ogre::Vector3 myPos = mBodyNode->getPosition();
-	for(Ogre::SceneNode* wall : app->getWallList())
+	for(Ogre::Vector3 wPos : app->getWallList())
 	{
-		Ogre::Vector3 wPos = wall->getPosition();
+		//Ogre::Vector3 wPos = wall;
 		if ((myPos[0] >= (wPos[0] - 7) && myPos[0] <= (wPos[0] + 7)) 
 			&& (myPos[2] >= (wPos[2] - 7) && myPos[2] <= (wPos[2] + 7)))
 		{

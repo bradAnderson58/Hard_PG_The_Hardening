@@ -452,26 +452,26 @@ Ogre::Vector3 Player::collisionRobots(Ogre::Vector3 myPos){
 
 //moved into updatelocomote - will probably be added back in
 Ogre::Vector3 Player::collisionWalls(Ogre::Vector3 myPos){
-	std::list<Ogre::SceneNode*> walls = app->getWallList();
+	std::list<Ogre::Vector3> walls = app->getWallList();
 	//Ogre::Vector3 myPos = mBodyNode->getPosition();
 
-	for (Ogre::SceneNode* w : walls){
-		Ogre::Vector3 wPos = w->getPosition();
-		if ((myPos[0] >= (wPos[0] - 7) && myPos[0] <= (wPos[0] + 7)) && (myPos[2] >= (wPos[2] - 7) && myPos[2] <= (wPos[2] + 7))){
-			if(abs(myPos[0] - wPos[0]) < abs(myPos[2] - wPos[2])){
-				if (abs(myPos[2] - (wPos[2] +7 )) < abs(myPos[2]-(wPos[2] - 7))){
-					myPos[2] = wPos[2] + 7;
+	for (Ogre::Vector3 w : walls){
+		//Ogre::Vector3 wPos = w->getPosition();
+		if ((myPos[0] >= (w[0] - 7) && myPos[0] <= (w[0] + 7)) && (myPos[2] >= (w[2] - 7) && myPos[2] <= (w[2] + 7))){
+			if(abs(myPos[0] - w[0]) < abs(myPos[2] - w[2])){
+				if (abs(myPos[2] - (w[2] +7 )) < abs(myPos[2]-(w[2] - 7))){
+					myPos[2] = w[2] + 7;
 				}
 				else{
-					myPos[2] = wPos[2] - 7;
+					myPos[2] = w[2] - 7;
 				}
 			}
 			else{
-				if (abs(myPos[0] - (wPos[0] + 7)) < abs(myPos[0] - (wPos[0] - 7))){
-					myPos[0] = wPos[0] + 7;
+				if (abs(myPos[0] - (w[0] + 7)) < abs(myPos[0] - (w[0] - 7))){
+					myPos[0] = w[0] + 7;
 				}
 				else{
-					myPos[0] = wPos[0] - 7;
+					myPos[0] = w[0] - 7;
 				}
 			}
 			return myPos;
