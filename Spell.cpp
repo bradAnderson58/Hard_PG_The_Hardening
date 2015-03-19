@@ -10,8 +10,19 @@ Spell::Spell(Ogre::SceneManager* SceneManager, std::string name,
 
 Spell::~Spell(){}
 
-void 
-Spell::checkCollision(){}
+bool 
+Spell::checkCollision(NPC* enemy)
+{
+	// just use a distance check to see if agent is within radius
+	Ogre::AxisAlignedBox spellBox = mModelEntity->getWorldBoundingBox();
+	Ogre::AxisAlignedBox enemyBox = enemy->getBoundingBox();
+	if (spellBox.intersects(enemyBox))
+	{
+		enemy->getHurt(mDmg);
+		return true;
+	}
+	return false;
+}
 
 void 
 Spell::shoot(Ogre::Real deltatime){}
@@ -22,5 +33,5 @@ Spell::reload(){}
 void
 Spell::setCoolDown(Ogre::Real time)
 {
-	cooldown_timer = new Timer(time);
+	this->cooldown_timer = new Timer(time);
 }

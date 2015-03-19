@@ -1,5 +1,6 @@
 #include "NPC.h"
 #include "GameApplication.h"
+#include "Event.h"
 #define _USE_MATH_DEFINES 
 #include <math.h>
 
@@ -27,6 +28,8 @@ NPC::NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 
 	lookAngle = Ogre::Real(30);
 	lookRange = 40;
+
+	mEvent = NULL;
 }
 
 NPC::~NPC(void)

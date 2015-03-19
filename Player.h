@@ -106,6 +106,8 @@ public:
 	void dropMe();
 	bool isCarrying();
 
+	NPC* findConversant(std::list<NPC*> npcs);
+
 private:
 	bool fForward;		//how am I moving? Each flag indicates a direction
 

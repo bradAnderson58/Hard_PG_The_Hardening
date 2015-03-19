@@ -15,6 +15,7 @@ GameController::GameController(GameApplication* a)
 	app = a;
 	uWindow = a->getWindow();		//It will be nice to hav a pointer to the main window
 	interactWith = NULL;
+	conversant = NULL;
 	alreadyPicked = false;
 
 	Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
@@ -104,6 +105,7 @@ void GameController::removeSelf(){
 }
 
 //Key Press handler
+//TODO: seperate key press reactions by GameState
 bool GameController::keyPressed( const OIS::KeyEvent &arg ) 
 {
     if(arg.key == OIS::KC_F5)   // refresh all textures
@@ -121,28 +123,43 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 
 	else if (arg.key == OIS::KC_SPACE)
 	{
-		if (interactWith == NULL){
-			if(!player->doingStuff){
-				player->changeSpeed(.6);  //jump should be slower
-				player->buttonAnimation(arg.key, true);
-				player->doingStuff = true;
+		if (app->getGameState() == GameApplication::DIALOG)
+		{
+			mGUICont->cycleDialog(); // use space bar to cycle through each line
+		}
+		else if (app->getGameState() == GameApplication::PLAYING)
+		{
+			conversant = player->findConversant(app->getGoodGuys());
+			if (conversant && conversant->getEvent())
+			{
+				app->toggleState(GameApplication::DIALOG);
+				mGUICont->setDialogEvent(conversant->getEvent());
 			}
-		}else{
-			//interact with
-			if (Environment::LOOT == interactWith->handleInteraction(player)){
-				app->removeNulls(interactWith);
-				interactWith = NULL;
+			if (interactWith == NULL){
+				if(!player->doingStuff)
+				{
+					player->changeSpeed(.6);  //jump should be slower
+					player->buttonAnimation(arg.key, true);
+					player->doingStuff = true;
+				}
+			}
+			else
+			{
+				//interact with
+				if (Environment::LOOT == interactWith->handleInteraction(player))
+				{
+					app->removeNulls(interactWith);
+					interactWith = NULL;
+				}
 			}
 		}
 	}
 	else if (arg.key == OIS::KC_F)
 	{
-		std::cout << "fire?" << std::endl;
 		player->shoot(Player::FIREBALL);
 	}
 	else if (arg.key == OIS::KC_G)
 	{
-		std::cout << "freeze?" << std::endl;
 		player->shoot(Player::FREEZE);
 	}
 	else if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || OIS::KC_D) {

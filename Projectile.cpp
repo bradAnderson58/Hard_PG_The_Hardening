@@ -12,7 +12,7 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 	active = false;
 	
 	mTarget = NULL;
-	mDmg = 1.0;
+	mDmg = 10.0;
 	mMass = 2.5;
 	mHeight = height;	// pass shooters mBodyNode position
 	mDirection = Ogre::Vector3(0,0,0);
@@ -21,6 +21,7 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 	mModelEntity->setMaterialName("Examples/fire");
 	mModelEntity->setCastShadows(false);
 	mModelEntity->setVisible(false);
+
 }
 
 // inherit update from agent.cpp
@@ -31,12 +32,6 @@ Projectile::updateLocomote(Ogre::Real deltaTime)
 {
 	if(active)
 		shoot(deltaTime);
-}
-
-void 
-Projectile::checkCollision()
-{
-
 }
 
 void Projectile::setupAnimations()
@@ -60,7 +55,6 @@ void
 Projectile::fire(Ogre::Real vx, Ogre::Real vy, Ogre::Real vz,
 				 Ogre::Vector3 pos)
 {
-	std::cout << "I Said FIRE!!" << std::endl;
 	active = true; // turns on the movement, which will call shoot
 	mModelEntity->setVisible(true);
 	// set up the initial state
@@ -71,9 +65,6 @@ Projectile::fire(Ogre::Real vx, Ogre::Real vy, Ogre::Real vz,
 	gravity.x = 0;
 	gravity.y = Ogre::Real(-9.81);
 	gravity.z = 0;
-	//this->mBodyNode->yaw(Ogre::Degree(180));
-	//this->mBodyNode->pitch(Ogre::Degree(45));
-	this->mBodyNode->showBoundingBox(true); 
 }
 
 //updates the current velocity and position of the agent
@@ -89,13 +80,22 @@ Projectile::shoot(Ogre::Real deltaTime)
 	pos = pos + (vel * mSpeed * deltaTime);	
 	pos = pos + 0.5 * mMass*gravity * deltaTime * deltaTime;
 
+	// move and animate the fireball
 	this->mBodyNode->setPosition(pos);
-	//this->mBodyNode->pitch(Ogre::Degree(20));
+	this->mBodyNode->roll(Ogre::Degree(2));
+	this->mBodyNode->yaw(Ogre::Degree(2));
 
-	if (this->mBodyNode->getPosition().y <= -0.5) // if it get close to the ground, stop
+	// if a fireball hits something, explode it and reload
+	for (NPC *enemy : app->getNPCs())
 	{
-		reload();	// finished reset
+		if (checkCollision(enemy))
+			reload();
 	}
+	//TODO: needs a particle effect on hits
+	if (this->mBodyNode->getPosition().y <= -0.5) // if it get close to the ground, stop
+		reload();	// finished reset
+	else if(hitsWall())
+		reload();
 }
 
 // ready to fire again!
@@ -105,4 +105,20 @@ Projectile::reload()
 {
 	active = false;
 	mModelEntity->setVisible(false);
+}
+
+bool
+Projectile::hitsWall()
+{
+	Ogre::Vector3 myPos = mBodyNode->getPosition();
+	for(Ogre::SceneNode* wall : app->getWallList())
+	{
+		Ogre::Vector3 wPos = wall->getPosition();
+		if ((myPos[0] >= (wPos[0] - 7) && myPos[0] <= (wPos[0] + 7)) 
+			&& (myPos[2] >= (wPos[2] - 7) && myPos[2] <= (wPos[2] + 7)))
+		{
+			return true;
+		}
+	}
+	return false;
 }

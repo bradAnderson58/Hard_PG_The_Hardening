@@ -19,9 +19,9 @@ private:
 	void fadeAnimations(Ogre::Real deltaTime);		// blend from one animation to another
 	void updateAnimations(Ogre::Real deltaTime);	// update the animation frame
 
-	void checkCollision();
-	void shoot(Ogre::Real deltatime);
-	void reload();
+	void shoot(Ogre::Real deltatime);				// update projectile movement and animation here
+	void reload();									// reset projectile to fire again
+	bool hitsWall();								// check if projectile hit a wall
 
 	void updateLocomote(Ogre::Real deltaTime);
 

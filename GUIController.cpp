@@ -4,9 +4,15 @@
 #include "GameController.h"
 #include "InventoryView.h"
 #include "CharacterRecord.h"
+#include "DialogView.h"
+#include "Event.h"
 
 
-GUIController::GUIController(GameApplication* a){
+GUIController::GUIController(GameApplication* a)
+{
+	//
+	// TODO: Base dimensions of GUI's based on window size 
+	//
 
 	//some setup required
 	app = a;
@@ -63,13 +69,15 @@ GUIController::GUIController(GameApplication* a){
 	exitB = mGUI->createWidget<MyGUI::Button>("Button", 
 		wMiddlish, hMiddlish+100, 200, 50, MyGUI::Align::Default, "Main", "exit");
 	exitB->setCaption("Exit Game");
-
 	
-	//character record window
+	// character record window
 	charRecord = new CharacterRecord(mGUI, wMiddlish, hMiddlish, this);
 	
 	// inventory window
 	inventory = new InventoryView(mGUI, wMiddlish+100, hMiddlish-200, this);
+
+	// dialog event view window
+	dialog = new DialogView(mGUI, wMiddlish-125, 100, 600, 200, this);
 	
 	// set callbacks
 	inventoryB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
@@ -87,8 +95,8 @@ GUIController::GUIController(GameApplication* a){
 
 	charRecord->open(false);
 	inventory->show(false);
+	dialog->show(false);
 	mGUI->hidePointer();
-
 }
 
 GUIController::~GUIController(){
@@ -143,6 +151,30 @@ void GUIController::openInventory(bool visible)
 void GUIController::openCharRecord(bool visible){
 	openMenu(!visible);
 	charRecord->open(visible);
+}
+
+void
+GUIController::openADialog(bool visible)
+{
+	dialog->show(visible);
+}
+
+void
+GUIController::setDialogEvent(Event* e)
+{
+	 dialog->setEvent(e); 
+}
+
+void
+GUIController::cycleDialog()
+{
+	dialog->setLineRead(true);
+}
+
+void
+GUIController::updateDialog()
+{
+	dialog->update(app);
 }
 
 void GUIController::revealHUD(double health, double mana){

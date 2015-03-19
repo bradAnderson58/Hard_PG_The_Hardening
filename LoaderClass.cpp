@@ -3,6 +3,7 @@
 #include "GameApplication.h"
 #include "Player.h"
 #include "Environment.h"
+#include "Event.h"
 
 LoaderClass::LoaderClass(Ogre::SceneManager* mgr, GameApplication* a){
 	uSceneMgr = mgr;
@@ -33,6 +34,11 @@ void LoaderClass::loadEnv(){
 	using namespace Ogre;	// use both namespaces
 	using namespace std;
 
+	//StaticGeometry* sgNode;		//used to make walls static objects for faster rendering
+	//Ogre::SceneNode* mNode;			//
+	//Ogre::SceneNode* mTran;			//
+	//Ogre::SceneNode* mTree;			//
+
 	class readEntity // need a structure for holding entities
 	{
 	public:
@@ -49,7 +55,7 @@ void LoaderClass::loadEnv(){
 
 	string path = __FILE__; //gets the current cpp file's path with the cpp file   --THIS NEEDS TO BE REDONE FOR RELEASE
 	path = path.substr(0,1+path.find_last_of('\\')); //removes filename to leave path
-	path+= "level001.txt"; //if txt file is in the same directory as cpp file
+	path+= "demolevel.txt"; //if txt file is in the same directory as cpp file
 	inputfile.open(path);
 
 	//inputfile.open("D:/CS425-2012/Lecture 8/GameEngine-loadLevel/level001.txt"); //explicit path in Release?
@@ -121,6 +127,7 @@ void LoaderClass::loadEnv(){
 	}
 	delete rent; // we didn't need the last one
 
+	//mTree = uSceneMgr->getRootSceneNode()->createChildSceneNode("nTree"); // tree for static things
 	// read through the placement map
 	char c;
 	for (int i = 0; i < z; i++)			// down (row)
@@ -147,7 +154,22 @@ void LoaderClass::loadEnv(){
 						app->pushNPCs(rat);
 						//enemy code will go here	
 					}
-					
+					// added another Ninja to test dialog interaction
+					else if (c == 'N')	
+					{
+						NPC* npcNinja = new NPC(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, 1, NPC::GOOD, NPC::NONE);
+						npcNinja->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
+						npcNinja->setStartPos();
+
+						// set up a test event and give to ninja
+						std::vector<std::string> someDialog;
+						someDialog.push_back("A boats a boat,\n but a Mystery box could be anything. \nEven a Boat!!!");
+						someDialog.push_back("You know how much we've wanted one of those.");
+						someDialog.push_back("We'll take the box!");
+						npcNinja->setEvent(new Event(app, someDialog, true));
+
+						app->pushGoodGuy(npcNinja);
+					}
 				}
 				else	// Load objects - non-agents will go in here
 				{
@@ -162,7 +184,6 @@ void LoaderClass::loadEnv(){
 						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::MOVEABLE);
 					}
 
-
 					//set position and put in list of interactable objects
 					obj->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 					app->pushEnvObj(obj);
@@ -176,6 +197,7 @@ void LoaderClass::loadEnv(){
 					Entity* ent = uSceneMgr->createEntity(getNewName(), Ogre::SceneManager::PT_CUBE);
 					ent->setMaterialName("Examples/RustySteel");
 					Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
+					//Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
 					mNode->attachObject(ent);
 					mNode->scale(0.1f,0.2f,0.1f); // cube is 100 x 100
 					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
@@ -201,6 +223,7 @@ void LoaderClass::loadEnv(){
 					Entity* ent = uSceneMgr->createEntity(getNewName(), Ogre::SceneManager::PT_CUBE);
 					ent->setMaterialName("Examples/RustySteel");
 					Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
+					//Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing
 					mNode->attachObject(ent);
 					mNode->scale(0.1f,0.2f,0.1f); // cube is 100 x 100
 					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
@@ -218,7 +241,13 @@ void LoaderClass::loadEnv(){
 				}
 			}
 		}
-	
+
+	//Static geomerty
+	//sgNode = uSceneMgr->createStaticGeometry("StaticTree");
+	//sgNode->addSceneNode(uSceneMgr->getSceneNode("nTree"));
+	//sgNode->build();
+	//mTree->removeAndDestroyAllChildren();
+
 	// delete all of the readEntities in the objs map
 	rent = objs["s"]; // just so we can see what is going on in memory (delete this later)
 	

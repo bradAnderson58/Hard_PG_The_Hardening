@@ -5,6 +5,8 @@
 #ifndef __Timer_h_
 #define __Timer_h_
 
+#include <math.h>
+
 #include "GameApplication.h"
 
 class GameApplication; //whyyyyyyyyy
@@ -12,17 +14,17 @@ class GameApplication; //whyyyyyyyyy
 class Timer
 {
 private:
-
+	Ogre::Real mStartTime;
 	Ogre::Real mCountDown;
 	//Ogre::Timer* mPrecisionTimer;
 
 public:
-
 	Timer(Ogre::Real countdown_millsec);
 	~Timer();
 
 	void update(Ogre::Real deltaTime);
-	void reset(Ogre::Real countdown_millsec);
+	void reset();
 	bool isZero();
+	int timeLeft_seconds() { return floor (mCountDown); }
 };
 #endif

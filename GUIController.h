@@ -11,6 +11,8 @@
 class GameApplication;
 class InventoryView;
 class CharacterRecord;
+class DialogView;
+class Event;
 
 class GUIController{
 public:
@@ -19,6 +21,7 @@ public:
 
 	InventoryView* getInventory() { return inventory; }
 	CharacterRecord* getCharRecord() { return charRecord; }
+	DialogView* getDialog() { return dialog; }
 
 	//set health or mana bar
 	void setHealth(double health){ healthBar->setProgressPosition(health); }
@@ -34,6 +37,13 @@ public:
 	void openInventory(bool visible);
 	void openCharRecord(bool visible);
 
+	//dialog stuff
+	void openADialog(bool visible);
+	void setDialogEvent(Event* e);
+	void cycleDialog();					// cycle through a line of dialog
+	void updateDialog();
+
+	//
 	void recordUpdator();
 
 	//these used for getting and setting current active choice with xbox controller
@@ -57,7 +67,8 @@ private:
 	MyGUI::ButtonPtr charRecordB;		// button to acces character records from pause menu
 	MyGUI::ButtonPtr exitB;				// button to exit from pause menu
 	InventoryView* inventory;			// inventory window for gear and items
-	CharacterRecord* charRecord;		//character records (stats, quests, ect...)
+	CharacterRecord* charRecord;		// character records (stats, quests, ect...)
+	DialogView* dialog;					// view for dialog events
 
 	void buttonHit(MyGUI::WidgetPtr _sender);
 
