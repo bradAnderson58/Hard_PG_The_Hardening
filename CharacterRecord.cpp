@@ -24,7 +24,6 @@ CharacterRecord::CharacterRecord(MyGUI::Gui* mGUI, int left, int top, GUIControl
 	//text boxes
 	vStats = mGUI->createWidget<MyGUI::ListBox>("ListBox",
 		left - 90, top + 50, 200, 200, MyGUI::Align::Default, "Main", "statdisplay");
-	//vStats->setCaption("Player Stats\nStrength:\nDexterity:\nConstitution:\nIntelligence:\nEvil:");
 	vStats->addItem("PlayerStats");
 
 	/*
@@ -73,7 +72,7 @@ void CharacterRecord::updateStats(Player* pl){
 
 	//append new stats
 	vStats->addItem("PlayerStats");
-	std::string test = std::to_string(5);
+
 	vStats->addItem("Strength:      " + std::to_string(pl->getStrength()));
 	vStats->addItem("Dexterity:     " + std::to_string(pl->getDex()));
 	vStats->addItem("Constitution:  " + std::to_string(pl->getConstitution()));

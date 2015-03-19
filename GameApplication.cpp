@@ -129,7 +129,7 @@ GameApplication::toggleState(GameState s)
 		mGUICont->showPointer();
 		mGUICont->openMenu(true);
 		for (UsableItems* thing : playerPointer->getInventory()){
-			std::cout << thing->getName() << " for testing - press Y to equip " << thing->getStat(UsableItems::DAMAGE) << std::endl;
+			//std::cout << thing->getName() << " for testing - press Y to equip " << thing->getStat(UsableItems::DAMAGE) << std::endl;
 		}
 	}
 	else if (s == DEAD_STATE)

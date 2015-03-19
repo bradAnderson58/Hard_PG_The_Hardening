@@ -23,12 +23,19 @@ public:
 
 	bool mVisible;		//is the inventory currently visible?
 	void switchSelected(int row, int col);	//switch with xbox controller
-	
+
+	int swapWrapper();  //return the index of the swapped item
+	void updateStatFields();
+
 private:
 	int selectedRow;
 	int selectedCol;
 
+	Cell* selectCell;
+	Cell* equippedCell;
+
 	void updateAll();  //call this to update all the data in the inventory view
+	
 
 	GUIController* mainMenu;	//this is for turning control back over the the main menu at the end
 
@@ -41,9 +48,11 @@ private:
 	Cell* necklace;
 
 	MyGUI::WindowPtr mWindow;	// window for background of inventory
+	MyGUI::ListBox* equippedStats; //list guis for stats of inventory items
+	MyGUI::ListBox* selectedStats;
 	MyGUI::ButtonPtr backB;		// button to go back to menu
 
-	void swap(Cell* a, Cell* b);		// swap items between two cells
+	void swap(Cell* a, Cell* b);		// swap items between two cells, return index of swapped inventory item
 
 	void updateInventory(Player* p);	// update the contents of our inventory
 	void updateEquipment(Player* p);	// update the equipment slots

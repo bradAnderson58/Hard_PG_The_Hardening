@@ -34,6 +34,16 @@ InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController*
 	shield = new Cell(mGUI, mLeft + 200	, mTop + 100, EQPCELLSIZE, "shield");
 	necklace = new Cell(mGUI, mLeft + 200, mTop		, EQPCELLSIZE, "neck");
 
+	//this is the cooresponding equipped item to the selected item
+	equippedStats = mGUI->createWidget<MyGUI::ListBox>("ListBox",
+						mLeft - 225, mTop + 75, 200, 100, MyGUI::Align::Default, "Main", "currentStats");
+	//equippedStats->addItem("Currently Equipped: ");
+
+	//this is the currently highlighted item
+	selectedStats = mGUI->createWidget<MyGUI::ListBox>("ListBox",
+						mLeft - 225, mTop + 250, 200, 100, MyGUI::Align::Default, "Main", "selectedStats");
+	//selectedStats->addItem("Selected Item: ");
+
 	mTop += 300;
 	mLeft += 25;
 	for(int i = 0; i < 4; i++)
@@ -55,7 +65,7 @@ InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController*
 
 	inventoryGrid[selectedRow][selectedCol]->click();  //start in top left
 
-	updateAll();
+	updateStatFields();
 
 }
 
@@ -92,13 +102,23 @@ InventoryView::show(bool visible)
 	mWindow->setVisible(visible);
 	backB->setVisible(visible);
 
+	equippedStats->setVisible(visible);
+	selectedStats->setVisible(visible);
+
 	mVisible = visible;
+}
+
+int InventoryView::swapWrapper(){
+	
+	swap(selectCell, equippedCell);
+	return (selectedRow * 5) + selectedCol;
 }
 
 // swap items between two cells
 void
 InventoryView::swap(Cell* a, Cell* b)
 {
+	if (a->getItem() == NULL) return;  //fuck it
 	UsableItems* itemA; 
 	UsableItems* itemB;
 
@@ -113,13 +133,15 @@ InventoryView::swap(Cell* a, Cell* b)
 	}
 	else if (!itemA && itemB)
 	{
+
 		a->setItem(itemB);
-		b->removeItem();
+		b->setItem(NULL);
 	}
 	else if (itemA && !itemB)
 	{
+		std::cout << "Executed this line" << std::endl;
 		b->setItem(itemA);
-		a->removeItem();
+		a->setItem(NULL);
 	}
 	// else both are null, do nothing
 }
@@ -191,8 +213,85 @@ InventoryView::buttonHit(MyGUI::WidgetPtr _sender)
 		selectedRow = myInt / 5;
 		selectedCol = myInt % 5;
 		inventoryGrid[selectedRow][selectedCol]->click();
+		updateStatFields();
 	}
 
+}
+
+void InventoryView::updateStatFields(){
+	selectCell = inventoryGrid[selectedRow][selectedCol];
+	UsableItems *newItem, *equippedItem;
+	newItem = selectCell->getItem();
+	equippedStats->removeAllItems();
+	selectedStats->removeAllItems();
+
+	//if we've selected an empty slot
+	if (newItem == NULL) {
+		std::cout << "This is null" << std::endl;
+		selectedStats->addItem("Currently Selected: ");
+		selectedStats->addItem("Empty");
+		equippedStats->addItem("Currently Equipped:");
+		return;
+	}
+
+	selectedStats->addItem("Currently Selected: " );
+	selectedStats->addItem(newItem->getName());
+
+	//selected Item is a weapon
+	if (newItem->getType() == UsableItems::WEAPON){
+
+		equippedCell = weapon;
+		selectedStats->addItem("Damage Rating: " + std::to_string(newItem->getStat(UsableItems::DAMAGE)));
+		equippedItem = weapon->getItem();
+
+		//Null check before getting name of the currently equipped item.  (There may be no item currently equipped)
+		if (equippedItem != NULL){
+			equippedStats->addItem("Currently Equipped: " );
+			equippedStats->addItem(equippedItem->getName());
+			equippedStats->addItem("Damage Rating: " + std::to_string(equippedItem->getStat(UsableItems::DAMAGE)));
+		}else{
+			equippedStats->addItem("Currently Equipped: \nNone");
+		}
+
+	//This is the case where selected item is a potion (Which we dont have yet)
+	}else if (newItem->getType() == UsableItems::POTION){
+
+		equippedCell = NULL;
+		selectedStats->addItem("Heal Thyself");
+		equippedStats->addItem("Currently Equipped: ");
+
+	//should be either helm, breastplate, pants, shield or necklace
+	}else{
+		switch (newItem->getType()){
+			case UsableItems::HELM :
+				equippedCell = head;
+				break;
+			case UsableItems::BOOBPLATE :
+				equippedCell = body;
+				break;
+			case UsableItems::PANTS :
+				equippedCell = legs;
+				break;
+			case UsableItems::SHIELD :
+				equippedCell = shield;
+				break;
+			case UsableItems::NECKLACE :
+				equippedCell = necklace;
+				break;
+		}
+
+		equippedItem = equippedCell->getItem();
+
+		selectedStats->addItem("Armor Rating: " + std::to_string(newItem->getStat(UsableItems::DEFENSE)));
+		if (equippedItem != NULL){
+			equippedStats->addItem("Currently Equipped:");
+			equippedStats->addItem(equippedItem->getName());
+			equippedStats->addItem("Armor Rating: " + std::to_string(equippedItem->getStat(UsableItems::DEFENSE)));
+		}else{
+			equippedStats->addItem("Currently Equipped:");
+			equippedStats->addItem("None");
+		}
+	}
 }
 
 //call this to buttonhit callback move thing yup
