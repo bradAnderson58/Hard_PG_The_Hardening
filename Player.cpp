@@ -407,7 +407,10 @@ Player::shoot(skillID skill)
 {
 	if (skill == FIREBALL && !mFireball->isActive() && !doingStuff)
 	{
-		mFireball->fire(mDirection[0], mDirection[1]+10.0, mDirection[2],
+		std::cout << mDirection[0] << " " << mDirection[1] << " " << mDirection[2] << std::endl;
+		Ogre::Vector3 temp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * mDirection;
+
+		mFireball->fire(temp[0], temp[1]+10.0, temp[2],
 						getPosition());
 	}
 	else if (skill == FREEZE && !mFreeze->isActive() && !doingStuff)
