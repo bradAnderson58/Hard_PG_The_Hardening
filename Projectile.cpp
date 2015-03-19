@@ -91,11 +91,11 @@ Projectile::shoot(Ogre::Real deltaTime)
 		if (checkCollision(enemy))
 			reload();
 	}
-
+	//TODO: needs a particle effect on hits
 	if (this->mBodyNode->getPosition().y <= -0.5) // if it get close to the ground, stop
-	{
 		reload();	// finished reset
-	}
+	else if(hitsWall())
+		reload();
 }
 
 // ready to fire again!
@@ -105,4 +105,20 @@ Projectile::reload()
 {
 	active = false;
 	mModelEntity->setVisible(false);
+}
+
+bool
+Projectile::hitsWall()
+{
+	Ogre::Vector3 myPos = mBodyNode->getPosition();
+	for(Ogre::SceneNode* wall : app->getWallList())
+	{
+		Ogre::Vector3 wPos = wall->getPosition();
+		if ((myPos[0] >= (wPos[0] - 7) && myPos[0] <= (wPos[0] + 7)) 
+			&& (myPos[2] >= (wPos[2] - 7) && myPos[2] <= (wPos[2] + 7)))
+		{
+			return true;
+		}
+	}
+	return false;
 }
