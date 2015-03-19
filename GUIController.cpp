@@ -193,7 +193,7 @@ void GUIController::revealHUD(double health, double mana){
 }
 
 void GUIController::recordUpdator(){
-	//charRecord->update(app->getPlayerPointer());
+	charRecord->update(app->getPlayerPointer());
 	inventory->update(app->getPlayerPointer());
 	inventory->updateStatFields();
 }
