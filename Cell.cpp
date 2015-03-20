@@ -45,13 +45,15 @@ void
 Cell::removeItem()
 {
 	free(mItem);	// do we need to free usableItems, or does ogre handle?
-	mItem = NULL;
+	mItem = NULL;   //this destroys the item for everyone.  To move it from the inventory to equipped, do not call!
 }
 
 // assign new item and update img
 void
 Cell::setItem(UsableItems* item)
 {
+
+
 	if (item){
 
 		std::cout << "Got an item " << item->getImgFile() << std::endl; 
@@ -65,6 +67,7 @@ Cell::setItem(UsableItems* item)
 	}
 	else{
 		std::cout << "Didnt have an item" << std::endl;
+		mItem = NULL;  //no longer point at anything
 		mImgBox->setImageTexture("emptySlot.png");
 	}
 }

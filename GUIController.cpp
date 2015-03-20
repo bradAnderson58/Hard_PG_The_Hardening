@@ -193,8 +193,9 @@ void GUIController::revealHUD(double health, double mana){
 }
 
 void GUIController::recordUpdator(){
-	//charRecord->update(app->getPlayerPointer());
+	charRecord->update(app->getPlayerPointer());
 	inventory->update(app->getPlayerPointer());
+	inventory->updateStatFields();
 }
 
 void GUIController::setCurrentActive(bool up){
@@ -229,8 +230,16 @@ void GUIController::setCurrentActive(bool up){
 
 //manually call buttonhit on the active button
 void GUIController::xBoxSelect(){
-	(currentActive == INV_B) ? buttonHit(inventoryB) :
-		(currentActive == CHAR_B) ? buttonHit(charRecordB) :
-		(currentActive == EXIT_B) ? buttonHit(exitB) :
-		std::cout << "Something wrong with xBoxSelect?" << std::endl;
+
+	if (inventory->mVisible){
+		int index = inventory->swapWrapper();
+		app->getPlayerPointer()->switchEquipment(index);
+		recordUpdator();
+	}
+	else{
+		(currentActive == INV_B) ? buttonHit(inventoryB) :
+			(currentActive == CHAR_B) ? buttonHit(charRecordB) :
+			(currentActive == EXIT_B) ? buttonHit(exitB) :
+			std::cout << "Something wrong with xBoxSelect?" << std::endl;
+	}
 }

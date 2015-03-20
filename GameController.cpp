@@ -356,7 +356,7 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 	else if (app->getGameState() == GameApplication::MENUSCREEN){
 		//A button selects
 		if (button == 0){
-			//just show inventory and hide others
+			//just show selected and hide others
 			mGUICont->xBoxSelect();
 		}
 		//B button closes current window
@@ -368,8 +368,7 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 		// need buttons prompt exit game window
 		//Select is 6
 		else if (button == 6){
-			mGUICont->openCharRecord(false);
-			mGUICont->openCharRecord(false);
+
 			app->toggleState(GameApplication::PLAYING);
 		}
 		//Y button is 3

@@ -247,7 +247,7 @@ void NPC::dealDamagePlayer(Player* player){
 
 void NPC::checkHit(){
 	Player* p = app->getPlayerPointer();
-	std::list<Ogre::SceneNode*> walls = app->getWallList();
+	std::list<Ogre::Vector3> walls = app->getWallList();
 	std::list<NPC*> rats = app->getNPCs();
 	if (mDirection != Ogre::Vector3::ZERO){//if the velocity isnt zero set up animations
 		mTimer = 0;
@@ -308,23 +308,23 @@ void NPC::checkHit(){
 
 	Ogre::Vector3 myPos = mBodyNode->getPosition();
 
-	for (Ogre::SceneNode* w : walls){
-		Ogre::Vector3 wPos = w->getPosition();
-		if ((myPos[0] >= (wPos[0] - 7) && myPos[0] <= (wPos[0] + 7)) && (myPos[2] >= (wPos[2] - 7) && myPos[2] <= (wPos[2] + 7))){
-			if(abs(myPos[0] - wPos[0]) < abs(myPos[2] - wPos[2])){
-				if (abs(myPos[2] - (wPos[2] +7 )) < abs(myPos[2]-(wPos[2] - 7))){
-					myPos[2] = wPos[2] + 7;
+	for (Ogre::Vector3 w : walls){
+		//Ogre::Vector3 wPos = w->getPosition();
+		if ((myPos[0] >= (w[0] - 7) && myPos[0] <= (w[0] + 7)) && (myPos[2] >= (w[2] - 7) && myPos[2] <= (w[2] + 7))){
+			if(abs(myPos[0] - w[0]) < abs(myPos[2] - w[2])){
+				if (abs(myPos[2] - (w[2] +7 )) < abs(myPos[2]-(w[2] - 7))){
+					myPos[2] = w[2] + 7;
 				}
 				else{
-					myPos[2] = wPos[2] - 7;
+					myPos[2] = w[2] - 7;
 				}
 			}
 			else{
-				if (abs(myPos[0] - (wPos[0] + 7)) < abs(myPos[0] - (wPos[0] - 7))){
-					myPos[0] = wPos[0] + 7;
+				if (abs(myPos[0] - (w[0] + 7)) < abs(myPos[0] - (w[0] - 7))){
+					myPos[0] = w[0] + 7;
 				}
 				else{
-					myPos[0] = wPos[0] - 7;
+					myPos[0] = w[0] - 7;
 				}
 			}
 			mBodyNode->setPosition(myPos);
@@ -356,7 +356,7 @@ bool NPC::checkInFront(){
 	inbetween[1] = 0;
 
 	Ogre::Radian angleBetween;
-	std::list<Ogre::SceneNode*> walls = app->getWallList();
+	std::list<Ogre::Vector3> walls = app->getWallList();
 	Ogre::Vector3 distFromWall;
 
 	if (mBodyNode->getPosition().distance(app->getPlayerPointer()->getPosition()) <= lookRange){
@@ -367,8 +367,8 @@ bool NPC::checkInFront(){
 			angleBetween = lookDir.angleBetween(inbetween);
 		}
 		if (angleBetween.valueDegrees() >= 0 && angleBetween.valueDegrees() <= lookAngle){//will have to change when real model gets in
-			for (Ogre::SceneNode* w : walls){
-				distFromWall = w->getPosition();
+			for (Ogre::Vector3 distFromWall : walls){
+				//distFromWall = w->getPosition();
 				distFromWall[1] = 0;
 				distFromWall = distFromWall - getPosition();
 				if (distFromWall.angleBetween(inbetween).valueDegrees() <= 5){
