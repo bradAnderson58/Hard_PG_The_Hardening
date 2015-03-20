@@ -38,6 +38,7 @@ public:
 	void setMovement(char dir, bool on); //set the movemnt
 	void setStartPos(){startPos = mBodyNode->getPosition();}
 
+	void getPushed(Ogre::Vector3 direction);
 	void getHurt(int d);
 	Ogre::Vector3 getPosition(){return mBodyNode->getPosition();}
 	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }

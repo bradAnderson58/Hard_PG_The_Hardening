@@ -379,8 +379,10 @@ void Player::dealDamage(NPC *enemy){
 	if (critPerc <= criticalStat){ //critical strike - extra damages!
 		damage = 1.5 * damage;
 	}
-
+	// TODO: apply your direction to them to push them backwards a bit on hit
+	// enemy->getPushed(player->mDirection)
 	enemy->getHurt(damage);
+	enemy->getPushed(mDirection);
 }
 
 //damage done to the player

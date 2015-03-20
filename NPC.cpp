@@ -424,10 +424,14 @@ void NPC::flee(){
 	steer += mDirection*/							//if you wanna make it impossible to catch the guy;
 }
 
-
-
-
-
+// recoil effet
+void
+NPC::getPushed(Ogre::Vector3 direction)
+{
+	Ogre::Vector3 push_force = Ogre::Vector3(2.0, 1.0, 2.0);
+	std::cout << "Back Fiend!" << std::endl;
+	mBodyNode->translate(direction * push_force);
+}
 
 void NPC::getHurt(int d){
 	state = SEEK;
