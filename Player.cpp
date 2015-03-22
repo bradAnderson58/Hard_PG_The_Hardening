@@ -479,7 +479,7 @@ Ogre::Vector3 Player::collisionWalls(Ogre::Vector3 myPos){
 					myPos[0] = w[0] - 7;
 				}
 			}
-			return myPos;
+			
 		}
 	}
 	return myPos;
