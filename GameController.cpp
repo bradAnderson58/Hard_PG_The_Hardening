@@ -153,6 +153,9 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 				}
 			}
 		}
+		else if (app->getGameState() == GameApplication::MENUSCREEN){
+			if (mGUICont->getInventory()->mVisible) mGUICont->xBoxSelect();  //use the same method to select with spacebar
+		}
 	}
 	else if (arg.key == OIS::KC_F)
 	{
