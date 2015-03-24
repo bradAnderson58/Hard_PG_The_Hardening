@@ -52,8 +52,6 @@ Cell::removeItem()
 void
 Cell::setItem(UsableItems* item)
 {
-
-
 	if (item){
 
 		std::cout << "Got an item " << item->getImgFile() << std::endl; 

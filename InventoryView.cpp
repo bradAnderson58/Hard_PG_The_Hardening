@@ -118,7 +118,6 @@ int InventoryView::swapWrapper(){
 void
 InventoryView::swap(Cell* a, Cell* b)
 {
-	if (a->getItem() == NULL) return;  //fuck it
 	UsableItems* itemA; 
 	UsableItems* itemB;
 
@@ -133,7 +132,6 @@ InventoryView::swap(Cell* a, Cell* b)
 	}
 	else if (!itemA && itemB)
 	{
-
 		a->setItem(itemB);
 		b->setItem(NULL);
 	}

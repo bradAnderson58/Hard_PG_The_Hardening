@@ -536,6 +536,7 @@ void Player::die(){
 
 void Player::switchEquipment(int ind){
 	//determine the type of equipment, and swtich it out
+	if (ind >= inventory.size()) return;
 	UsableItems::itemType typ = inventory[ind]->getType();
 	UsableItems* temp = inventory[ind];
 	inventory.erase(inventory.begin()+ind);
