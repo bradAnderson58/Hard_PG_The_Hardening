@@ -18,7 +18,8 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 	mDirection = Ogre::Vector3(0,0,0);
 	mSpeed = 4.0;
 
-	mModelEntity->setMaterialName("Examples/fire");
+	mModelEntity->setMaterialName( "PlainTexture" ); // not working presently
+	//mModelEntity->setMaterialName("Examples/fire");
 	mModelEntity->setCastShadows(false);
 	mModelEntity->setVisible(false);
 

@@ -1,4 +1,4 @@
-23 23
+11 11
 Examples/BeachStones
 
 Objects
@@ -13,26 +13,14 @@ N ninja.mesh 0.0 0.04
 f fish.mesh 0.0 2
 
 World
-bbbbbbbbbbbbbbbbbbbbbbb
-booowooooooooooooooooob
-bwwdwooooooooooooooNoob
-booooooooooooooooooooob
-booooooooowooooowooooob
-booooooooooooooooooooob
-booooooooooooosooooooob
-booooooooooooooooooooob
-booooooooowooooowooooob
-booooooooooooooooooooob
-booooooooooooooooooooob
-booooooooonoopoooooooob
-booooooooooooooooooooob
-booooooooooooooooooooob
-booooooooooooooooooooob
-booooooooooooooooooooob
-boooooooooooofoooooooob
-booooooooooooooooooooob
-booooooooooooooooooooob
-boofooooooooooooofoooob
-booooooooooooooooooooob
-booooooooofooooooooooob
-bbbbbbbbbbbbbbbbbbbbbbb
+bbbbbbbbbbb
+booooooooob
+booooooooob
+booooooooob
+booooooooob
+boooonoooob
+booooooooob
+booooooooob
+booooooooob
+booooooooob
+bbbbbbbbbbb
