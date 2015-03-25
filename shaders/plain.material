@@ -1,11 +1,11 @@
-// Make sure you have this line in the plugins.cfg file : Plugin=Plugin_CgProgramManager.
-// name of this file doesn't matter
 
-// CG Vertex shader definition
-vertex_program PlainTexture_VS cg
+// changed from cg to glsl
+
+// glsl Vertex shader definition
+vertex_program PlainTexture_VS glsl
 {
 	// Look in this source file for shader code
-	source GameObjStandard.cg
+	source bPlain_vs.glsl
 	
 	// use this function for the vertex shader
 	entry_point main_plain_texture_vp
@@ -24,11 +24,11 @@ vertex_program PlainTexture_VS cg
 	}
 }
 
-// CG Pixel shader definition
-fragment_program PlainTexture_PS cg
+// glsl Pixel shader definition
+fragment_program PlainTexture_PS glsl
 {
 	// Look in this source file for shader code
-	source GameObjStandard.cg
+	source bPlain_ps.glsl 	// change this to a GLSL file
 	
 	// Use this function for the pixel shader
 	entry_point main_plain_texture_fp
@@ -65,6 +65,3 @@ material PlainTexture
 		}
 	}
 }
-
-// This material made references to another file which contains the CG pixel 
-// and vertex shaders. See 'GameObjStandard.cg'
