@@ -149,6 +149,31 @@ GameApplication::toggleState(GameState s)
 		gameState = s;
 		playerPointer->die();
 	}
+	else if (s == LOADING)
+	{
+		gameState = s;
+		destroyallChildren(mSceneMgr->getRootSceneNode());
+
+		//clean up this memory
+		for (NPC* npc : NPClist){
+			delete npc;
+		}
+		NPClist.clear();  
+		for (NPC* npc : goodNPCs){
+			delete npc;
+		}
+		goodNPCs.clear();
+		for (Environment* thing : interactableObjs){
+			delete thing;
+		}
+		interactableObjs.clear();
+
+		delete playerPointer;
+
+		loading->loadEnv("demolevel.txt");
+
+		gameState = PLAYING;
+	}
 	else
 		std::cout << "Not a valid state" << std::endl;
 }
@@ -171,6 +196,9 @@ void GameApplication::endGame(char condition){
 void GameApplication::destroyallChildren(Ogre::SceneNode* p){
 
 	//WHat the fuck does all this do?
+	mSceneMgr->destroyStaticGeometry("StaticTree");
+	mSceneMgr->destroyEntity("Floor");
+	mSceneMgr->destroyEntity("attackCube");
 
 	Ogre::SceneNode::ObjectIterator it = p->getAttachedObjectIterator();
 	while (it.hasMoreElements()){
@@ -178,13 +206,15 @@ void GameApplication::destroyallChildren(Ogre::SceneNode* p){
 		p->getCreator()->destroyMovableObject(o);
 	}
 
-	Ogre::SceneNode::ChildNodeIterator itChild = p->getChildIterator();
+   Ogre::SceneNode::ChildNodeIterator itChild = p->getChildIterator();
 
-   while ( itChild.hasMoreElements() )
+   /*while ( itChild.hasMoreElements() )
    {
       Ogre::SceneNode* pChildNode = static_cast<Ogre::SceneNode*>(itChild.getNext());
       destroyallChildren( pChildNode );
-   }
+   }*/
+
+   p->removeAndDestroyAllChildren();
 
 }
 

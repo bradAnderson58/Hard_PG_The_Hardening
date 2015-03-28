@@ -25,6 +25,10 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 
 }
 
+Projectile::~Projectile(){
+
+}
+
 // inherit update from agent.cpp
 
 // override with projectile motion

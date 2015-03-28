@@ -18,6 +18,10 @@ AoE::AoE(Ogre::SceneManager* SceneManager, std::string name,
 	mModelEntity->setVisible(false);
 }
 
+AoE::~AoE(){
+
+}
+
 void
 AoE::updateLocomote(Ogre::Real deltaTime)
 {

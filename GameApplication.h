@@ -40,9 +40,11 @@ private:
 
 	void addTime(Ogre::Real deltaTime);		// update the game state
 
-	LoaderClass* loading;  //Do loading with this shits
-
 public:	
+
+	LoaderClass* loading;  //Do loading with this shits
+	void destroyAllThings();  //for level loading sirs
+
 	enum GameState
 	{
 		MAINSCREEN,
@@ -52,7 +54,8 @@ public:
 		MENUSCREEN,
 		INVENTORY,
 		CHAR_RECORD,
-		DEAD_STATE
+		DEAD_STATE,
+		LOADING
 	};	//game states
 
     GameApplication(void);

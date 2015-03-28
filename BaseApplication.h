@@ -48,6 +48,7 @@ public:
 
 	Ogre::RenderWindow* getWindow(){ return mWindow; }  //give my window to the controller (or whoever)
 	Ogre::SceneManager* getSceneMgr(){ return mSceneMgr; }  //getter scene manager
+	void setSceneMgr(Ogre::SceneManager* sn){ mSceneMgr = sn; }
 
     virtual void go(void);
 

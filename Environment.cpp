@@ -40,8 +40,8 @@ Environment::Environment(Ogre::SceneManager* SceneManager, std::string name, std
 
 Environment::~Environment(){
 	inner = NULL;
-	mBodyNode->removeAndDestroyAllChildren();
-	mSceneMgr->destroySceneNode(mBodyNode);
+	//mBodyNode->removeAndDestroyAllChildren();
+	mSceneMgr->destroyEntity(mBodyEntity);
 	//delete mBodyEntity;
 	//we need to look into deleting stuff!  TODO
 }

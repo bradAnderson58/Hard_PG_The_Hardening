@@ -16,6 +16,8 @@ This source file is part of the
 */
 #include "BaseApplication.h"
 #include "GameController.h"
+#define _USE_MATH_DEFINES   
+#include <math.h>
 
 //-------------------------------------------------------------------------------------
 BaseApplication::BaseApplication(void)
@@ -90,6 +92,8 @@ void BaseApplication::createCamera(void)
 
     mCameraMan = new OgreBites::SdkCameraMan(mCamera);   // create a default camera controller
 	mCameraMan->setStyle(OgreBites::CS_FREELOOK); // CS_FREELOOK, CS_ORBIT, CS_MANUAL
+
+	mCamera->pitch(Ogre::Radian(-10 * M_PI /180));
 }
 //-------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------

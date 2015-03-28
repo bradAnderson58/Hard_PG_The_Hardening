@@ -53,6 +53,7 @@ Agent::Agent(Ogre::SceneManager* SceneManager, std::string name, std::string fil
 Agent::~Agent(){
 	// mSceneMgr->destroySceneNode(mBodyNode); // Note that OGRE does not recommend doing this. It prefers to use clear scene
 	// mSceneMgr->destroyEntity(mBodyEntity);
+	mSceneMgr->destroyEntity(mModelEntity);
 }
 
 void 

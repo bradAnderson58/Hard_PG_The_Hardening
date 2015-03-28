@@ -4,6 +4,7 @@
 #include "GUIController.h"
 #include "InventoryView.h"
 #include "CharacterRecord.h"
+#include "loaderClass.h"
 
 //Contructor requires use of GameApps mWindow for binding
 GameController::GameController(GameApplication* a)
@@ -163,22 +164,35 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 	}
 	else if (arg.key == OIS::KC_G)
 	{
+		std::cout <<"WTF"<<std::endl;
 		player->shoot(Player::FREEZE);
 	}
-	else if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || OIS::KC_D) {
+	else if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || arg.key == OIS::KC_D) {
 		
 		if (app->getGameState() == GameApplication::PLAYING){
 			keyHandler(arg.key, true);
 		}
 	
 	}
-	//Some wicked attacks - template for spellcasting possibly
 	else if (arg.key == OIS::KC_Q){
-		if(!player->doingStuff){
-			player->buttonAnimation(arg.key, true);
-			player->doingStuff = true;
-				
-		}
+		std::cout << "Q was hit" << std::endl;
+	}
+	else if (arg.key == OIS::KC_L){
+		//test level loading system
+		std::cout <<"Here" << std::endl;
+		app->toggleState(GameApplication::LOADING);
+
+		//app->destroyallChildren(app->getSceneMgr()->getRootSceneNode()); //getSceneMgr()->getRootSceneNode()->getAttachedObjectIterator();
+
+
+
+		//app->getSceneMgr()->getRootSceneNode()->detachAllObjects();					//everything except scenmanager and root are gone
+		//app->getSceneMgr()->getRootSceneNode()->removeAndDestroyAllChildren();
+
+		//app->loading->loadEnv("demolevel.txt");
+
+		//app->toggleState(GameApplication::PLAYING);
+
 	}
 
 	MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), arg.text);

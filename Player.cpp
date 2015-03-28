@@ -3,6 +3,7 @@
 #include "GUIController.h"
 #include "Environment.h"
 #include "NPC.h"
+#include "loaderClass.h"
 #define _USE_MATH_DEFINES   
 #include <math.h>
 
@@ -20,7 +21,7 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	Ogre::Vector3 temp(mBodyNode->getPosition());
 	Ogre::Vector3 temp1(temp[0], temp[1]+40, temp[2]+40);//move camera to location. temp[1] is height relative to player temp[2] is z distance
 	Ogre::Camera* cam = app->getCamera();
-	cam->pitch(Ogre::Radian(-10 * M_PI /180));
+	//cam->pitch(Ogre::Radian(-10 * M_PI /180));
 	cam->setPosition(temp1);
 
 	//attaching camera code here
@@ -38,7 +39,7 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 
 	//attack space
 	mAttackNode = mModelNode->createChildSceneNode();
-	mAttackEntity = mSceneMgr->createEntity("attackCube", Ogre::SceneManager::PT_CUBE);
+	mAttackEntity = mSceneMgr->createEntity("attackCube", Ogre::SceneManager::PT_CUBE); //used to be called "attackCube"
 	mAttackEntity->setMaterialName("Examples/RustySteel");
 	mAttackNode->attachObject(mAttackEntity);
 	
@@ -74,12 +75,12 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	inventory.push_back(new UsableItems(UsableItems::WEAPON, 20, 0, 0, 0, 0, "The Allocator!", 5000));  //Super Awesome weapon for testing
 
 	// some projectile to throw
-	mFireball = new Projectile(SceneManager, "fireball", "geosphere4500.mesh",
-		height, scale/5, a); 
+	mFireball = new Projectile(SceneManager, LoaderClass::getNewName(), "geosphere4500.mesh",
+		height, scale/5, a);                                                       //used to be named 'fireball'
 
 	// set up AoE field around character to activate for freeze attack
-	mFreeze = new AoE(SceneManager, "freeze", "geosphere4500.mesh", 
-		height, scale, a);
+	mFreeze = new AoE(SceneManager, LoaderClass::getNewName(), "geosphere4500.mesh", 
+		height, scale, a);															//used to be named 'freeze'
 	mFreeze->setCoolDown(FREEZE_COOLDOWN);
 
 	srand(time(NULL));  //seed for random number generation
@@ -94,7 +95,8 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 
 Player::~Player(void)
 {
-	
+	delete mFireball;
+	delete mFreeze;
 }
 
 void Player::doUpdateGUI(){

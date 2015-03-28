@@ -13,15 +13,17 @@ public:
 	LoaderClass(Ogre::SceneManager* mgr, GameApplication* a);
 	~LoaderClass(void);
 
-	void loadEnv();		//load environemnt
+	void loadEnv(std::string envText);		//load environemnt
 	void setupEnv();	//set up environment
+
+	static std::string getNewName();
 private:
 	Agent* agent;
 	GameApplication* app;
 	Grid* grid;							//for reading in level datas
 	Ogre::SceneManager* uSceneMgr;		//This will be nice for loading things
 
-	std::string getNewName();			//Kvothe
+	//std::string getNewName();			//Kvothe
 };
 
 #endif

@@ -8,7 +8,7 @@
 LoaderClass::LoaderClass(Ogre::SceneManager* mgr, GameApplication* a){
 	uSceneMgr = mgr;
 	app = a;
-	loadEnv();
+	loadEnv("level001.txt");
 	setupEnv();
 }
 
@@ -30,7 +30,7 @@ std::string LoaderClass::getNewName() // return a unique name
 	return "object_" + s;	// append the current count onto the string
 }
 
-void LoaderClass::loadEnv(){
+void LoaderClass::loadEnv(std::string envTxt){
 	using namespace Ogre;	// use both namespaces
 	using namespace std;
 
@@ -57,7 +57,7 @@ void LoaderClass::loadEnv(){
 
 	string path = __FILE__; //gets the current cpp file's path with the cpp file   --THIS NEEDS TO BE REDONE FOR RELEASE
 	path = path.substr(0,1+path.find_last_of('\\')); //removes filename to leave path
-	path+= "level001.txt"; //if txt file is in the same directory as cpp file
+	path+= envTxt; //if txt file is in the same directory as cpp file
 	inputfile.open(path);
 
 	//inputfile.open("D:/CS425-2012/Lecture 8/GameEngine-loadLevel/level001.txt"); //explicit path in Release?
@@ -78,7 +78,7 @@ void LoaderClass::loadEnv(){
 		Plane(Vector3::UNIT_Y, 0), x*NODESIZE, z*NODESIZE, x, z, true, 1, x, z, Vector3::UNIT_Z);
 	
 	//create a floor entity, give it material, and place it at the origin
-	Entity* floor = uSceneMgr->createEntity("Floor", "floor");
+	Entity* floor = uSceneMgr->createEntity("Floor", "floor");  
 	floor->setMaterialName(matName);
 	floor->setCastShadows(false);
 	uSceneMgr->getRootSceneNode()->attachObject(floor);
@@ -245,13 +245,13 @@ void LoaderClass::loadEnv(){
 		}
 
 	//Static geomerty
-	sgNode = uSceneMgr->createStaticGeometry("StaticTree");
+	sgNode = uSceneMgr->createStaticGeometry("StaticTree");  
 	sgNode->addSceneNode(uSceneMgr->getSceneNode("nTree"));
 	sgNode->build();
 	mTree->removeAndDestroyAllChildren();
 
 	// delete all of the readEntities in the objs map
-	rent = objs["s"]; // just so we can see what is going on in memory (delete this later)
+	rent = objs["s"]; // just so we can see what is going on in memory
 	
 	std::map<string,readEntity*>::iterator it;
 	for (it = objs.begin(); it != objs.end(); it++) // iterate through the map
