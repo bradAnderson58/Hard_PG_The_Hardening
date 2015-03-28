@@ -13,6 +13,8 @@
 Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a):
 	Agent(SceneManager, name, filename, height, scale, a)
 {
+	mModelEntity->setMaterialName( "ToonTexture" );  // change player texture with shader
+
 	//set player to origin to attach the camera
 	mBodyNode->setPosition(0.0,0.0,0.0);
 	mBodyNode->yaw(Ogre::Radian(M_PI));

@@ -1,10 +1,9 @@
 11 11
-Examples/BeachStones
+Examples/GrassFloor
 
 Objects
 d cube.mesh 0.5 0.2 0.1
 p penguin.mesh 0.5 0.2 0.1
-t tudorhouse.mesh 27.0 0.0 0.05
 s Barrel.mesh 2.5 0.0 1
 
 Characters
@@ -14,7 +13,7 @@ f fish.mesh 0.0 2
 
 World
 bbbbbbbbbbb
-booooooooob
+btoooooootb
 booooooooob
 booooooooob
 booooooooob
@@ -22,5 +21,5 @@ boooonoooob
 booooooooob
 booooooooob
 booooooooob
-booooooooob
+btoooooootb
 bbbbbbbbbbb
