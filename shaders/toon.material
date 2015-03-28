@@ -1,0 +1,63 @@
+
+// changed from cg to glsl
+
+// glsl Vertex shader definition
+vertex_program ToonTexture_VS glsl
+{
+	// Look in this source file for shader code
+	source toon3_vs.glsl
+	
+	// use this function for the vertex shader
+	entry_point main_toon_texture_vp
+	
+	// Compile to openGL format instead
+	profiles arbvp1 
+
+	// This block saves us from manually setting parameters in code
+	default_params
+	{
+		// ogre will put the worldviewproj into our 'worldViewProj' parameter for us.
+		param_named_auto worldViewProj worldviewproj_matrix
+		//throws an error if you declare this and don't use it
+	}
+}
+
+// glsl Pixel shader definition
+fragment_program ToonTexture_PS glsl
+{
+	// Look in this source file for shader code
+	source toon3_ps.glsl 	// change this to a GLSL file
+	
+	// Use this function for the pixel shader
+	entry_point main_toon_texture_fp
+	
+	// Compile to openGL format instead
+	profiles arbfp1 
+}
+
+material ToonTexture
+{
+	// Material has one technique
+	technique
+	{
+		// This technique has one pass
+		pass
+		{
+			// Make this pass use the vertex shader defined above
+			vertex_program_ref ToonTexture_VS
+			{
+
+			}
+			// Make this pass use the pixel shader defined above
+			fragment_program_ref ToonTexture_PS
+			{
+
+			}
+			texture_unit
+			{
+				// This pass will use this texture as input
+				texture nskingr.jpg
+			}
+		}
+	}
+}

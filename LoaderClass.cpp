@@ -241,6 +241,20 @@ void LoaderClass::loadEnv(){
 					mNode->attachObject(ps);
 					mNode->setPosition(grid->getPosition(i,j).x, 0.0f, grid->getPosition(i,j).z);
 				}
+				else if (c == 't') // treeeeee
+				{
+					Entity* ent = uSceneMgr->createEntity(getNewName(), "Forest_Tree.mesh");
+					//ent->setMaterialName("Examples/RustySteel");
+					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
+					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
+					mNode->attachObject(ent);
+					mNode->scale(1.1f,3.2f,1.1f); // cube is 100 x 100
+					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
+					mNode->setPosition(grid->getPosition(i,j).x, 0.0f, grid->getPosition(i,j).z);
+					app->pushWalls(mNode->getPosition());
+					//mNode->showBoundingBox(true);
+					//app->pushWallEntity(ent);
+				}
 			}
 		}
 
