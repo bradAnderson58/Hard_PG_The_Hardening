@@ -51,6 +51,7 @@ void NPC::updateGood(Ogre::Real deltaTime){
 }
 
 void NPC::updateBad(Ogre::Real deltaTime){
+	// each state can be used as input to get the next animation - B note
 	Player* p = app->getPlayerPointer();
 	if (state == GUARD){
 		if (checkInFront()){

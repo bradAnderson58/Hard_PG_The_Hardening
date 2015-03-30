@@ -8,6 +8,7 @@
 #include "UsableItems.h"
 #include "NPC.h"
 #include "Rat.h"
+#include "Diablous.h"
 
 class Grid;  //okay whatever
 class LoaderClass;

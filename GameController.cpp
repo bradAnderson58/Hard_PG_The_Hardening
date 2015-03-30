@@ -164,7 +164,6 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 	}
 	else if (arg.key == OIS::KC_G)
 	{
-		std::cout <<"WTF"<<std::endl;
 		player->shoot(Player::FREEZE);
 	}
 	else if (arg.key == OIS::KC_W || arg.key == OIS::KC_A || arg.key == OIS::KC_S || arg.key == OIS::KC_D) {
