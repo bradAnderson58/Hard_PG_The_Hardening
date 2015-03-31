@@ -73,12 +73,16 @@ void LoaderClass::loadEnv(std::string envTxt){
 	string matName;
 	inputfile >> matName;	// read in the material name
 
+	//MeshManager::getSingleton()
 	// create floor mesh using the dimension read
-	MeshManager::getSingleton().createPlane("floor", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+
+
+	string planename = envTxt + "floor";
+	MeshManager::getSingleton().createPlane(planename, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
 		Plane(Vector3::UNIT_Y, 0), x*NODESIZE, z*NODESIZE, x, z, true, 1, x, z, Vector3::UNIT_Z);
 	
 	//create a floor entity, give it material, and place it at the origin
-	Entity* floor = uSceneMgr->createEntity("Floor", "floor");  
+	Entity* floor = uSceneMgr->createEntity("Floor", planename);  
 	floor->setMaterialName(matName);
 	floor->setCastShadows(false);
 	uSceneMgr->getRootSceneNode()->attachObject(floor);
@@ -241,7 +245,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 					mNode->attachObject(ps);
 					mNode->setPosition(grid->getPosition(i,j).x, 0.0f, grid->getPosition(i,j).z);
 				}
-				else if (c == 't') // treeeeee
+				/*else if (c == 't') // treeeeee
 				{
 					Entity* ent = uSceneMgr->createEntity(getNewName(), "Forest_Tree.mesh");
 					//ent->setMaterialName("Examples/RustySteel");
@@ -254,7 +258,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 					app->pushWalls(mNode->getPosition());
 					//mNode->showBoundingBox(true);
 					//app->pushWallEntity(ent);
-				}
+				}*/
 			}
 		}
 
