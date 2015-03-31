@@ -169,8 +169,8 @@ void NPC::updateBad(Ogre::Real deltaTime){
 	}
 
 	checkHit();
-
 	updateLocomote(deltaTime);
+	updateAnimations(deltaTime);
 }
 
 void NPC::updateLocomote(Ogre::Real deltaTime){

@@ -16,7 +16,6 @@ private:
 
 	enum AnimID
 	{
-		ATTACK,
 		DIE,
 		HIT,
 		IDLE,

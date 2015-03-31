@@ -17,7 +17,9 @@ Diablous::Diablous(Ogre::SceneManager* SceneManager, std::string name, std::stri
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
 
-	//setupAnimations(); // NEed his animations, damn converters are a pain
+	std::cout << "Num Animations Diablous: " << mModelEntity->getSkeleton()->getNumAnimations() << std::endl;
+
+	setupAnimations(); // turn this off if you can't find the animations
 
 }
 
@@ -29,6 +31,7 @@ Diablous::~Diablous(void)
 
 void Diablous::updateAnimations(Ogre::Real deltaTime){
 	if (DiablousAnim != ANIM_NONE){
+		std::cout << mAnims[DiablousAnim] << std::endl;
 		mAnims[DiablousAnim]->addTime(deltaTime);
 	}
 	//transitions
@@ -62,19 +65,18 @@ void Diablous::fadeAnimations(Ogre::Real deltaTime){
 }
 
 void Diablous::setupAnimations(){
-	this->mTimer = 0;	// Start from the beginning
+	this->mTimer = 0;				// Start from the beginning
 	this->mVerticalVelocity = 0;	// Not jumping
 
 	// this is very important due to the nature of the exported animations
 	mModelEntity->getSkeleton()->setBlendMode(Ogre::ANIMBLEND_CUMULATIVE);
 
 	// Name of the animations for this character - this will change with new assets
-	// not working....
-	//Ogre::String animNames[] = {"Attack", "Die", "Hit", "Idle", "Idle_2", "Run", "Walk"};
-	Ogre::String animNames[] = {"Attack", "Die", "Hit", "Idle", "Idle_2", "Run", "Walk"};
+	Ogre::String animNames[] = {"Die", "Hit", "Idle", "Idle_2", "Run", "Walk"};
+	int numAnimations = sizeof(animNames) / sizeof(animNames[0]);
 
 	// populate our animation list
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < numAnimations; i++)
 	{
 		mAnims[i] = mModelEntity->getAnimationState(animNames[i]);
 		
@@ -85,6 +87,7 @@ void Diablous::setupAnimations(){
 
 		mFadingIn[i] = false;
 		mFadingOut[i] = false;
+		std::cout << i << std::endl;
 	}
 
 	// start off in the idle state (top and bottom together)
@@ -92,7 +95,7 @@ void Diablous::setupAnimations(){
 }
 
 void Diablous::setAnimation(AnimID id, bool reset){
-	if (DiablousAnim >= 0 && DiablousAnim < 1)
+	if (DiablousAnim >= 0 && DiablousAnim < 6)
 	{
 		// if we have an old animation, fade it out
 		mFadingIn[DiablousAnim] = false;
@@ -111,4 +114,3 @@ void Diablous::setAnimation(AnimID id, bool reset){
 		if (reset) mAnims[id]->setTimePosition(0);
 	}
 }
-

@@ -10,7 +10,7 @@ Characters
 n ninja.mesh 0.0 0.04
 N ninja.mesh 0.0 0.04
 f fish.mesh 0.0 2
-D diablous.001.mesh 8.0 0.80
+D diablous.mesh 8.0 0.80
 
 World
 bbbbbbbbbbb

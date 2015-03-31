@@ -92,6 +92,8 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	updateGUI = a->getGUICont();
 	//updateGUI->recordUpdator();
 	
+	std::cout << "Num Animations Ninja: " << mModelEntity->getSkeleton()->getNumAnimations() << std::endl;
+	
 	setupAnimations();
 }
 
@@ -308,7 +310,7 @@ void Player::setupAnimations(){
 	// populate our animation list
 	for (int i = 0; i < 20; i++)
 	{
-		mAnims[i] = mModelEntity->getAnimationState(animNames[i]);
+		mAnims[i] = mModelEntity->getAnimationState(animNames[i]); // get by string value
 		
 		//Some animations are not looping
 		if (animNames[i] == "Idle3" || animNames[i] == "Stealth") mAnims[i]->setLoop(true);
