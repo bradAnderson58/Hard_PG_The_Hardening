@@ -153,12 +153,23 @@ void LoaderClass::loadEnv(std::string envTxt){
 						
 						agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						((Player*)agent)->setInitPos(((Player*)agent)->getPosition());		//casting magics
-					}else if (c == 'f'){
+					}
+					else if (c == 'f'){
 						Rat* rat = new Rat(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, 1, NPC::BAD, NPC::GUARD);
 						rat->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						rat->setStartPos();
 						app->pushNPCs(rat);
 						//enemy code will go here	
+					}
+					// add a flying demon
+					else if (c == 'D') 
+					{
+						// need each type of enemy to be a child of (<bad>NPC), to give their own animation states
+						Diablous* flyingDemon = new Diablous(this->uSceneMgr, getNewName(), rent->filename, 
+							rent->y, rent->scale, app, 1, NPC::BAD, NPC::GUARD);
+						flyingDemon->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
+						flyingDemon->setStartPos();
+						app->pushNPCs(flyingDemon);
 					}
 					// added another Ninja to test dialog interaction
 					else if (c == 'N')	
@@ -227,7 +238,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 				else if (c == 'b') // create borderwalls
 				{
 					Entity* ent = uSceneMgr->createEntity(getNewName(), Ogre::SceneManager::PT_CUBE);
-					ent->setMaterialName("Examples/RustySteel");
+					ent->setMaterialName(" ToonRockWall ");
 					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
 					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing
 					mNode->attachObject(ent);
@@ -291,7 +302,7 @@ void LoaderClass::setupEnv(){
 	using namespace Ogre;
 
 	// set shadow properties
-	uSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
+	uSceneMgr->setShadowTechnique(SHADOWTYPE_STENCIL_MODULATIVE);
 	uSceneMgr->setShadowColour(ColourValue(0.5, 0.5, 0.5));
 	uSceneMgr->setShadowTextureSize(1024);
 	uSceneMgr->setShadowTextureCount(1);
@@ -303,9 +314,10 @@ void LoaderClass::setupEnv(){
 	uSceneMgr->setAmbientLight(ColourValue(0.5f, 0.5f, 0.5f));
 
 	// add a bright light above the scene
+	// want to create point lights from level editor...
 	Ogre::Light* mLight = uSceneMgr->createLight();
 	mLight->setType(Light::LT_POINT);
-	mLight->setPosition(-10, 40, 20);
+	mLight->setPosition(-10, 80, 20);
 	mLight->setSpecularColour(ColourValue::White);
 	mLight->setDiffuseColour(ColourValue::White);
 

@@ -13,7 +13,7 @@
 Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a):
 	Agent(SceneManager, name, filename, height, scale, a)
 {
-	mModelEntity->setMaterialName( "ToonTexture" );  // change player texture with shader
+	mModelEntity->setMaterialName( "ToonNinja" );  // change player texture with shader
 
 	//set player to origin to attach the camera
 	mBodyNode->setPosition(0.0,0.0,0.0);
@@ -78,7 +78,7 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 
 	// some projectile to throw
 	mFireball = new Projectile(SceneManager, LoaderClass::getNewName(), "geosphere4500.mesh",
-		height, scale/5, a);                                                       //used to be named 'fireball'
+		height, scale/6, a);                                                       //used to be named 'fireball'
 
 	// set up AoE field around character to activate for freeze attack
 	mFreeze = new AoE(SceneManager, LoaderClass::getNewName(), "geosphere4500.mesh", 
@@ -91,6 +91,8 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	updateStats();
 	updateGUI = a->getGUICont();
 	//updateGUI->recordUpdator();
+	
+	std::cout << "Num Animations Ninja: " << mModelEntity->getSkeleton()->getNumAnimations() << std::endl;
 	
 	setupAnimations();
 }
@@ -308,7 +310,7 @@ void Player::setupAnimations(){
 	// populate our animation list
 	for (int i = 0; i < 20; i++)
 	{
-		mAnims[i] = mModelEntity->getAnimationState(animNames[i]);
+		mAnims[i] = mModelEntity->getAnimationState(animNames[i]); // get by string value
 		
 		//Some animations are not looping
 		if (animNames[i] == "Idle3" || animNames[i] == "Stealth") mAnims[i]->setLoop(true);
@@ -413,6 +415,9 @@ Player::shoot(skillID skill)
 {
 	if (skill == FIREBALL && !mFireball->isActive() && !doingStuff)
 	{
+		buttonAnimation(OIS::KC_F, true);
+		doingStuff = true;
+
 		std::cout << mDirection[0] << " " << mDirection[1] << " " << mDirection[2] << std::endl;
 		Ogre::Vector3 temp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * mDirection;
 

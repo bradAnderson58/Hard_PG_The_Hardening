@@ -1,11 +1,9 @@
 
-// changed from cg to glsl
-
 // glsl Vertex shader definition
 vertex_program ToonTexture_VS glsl
 {
 	// Look in this source file for shader code
-	source toon3_vs.glsl
+	source toonTex_vs.glsl
 	
 	// use this function for the vertex shader
 	entry_point main_toon_texture_vp
@@ -26,7 +24,7 @@ vertex_program ToonTexture_VS glsl
 fragment_program ToonTexture_PS glsl
 {
 	// Look in this source file for shader code
-	source toon3_ps.glsl 	// change this to a GLSL file
+	source toonTex_ps.glsl 	// change this to a GLSL file
 	
 	// Use this function for the pixel shader
 	entry_point main_toon_texture_fp
@@ -35,7 +33,7 @@ fragment_program ToonTexture_PS glsl
 	profiles arbfp1 
 }
 
-material ToonTexture
+material ToonNinja
 {
 	// Material has one technique
 	technique
@@ -57,6 +55,72 @@ material ToonTexture
 			{
 				// This pass will use this texture as input
 				texture nskingr.jpg
+			}
+		}
+	}
+}
+
+material ToonFireBall
+{
+	technique
+	{
+		pass
+		{
+			vertex_program_ref ToonTexture_VS
+			{
+
+			}
+			fragment_program_ref ToonTexture_PS
+			{
+
+			}
+			texture_unit
+			{
+				texture fire.jpg
+			}
+		}
+	}
+}
+
+material ToonRockWall
+{
+	technique
+	{
+		pass
+		{
+			vertex_program_ref ToonTexture_VS
+			{
+
+			}
+			fragment_program_ref ToonTexture_PS
+			{
+
+			}
+			texture_unit
+			{
+				texture rockwall.tga
+			}
+		}
+	}
+}
+
+material ToonFish
+{
+	technique
+	{
+		pass
+		{
+			vertex_program_ref ToonTexture_VS
+			{
+
+			}
+			fragment_program_ref ToonTexture_PS
+			{
+
+			}
+			texture_unit
+			{
+				texture steelhead.png
 			}
 		}
 	}
