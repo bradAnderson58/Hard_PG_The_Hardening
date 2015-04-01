@@ -197,6 +197,10 @@ void GameApplication::destroyallChildren(Ogre::SceneNode* p){
 
 	//WHat the fuck does all this do?
 	mSceneMgr->destroyStaticGeometry("StaticTree");
+	//mSceneMgr->destroyEntity("floor");
+
+	Ogre::MeshManager::getSingleton().destroyAllResourcePools();  //try this?
+
 	mSceneMgr->destroyEntity("Floor");
 	mSceneMgr->destroyEntity("attackCube");
 
