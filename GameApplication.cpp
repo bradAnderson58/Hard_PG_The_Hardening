@@ -16,6 +16,9 @@ GameApplication::GameApplication(void):
 {
 	gameState = MAINSCREEN;
 	level = 0;
+	engine = irrklang::createIrrKlangDevice();
+	//engine->play2D("../../media/getout.ogg", true);
+	//engine->stopAllSounds();
 }
 //-------------------------------------------------------------------------------------
 GameApplication::~GameApplication(void)
@@ -169,7 +172,8 @@ GameApplication::toggleState(GameState s)
 		interactableObjs.clear();
 
 		delete playerPointer;
-
+		this->stopSound();
+		this->engine->play2D("../../media/music2.ogg", true);
 		loading->loadEnv("demolevel.txt");
 
 		gameState = PLAYING;

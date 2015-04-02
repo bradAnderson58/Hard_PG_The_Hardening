@@ -35,13 +35,13 @@ public:
 	NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, GoodBad t, States s);
 	~NPC();
 
-	void update(Ogre::Real deltaTime);
+	virtual void update(Ogre::Real deltaTime);
 	void updateLocomote(Ogre::Real deltaTime);
 	void setMovement(char dir, bool on); //set the movemnt
 	void setStartPos(){startPos = mBodyNode->getPosition();}
 
 	void getPushed(Ogre::Vector3 direction);
-	void getHurt(int d);
+	virtual void getHurt(int d);
 	Ogre::Vector3 getPosition(){return mBodyNode->getPosition();}
 	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }
 
@@ -86,7 +86,7 @@ protected:
 	virtual void updateAnimations(Ogre::Real deltaTime);	// update the animation frame
 	virtual void setAnimation(AnimID id, bool reset = false);
 
-	void attackPlayer(Player* mainPlayer);
+	virtual void attackPlayer(Player* mainPlayer);
 	void attack(NPC* otherGuys);
 	void interact();
 	void dealDamage(NPC* guy);
