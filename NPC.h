@@ -1,6 +1,8 @@
 #ifndef __NPC_h_
 #define __NPC_h_
 
+#include <map>
+
 #include "Agent.h"
 #include "Player.h"
 
@@ -47,7 +49,8 @@ public:
 	void setEvent(Event* e) { mEvent = e; } 
 
 protected:
-	enum AnimId{
+
+	enum AnimID{
 		ANIM_NONE
 	};
 
@@ -75,11 +78,13 @@ protected:
 	Ogre::Real lastHit;
 
 	Event* mEvent;
+
+	int numAnimations;
 		
-	void setupAnimations();									// load this character's animations
-	void fadeAnimations(Ogre::Real deltaTime);				// blend from one animation to another
-	void updateAnimations(Ogre::Real deltaTime);			// update the animation frame
-	void setAnimation(AnimID id, bool reset = false);
+	virtual void setupAnimations();							// load this character's animations
+	virtual void fadeAnimations(Ogre::Real deltaTime);		// blend from one animation to another
+	virtual void updateAnimations(Ogre::Real deltaTime);	// update the animation frame
+	virtual void setAnimation(AnimID id, bool reset = false);
 
 	virtual void attackPlayer(Player* mainPlayer);
 	void attack(NPC* otherGuys);
@@ -101,6 +106,8 @@ protected:
 	void updateGood(Ogre::Real deltaTime);
 	bool nextLocation();
 
+private:
+	AnimID idOfAnim;
 };
 
 #endif

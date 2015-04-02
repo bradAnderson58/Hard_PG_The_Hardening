@@ -30,6 +30,8 @@ NPC::NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	lookRange = 40;
 
 	mEvent = NULL;
+
+	numAnimations =  mModelEntity->getSkeleton()->getNumAnimations();
 }
 
 NPC::~NPC(void)
@@ -187,23 +189,6 @@ void NPC::updateLocomote(Ogre::Real deltaTime){
 	}
 	//mDirection = mDirection * 100;
 	mBodyNode->translate(mDirection);
-}
-
-
-void NPC::updateAnimations(Ogre::Real deltaTime){
-	//will overwrite
-}
-
-void NPC::fadeAnimations(Ogre::Real deltaTime){
-	//will overwrite
-}
-
-void NPC::setupAnimations(){
-	//will overwrite
-}
-
-void NPC::setAnimation(AnimID id, bool reset){
-	//will overwrite
 }
 
 void NPC::attackPlayer(Player* mainPlayer){
@@ -441,11 +426,6 @@ void NPC::getHurt(int d){
 	}
 }
 
-
-
-
-
-
 bool 
 NPC::nextLocation()
 {
@@ -513,5 +493,22 @@ void NPC::moveTo(GridNode* n){
 		pos = n; //set position of the agent to goal for when its done moving
 	}
 
+
+}
+
+//virtuals ========================================
+void NPC::updateAnimations(Ogre::Real deltaTime){
+
+}
+
+void NPC::fadeAnimations(Ogre::Real deltaTime){
+
+}
+
+void NPC::setupAnimations(){
+	// do this one in NPC's children
+}
+
+void NPC::setAnimation(AnimID id, bool reset){
 
 }
