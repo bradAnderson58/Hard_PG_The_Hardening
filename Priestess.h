@@ -21,7 +21,8 @@ protected:
 		DIE,
 		HIT,
 		ATTACK,
-		WALK
+		WALK,
+		ANIM_NONE
 	};
 
 	// use npc's definitions

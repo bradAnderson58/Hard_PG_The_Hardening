@@ -39,7 +39,7 @@ void Diablous::updateAnimations(Ogre::Real deltaTime){
 void Diablous::fadeAnimations(Ogre::Real deltaTime){
 	using namespace Ogre;
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < numAnimations; i++)
 	{
 		if (mFadingIn[i])
 		{
