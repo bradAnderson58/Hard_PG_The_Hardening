@@ -1,29 +1,27 @@
-#ifndef __Diablous_h_
-#define __Diablous_h_
+#ifndef __Priestess_h_
+#define __Priestess_h_
 
 #include "NPC.h"
 #include "Player.h"
 
 class GameApplication;
 
-class Diablous : public NPC{
+class Priestess : public NPC{
 
 public:
-	Diablous(Ogre::SceneManager* SceneManager, std::string name, std::string filename, 
+	Priestess(Ogre::SceneManager* SceneManager, std::string name, std::string filename, 
 		float height, float scale, GameApplication* a, int l, NPC::GoodBad t, NPC::States s);
-	~Diablous();
+	~Priestess();
 protected:
 
 	// Use a map instead, declared in parent.
 	enum AnimID
 	{
+		IDLE,
 		DIE,
 		HIT,
-		IDLE,
-		IDLE_2,
-		RUN,
-		WALK,
-		ANIM_NONE
+		ATTACK,
+		WALK
 	};
 
 	// use npc's definitions

@@ -1,6 +1,8 @@
 #ifndef __NPC_h_
 #define __NPC_h_
 
+#include <map>
+
 #include "Agent.h"
 #include "Player.h"
 
@@ -33,13 +35,13 @@ public:
 	NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, GoodBad t, States s);
 	~NPC();
 
-	void update(Ogre::Real deltaTime);
+	virtual void update(Ogre::Real deltaTime);
 	void updateLocomote(Ogre::Real deltaTime);
 	void setMovement(char dir, bool on); //set the movemnt
 	void setStartPos(){startPos = mBodyNode->getPosition();}
 
 	void getPushed(Ogre::Vector3 direction);
-	void getHurt(int d);
+	virtual void getHurt(int d);
 	Ogre::Vector3 getPosition(){return mBodyNode->getPosition();}
 	Ogre::AxisAlignedBox getBoundingBox() { return mModelEntity->getWorldBoundingBox(); }
 
@@ -47,7 +49,8 @@ public:
 	void setEvent(Event* e) { mEvent = e; } 
 
 protected:
-	enum AnimId{
+
+	enum AnimID{
 		ANIM_NONE
 	};
 
@@ -75,13 +78,15 @@ protected:
 	Ogre::Real lastHit;
 
 	Event* mEvent;
-		
-	void setupAnimations();									// load this character's animations
-	void fadeAnimations(Ogre::Real deltaTime);				// blend from one animation to another
-	void updateAnimations(Ogre::Real deltaTime);			// update the animation frame
-	void setAnimation(AnimID id, bool reset = false);
 
-	void attackPlayer(Player* mainPlayer);
+	int numAnimations;
+		
+	virtual void setupAnimations();							// load this character's animations
+	virtual void fadeAnimations(Ogre::Real deltaTime);		// blend from one animation to another
+	virtual void updateAnimations(Ogre::Real deltaTime);	// update the animation frame
+	virtual void setAnimation(AnimID id, bool reset = false);
+
+	virtual void attackPlayer(Player* mainPlayer);
 	void attack(NPC* otherGuys);
 	void interact();
 	void dealDamage(NPC* guy);
@@ -101,6 +106,8 @@ protected:
 	void updateGood(Ogre::Real deltaTime);
 	bool nextLocation();
 
+private:
+	AnimID idOfAnim;
 };
 
 #endif

@@ -8,6 +8,8 @@
 LoaderClass::LoaderClass(Ogre::SceneManager* mgr, GameApplication* a){
 	uSceneMgr = mgr;
 	app = a;
+	a->stopSound();
+	a->engine->play2D("../../media/music1.ogg", true);
 	loadEnv("level001.txt");
 	setupEnv();
 }
@@ -170,6 +172,14 @@ void LoaderClass::loadEnv(std::string envTxt){
 						flyingDemon->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						flyingDemon->setStartPos();
 						app->pushNPCs(flyingDemon);
+					}
+					else if (c == 'P')
+					{
+						Priestess* priest_chick = new Priestess(this->uSceneMgr, getNewName(), rent->filename, 
+							rent->y, rent->scale, app, 1, NPC::BAD, NPC::GUARD);
+						priest_chick->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
+						priest_chick->setStartPos();
+						app->pushNPCs(priest_chick);
 					}
 					// added another Ninja to test dialog interaction
 					else if (c == 'N')	

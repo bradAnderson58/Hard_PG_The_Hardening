@@ -17,8 +17,7 @@ Diablous::Diablous(Ogre::SceneManager* SceneManager, std::string name, std::stri
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
 
-	std::cout << "Num Animations Diablous: " << mModelEntity->getSkeleton()->getNumAnimations() << std::endl;
-
+	numAnimations =  mModelEntity->getSkeleton()->getNumAnimations() - 1; // minus 1 since their is an extra animation
 	setupAnimations(); // turn this off if you can't find the animations
 
 }
@@ -28,11 +27,10 @@ Diablous::~Diablous(void)
 	
 }
 
-
 void Diablous::updateAnimations(Ogre::Real deltaTime){
-	if (DiablousAnim != ANIM_NONE){
-		std::cout << mAnims[DiablousAnim] << std::endl;
-		mAnims[DiablousAnim]->addTime(deltaTime);
+	if (idOfAnim != ANIM_NONE){
+		mAnims[idOfAnim]->addTime(deltaTime);
+		std::cout << mAnims[idOfAnim]->hasBlendMask() << std::endl;
 	}
 	//transitions
 	fadeAnimations(deltaTime);
@@ -73,11 +71,11 @@ void Diablous::setupAnimations(){
 
 	// Name of the animations for this character - this will change with new assets
 	Ogre::String animNames[] = {"Die", "Hit", "Idle", "Idle_2", "Run", "Walk"};
-	int numAnimations = sizeof(animNames) / sizeof(animNames[0]);
 
 	// populate our animation list
 	for (int i = 0; i < numAnimations; i++)
 	{
+		// get animation by name, and set to list
 		mAnims[i] = mModelEntity->getAnimationState(animNames[i]);
 		
 		//Some animations are not looping
@@ -95,14 +93,15 @@ void Diablous::setupAnimations(){
 }
 
 void Diablous::setAnimation(AnimID id, bool reset){
-	if (DiablousAnim >= 0 && DiablousAnim < 6)
+	if (idOfAnim >= 0 && idOfAnim < 6)
 	{
 		// if we have an old animation, fade it out
-		mFadingIn[DiablousAnim] = false;
-		mFadingOut[DiablousAnim] = true;
+		mFadingIn[idOfAnim] = false;
+		mFadingOut[idOfAnim] = true;
 	}
 
-	DiablousAnim = id; 
+	idOfAnim = id; 
+	std::cout << "id of Anim: " << idOfAnim << std::endl;
 
 	if (id != ANIM_NONE)
 	{
@@ -114,3 +113,4 @@ void Diablous::setAnimation(AnimID id, bool reset){
 		if (reset) mAnims[id]->setTimePosition(0);
 	}
 }
+

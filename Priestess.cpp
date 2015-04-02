@@ -1,9 +1,10 @@
-#include "Rat.h"
+#include "Priestess.h"
 #include "GameApplication.h"
 #define _USE_MATH_DEFINES 
 #include <math.h>
 
-Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::GoodBad t, NPC::States s):
+Priestess::Priestess(Ogre::SceneManager* SceneManager, std::string name, std::string filename, 
+	float height, float scale, GameApplication* a, int l, NPC::GoodBad t, NPC::States s):
 	NPC(SceneManager, name, filename, height, scale, a, l, t,s)
 {
 	mBodyNode->setPosition(mBodyNode->getPosition()[0], 0, mBodyNode->getPosition()[2]);
@@ -16,43 +17,25 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
 
-	setupAnimations();
+	numAnimations =  mModelEntity->getSkeleton()->getNumAnimations() - 1;
+	setupAnimations(); // turn this off if you can't find the animations
 
 }
 
-Rat::~Rat(void)
+Priestess::~Priestess(void)
 {
 	
 }
 
-void Rat::update(Ogre::Real deltaTime){
-	if (state == DEAD){
-		app->engine->play2D("../../media/ratDie.ogg");
-	}
-	NPC::update(deltaTime);
-}
-
-void Rat::attackPlayer(Player* mainPlayer){
-	if (canHit){
-		app->engine->play2D("../../media/ratAttack.ogg");
-		NPC::attackPlayer(mainPlayer);
-	}
-}
-
-void Rat::getHurt(int d){
-	app->engine->play2D("../../media/ratHurt.ogg");
-	NPC::getHurt(d);
-}
-
-void Rat::updateAnimations(Ogre::Real deltaTime){
-	if (ratAnim != ANIM_NONE){
-		mAnims[ratAnim]->addTime(deltaTime);
+void Priestess::updateAnimations(Ogre::Real deltaTime){
+	if (idOfAnim != ANIM_NONE){
+		mAnims[idOfAnim]->addTime(deltaTime);
 	}
 	//transitions
 	fadeAnimations(deltaTime);
 }
 
-void Rat::fadeAnimations(Ogre::Real deltaTime){
+void Priestess::fadeAnimations(Ogre::Real deltaTime){
 	using namespace Ogre;
 
 	for (int i = 0; i < 1; i++)
@@ -78,43 +61,42 @@ void Rat::fadeAnimations(Ogre::Real deltaTime){
 	}
 }
 
-void Rat::setupAnimations(){
-	this->mTimer = 0;	// Start from the beginning
+void Priestess::setupAnimations(){
+	this->mTimer = 0;				// Start from the beginning
 	this->mVerticalVelocity = 0;	// Not jumping
 
 	// this is very important due to the nature of the exported animations
 	mModelEntity->getSkeleton()->setBlendMode(Ogre::ANIMBLEND_CUMULATIVE);
 
 	// Name of the animations for this character - this will change with new assets
-	Ogre::String animNames[] =
-		{"swim"};
+	Ogre::String animNames[] = {"Idle","Die", "Hit", "Attack", "Walk"};
 
 	// populate our animation list
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < numAnimations; i++)
 	{
 		mAnims[i] = mModelEntity->getAnimationState(animNames[i]);
 		
 		//Some animations are not looping
-		if (animNames[i] == "swim") mAnims[i]->setLoop(true);
+		if (animNames[i] == "Idle") mAnims[i]->setLoop(true);
 		else mAnims[i]->setLoop(false);
 
 		mFadingIn[i] = false;
 		mFadingOut[i] = false;
+		std::cout << i << std::endl;
 	}
-
-	// start off in the idle state (top and bottom together)
-	setAnimation(SWIM);
+	setAnimation(IDLE);
 }
 
-void Rat::setAnimation(AnimID id, bool reset){
-	if (ratAnim >= 0 && ratAnim < 1)
+void Priestess::setAnimation(AnimID id, bool reset){
+	if (idOfAnim >= 0 && idOfAnim < 6)
 	{
 		// if we have an old animation, fade it out
-		mFadingIn[ratAnim] = false;
-		mFadingOut[ratAnim] = true;
+		mFadingIn[idOfAnim] = false;
+		mFadingOut[idOfAnim] = true;
 	}
 
-	ratAnim = id; 
+	idOfAnim = id; 
+	std::cout << "id of Anim: " << idOfAnim << std::endl;
 
 	if (id != ANIM_NONE)
 	{

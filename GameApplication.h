@@ -9,6 +9,8 @@
 #include "NPC.h"
 #include "Rat.h"
 #include "Diablous.h"
+#include "Priestess.h"
+#include <irrKlang.h>
 
 class Grid;  //okay whatever
 class LoaderClass;
@@ -110,6 +112,11 @@ public:
 
 	void endGame(char condition);		//End the game in either victory or crushing defeat
 	void destroyallChildren(Ogre::SceneNode* p);
+
+	void playSound(char* x){engine->play2D(x);}
+	void stopSound(){engine->stopAllSounds();}
+	void playSong(char* x){engine->play2D(x,true);}
+	irrklang::ISoundEngine* engine;
 
 protected:
     virtual void createScene(void);

@@ -11,6 +11,7 @@ n ninja.mesh 0.0 0.04
 N ninja.mesh 0.0 0.04
 f fish.mesh 0.0 2
 D diablous.mesh 8.0 0.80
+P priestess.mesh 0.0 1.0
 
 World
 bbbbbbbbbbb
@@ -20,7 +21,7 @@ boooooDooob
 booooooooob
 boooonoooob
 booooooooob
-booooooooob
+booPoooooob
 booooooooob
 btoooooootb
 bbbbbbbbbbb
