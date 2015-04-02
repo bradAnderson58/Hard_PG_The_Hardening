@@ -9,6 +9,7 @@
 #include "NPC.h"
 #include "Rat.h"
 #include "Diablous.h"
+#include "Priestess.h"
 
 class Grid;  //okay whatever
 class LoaderClass;

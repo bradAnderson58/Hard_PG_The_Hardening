@@ -171,6 +171,14 @@ void LoaderClass::loadEnv(std::string envTxt){
 						flyingDemon->setStartPos();
 						app->pushNPCs(flyingDemon);
 					}
+					else if (c == 'P')
+					{
+						Priestess* priest_chick = new Priestess(this->uSceneMgr, getNewName(), rent->filename, 
+							rent->y, rent->scale, app, 1, NPC::BAD, NPC::GUARD);
+						priest_chick->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
+						priest_chick->setStartPos();
+						app->pushNPCs(priest_chick);
+					}
 					// added another Ninja to test dialog interaction
 					else if (c == 'N')	
 					{
@@ -238,7 +246,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 				else if (c == 'b') // create borderwalls
 				{
 					Entity* ent = uSceneMgr->createEntity(getNewName(), Ogre::SceneManager::PT_CUBE);
-					ent->setMaterialName(" ToonRockWall ");
+					ent->setMaterialName("ToonRockWall ");
 					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
 					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing
 					mNode->attachObject(ent);

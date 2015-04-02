@@ -1,9 +1,9 @@
-#include "Diablous.h"
+#include "Priestess.h"
 #include "GameApplication.h"
 #define _USE_MATH_DEFINES 
 #include <math.h>
 
-Diablous::Diablous(Ogre::SceneManager* SceneManager, std::string name, std::string filename, 
+Priestess::Priestess(Ogre::SceneManager* SceneManager, std::string name, std::string filename, 
 	float height, float scale, GameApplication* a, int l, NPC::GoodBad t, NPC::States s):
 	NPC(SceneManager, name, filename, height, scale, a, l, t,s)
 {
@@ -17,26 +17,25 @@ Diablous::Diablous(Ogre::SceneManager* SceneManager, std::string name, std::stri
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
 
-	numAnimations =  mModelEntity->getSkeleton()->getNumAnimations() - 1; // minus 1 since their is an extra animation
+	numAnimations =  mModelEntity->getSkeleton()->getNumAnimations() - 1;
 	setupAnimations(); // turn this off if you can't find the animations
 
 }
 
-Diablous::~Diablous(void)
+Priestess::~Priestess(void)
 {
 	
 }
 
-void Diablous::updateAnimations(Ogre::Real deltaTime){
+void Priestess::updateAnimations(Ogre::Real deltaTime){
 	if (idOfAnim != ANIM_NONE){
 		mAnims[idOfAnim]->addTime(deltaTime);
-		std::cout << mAnims[idOfAnim]->hasBlendMask() << std::endl;
 	}
 	//transitions
 	fadeAnimations(deltaTime);
 }
 
-void Diablous::fadeAnimations(Ogre::Real deltaTime){
+void Priestess::fadeAnimations(Ogre::Real deltaTime){
 	using namespace Ogre;
 
 	for (int i = 0; i < 1; i++)
@@ -62,7 +61,7 @@ void Diablous::fadeAnimations(Ogre::Real deltaTime){
 	}
 }
 
-void Diablous::setupAnimations(){
+void Priestess::setupAnimations(){
 	this->mTimer = 0;				// Start from the beginning
 	this->mVerticalVelocity = 0;	// Not jumping
 
@@ -70,29 +69,25 @@ void Diablous::setupAnimations(){
 	mModelEntity->getSkeleton()->setBlendMode(Ogre::ANIMBLEND_CUMULATIVE);
 
 	// Name of the animations for this character - this will change with new assets
-	Ogre::String animNames[] = {"Die", "Hit", "Idle", "Idle_2", "Run", "Walk"};
+	Ogre::String animNames[] = {"Idle","Die", "Hit", "Attack", "Walk"};
 
 	// populate our animation list
 	for (int i = 0; i < numAnimations; i++)
 	{
-		// get animation by name, and set to list
 		mAnims[i] = mModelEntity->getAnimationState(animNames[i]);
 		
 		//Some animations are not looping
 		if (animNames[i] == "Idle") mAnims[i]->setLoop(true);
-		else if (animNames[i] == "Idle_2") mAnims[i]->setLoop(true);
 		else mAnims[i]->setLoop(false);
 
 		mFadingIn[i] = false;
 		mFadingOut[i] = false;
 		std::cout << i << std::endl;
 	}
-
-	// start off in the idle state (top and bottom together)
 	setAnimation(IDLE);
 }
 
-void Diablous::setAnimation(AnimID id, bool reset){
+void Priestess::setAnimation(AnimID id, bool reset){
 	if (idOfAnim >= 0 && idOfAnim < 6)
 	{
 		// if we have an old animation, fade it out
