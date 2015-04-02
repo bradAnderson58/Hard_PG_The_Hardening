@@ -14,17 +14,16 @@ public:
 	~Diablous();
 protected:
 
-	// Use a map instead, declared in parent.
+	/* Use a map instead, declared in parent.
 	enum AnimID
 	{
-		DIE,
-		HIT,
 		IDLE,
-		IDLE_2,
-		RUN,
+		HIT,
+		ATTACK,  //idle_2
 		WALK,
+		DIE,
 		ANIM_NONE
-	};
+	};*/
 
 	// use npc's definitions
 	void setupAnimations();									// load this character's animations

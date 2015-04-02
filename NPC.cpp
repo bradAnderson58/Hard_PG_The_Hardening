@@ -56,6 +56,7 @@ void NPC::updateBad(Ogre::Real deltaTime){
 	// each state can be used as input to get the next animation - B note
 	Player* p = app->getPlayerPointer();
 	if (state == GUARD){
+		setAnimation(IDLE);
 		if (checkInFront()){
 			prevState = state;
 			state = SEEK;
@@ -78,6 +79,7 @@ void NPC::updateBad(Ogre::Real deltaTime){
 		}
 	}
 	else if (state == WANDER){
+		setAnimation(WALK);
 		wander();
 		if (checkInFront()){
 			prevState = state;
@@ -85,17 +87,19 @@ void NPC::updateBad(Ogre::Real deltaTime){
 		}
 	}
 	else if (state == FLEE){
+		setAnimation(WALK);
 		flee();
 		
 	}
 	else if (state == SEEK){
+		setAnimation(WALK);
 		seek();
 		lastPlayerPos = p->getPosition();
 		if (!checkInFront()){
 			prevState = state;
 			state = LOST;
 		}
-		if (p->getPosition().distance(mBodyNode->getPosition()) < 5){
+		if (p->getPosition().distance(mBodyNode->getPosition()) < 10){
 			attackPlayer(p);
 		}
 		else if (p->getPosition().distance(mBodyNode->getPosition()) > (lookRange + 20)){
@@ -158,6 +162,7 @@ void NPC::updateBad(Ogre::Real deltaTime){
 
 	if (health <= 0 && !(state == DEAD || state == NONE)){
 		state=DEAD;
+		setAnimation(DIE);
 	}
 
 	if (state != DEAD && lastHit <= 0){
@@ -192,7 +197,10 @@ void NPC::updateLocomote(Ogre::Real deltaTime){
 }
 
 void NPC::attackPlayer(Player* mainPlayer){
+
+
 	if (canHit){
+		setAnimation(ATTACK);
 		dealDamagePlayer(mainPlayer);
 		canHit = false;
 		lastHit = 2;

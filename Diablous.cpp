@@ -17,7 +17,7 @@ Diablous::Diablous(Ogre::SceneManager* SceneManager, std::string name, std::stri
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
 
-	numAnimations =  mModelEntity->getSkeleton()->getNumAnimations() - 1; // minus 1 since their is an extra animation
+	numAnimations =  5;//mModelEntity->getSkeleton()->getNumAnimations() - 1; // minus 1 since their is an extra animation
 	setupAnimations(); // turn this off if you can't find the animations
 
 }
@@ -70,7 +70,7 @@ void Diablous::setupAnimations(){
 	mModelEntity->getSkeleton()->setBlendMode(Ogre::ANIMBLEND_CUMULATIVE);
 
 	// Name of the animations for this character - this will change with new assets
-	Ogre::String animNames[] = {"Die", "Hit", "Idle", "Idle_2", "Run", "Walk"};
+	Ogre::String animNames[] = {"Idle", "Hit", "Idle_2", "Walk", "Die"};
 
 	// populate our animation list
 	for (int i = 0; i < numAnimations; i++)
@@ -80,7 +80,7 @@ void Diablous::setupAnimations(){
 		
 		//Some animations are not looping
 		if (animNames[i] == "Idle") mAnims[i]->setLoop(true);
-		else if (animNames[i] == "Idle_2") mAnims[i]->setLoop(true);
+		else if (animNames[i] == "Walk") mAnims[i]->setLoop(true);
 		else mAnims[i]->setLoop(false);
 
 		mFadingIn[i] = false;
@@ -93,6 +93,10 @@ void Diablous::setupAnimations(){
 }
 
 void Diablous::setAnimation(AnimID id, bool reset){
+
+	if (id == idOfAnim) return;
+	else if (idOfAnim == ATTACK && !mAnims[idOfAnim]->hasEnded()) return;
+
 	if (idOfAnim >= 0 && idOfAnim < 6)
 	{
 		// if we have an old animation, fade it out

@@ -17,7 +17,7 @@ Priestess::Priestess(Ogre::SceneManager* SceneManager, std::string name, std::st
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
 
-	numAnimations =  mModelEntity->getSkeleton()->getNumAnimations();
+	numAnimations =  5; //mModelEntity->getSkeleton()->getNumAnimations();
 	setupAnimations(); // turn this off if you can't find the animations
 
 }
@@ -69,7 +69,7 @@ void Priestess::setupAnimations(){
 	mModelEntity->getSkeleton()->setBlendMode(Ogre::ANIMBLEND_CUMULATIVE);
 
 	// Name of the animations for this character - this will change with new assets
-	Ogre::String animNames[] = {"Idle","Die", "Hit", "Attack", "Walk"};
+	Ogre::String animNames[] = {"Idle","Hit", "Attack", "Walk", "Die"};
 
 	// populate our animation list
 	for (int i = 0; i < numAnimations; i++)
@@ -78,6 +78,7 @@ void Priestess::setupAnimations(){
 		
 		//Some animations are not looping
 		if (animNames[i] == "Idle") mAnims[i]->setLoop(true);
+		else if (animNames[i] == "Walk") mAnims[i]->setLoop(true);
 		else mAnims[i]->setLoop(false);
 
 		mFadingIn[i] = false;
@@ -88,6 +89,9 @@ void Priestess::setupAnimations(){
 }
 
 void Priestess::setAnimation(AnimID id, bool reset){
+	if (id == idOfAnim) return;
+	else if (idOfAnim == ATTACK && !mAnims[idOfAnim]->hasEnded()) return;
+
 	if (idOfAnim >= 0 && idOfAnim < numAnimations)
 	{
 		// if we have an old animation, fade it out
