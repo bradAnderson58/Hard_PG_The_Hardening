@@ -25,6 +25,24 @@ Rat::~Rat(void)
 	
 }
 
+void Rat::update(Ogre::Real deltaTime){
+	if (state == DEAD){
+		app->engine->play2D("../../media/ratDie.ogg");
+	}
+	NPC::update(deltaTime);
+}
+
+void Rat::attackPlayer(Player* mainPlayer){
+	if (canHit){
+		app->engine->play2D("../../media/ratAttack.ogg");
+		NPC::attackPlayer(mainPlayer);
+	}
+}
+
+void Rat::getHurt(int d){
+	app->engine->play2D("../../media/ratHurt.ogg");
+	NPC::getHurt(d);
+}
 
 void Rat::updateAnimations(Ogre::Real deltaTime){
 	if (ratAnim != ANIM_NONE){

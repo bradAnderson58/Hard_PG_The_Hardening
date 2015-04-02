@@ -92,8 +92,9 @@ Projectile::shoot(Ogre::Real deltaTime)
 	// if a fireball hits something, explode it and reload
 	for (NPC *enemy : app->getNPCs())
 	{
-		if (checkCollision(enemy))
+		if (checkCollision(enemy)){
 			reload();
+		}
 	}
 	//TODO: needs a particle effect on hits
 	if (this->mBodyNode->getPosition().y <= -0.5) // if it get close to the ground, stop
@@ -107,6 +108,7 @@ Projectile::shoot(Ogre::Real deltaTime)
 void
 Projectile::reload()
 {
+	app->engine->play2D("../../media/fireballHit.wav");
 	active = false;
 	mModelEntity->setVisible(false);
 }

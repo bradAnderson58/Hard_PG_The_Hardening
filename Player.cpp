@@ -370,7 +370,11 @@ void Player::checkHits(){
 		rRange = enemy->getBoundingBox();
 
 		if (aRange.intersects(rRange)){
+			app->engine->play2D("../../media/swordHit.wav");
 			dealDamage(enemy);	//hit em
+		}
+		else{
+			app->engine->play2D("../../media/Playermiss.wav");
 		}
 	}
 	//ADD MORE
@@ -393,6 +397,7 @@ void Player::dealDamage(NPC *enemy){
 
 //damage done to the player
 void Player::getHurt(int damage){
+	app->engine->play2D("../../media/palyerHurt.flac");
 	int temp = mDefense;
 	//blocking adds 1 defense plus whatever defense the shield provides if equipped
 	if (isBlocking){
@@ -415,6 +420,7 @@ Player::shoot(skillID skill)
 {
 	if (skill == FIREBALL && !mFireball->isActive() && !doingStuff)
 	{
+		app->engine->play2D("../../media/fireballShoot.wav");
 		buttonAnimation(OIS::KC_F, true);
 		doingStuff = true;
 
@@ -426,6 +432,7 @@ Player::shoot(skillID skill)
 	}
 	else if (skill == FREEZE && !mFreeze->isActive() && !doingStuff)
 	{
+		app->engine->play2D("../../media/ice.wav");
 		mFreeze->fire(getPosition());
 	}
 }
@@ -538,6 +545,7 @@ void Player::restart(){
 }
 
 void Player::die(){
+	app->engine->play2D("../../media/playerDie.wav");
 	setAnimation(DEATH_ONE);
 	doingStuff = true;
 	fForward = false;

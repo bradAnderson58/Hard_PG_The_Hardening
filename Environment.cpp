@@ -69,6 +69,7 @@ Environment::EnvType Environment::handleInteraction(Player* pl){
 		pl->pushInventory(inner);
 	}
 	if (mType == DOOR){
+		app->engine->play2D("../../media/door.wav");
 		animate = true;
 	}
 	if (mType == MOVEABLE){

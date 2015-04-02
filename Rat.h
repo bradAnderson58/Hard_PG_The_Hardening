@@ -21,6 +21,10 @@ private:
 	
 	AnimID ratAnim;
 
+	void Rat::attackPlayer(Player* mainPlayer);
+	void getHurt(int d);
+	void update(Ogre::Real deltaTime);
+
 	void setupAnimations();									// load this character's animations
 	void fadeAnimations(Ogre::Real deltaTime);				// blend from one animation to another
 	void updateAnimations(Ogre::Real deltaTime);			// update the animation frame

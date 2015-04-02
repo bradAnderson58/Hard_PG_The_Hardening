@@ -8,6 +8,8 @@
 LoaderClass::LoaderClass(Ogre::SceneManager* mgr, GameApplication* a){
 	uSceneMgr = mgr;
 	app = a;
+	a->stopSound();
+	a->engine->play2D("../../media/music1.ogg", true);
 	loadEnv("level001.txt");
 	setupEnv();
 }
