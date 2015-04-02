@@ -397,7 +397,7 @@ void Player::dealDamage(NPC *enemy){
 
 //damage done to the player
 void Player::getHurt(int damage){
-	app->engine->play2D("../../media/palyerHurt.flac");
+	app->engine->play2D("../../media/playerHurt.flac");
 	int temp = mDefense;
 	//blocking adds 1 defense plus whatever defense the shield provides if equipped
 	if (isBlocking){
