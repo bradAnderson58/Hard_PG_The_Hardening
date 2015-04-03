@@ -32,6 +32,16 @@ public:
 		NONE
 	};
 
+	enum AnimID
+	{
+		IDLE,
+		HIT,
+		ATTACK,  //idle_2 for diablous
+		WALK,
+		DIE,
+		ANIM_NONE
+	};
+
 	NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, GoodBad t, States s);
 	~NPC();
 
@@ -49,10 +59,6 @@ public:
 	void setEvent(Event* e) { mEvent = e; } 
 
 protected:
-
-	enum AnimID{
-		ANIM_NONE
-	};
 
 	GoodBad type;
 

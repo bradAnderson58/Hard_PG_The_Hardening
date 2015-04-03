@@ -222,7 +222,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 				if (c == 'w') // create a wall - this stays
 				{
 					Entity* ent = uSceneMgr->createEntity(getNewName(), Ogre::SceneManager::PT_CUBE);
-					ent->setMaterialName("Examples/RustySteel");
+					ent->setMaterialName("ToonRockWall");
 					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
 					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
 					mNode->attachObject(ent);
@@ -248,7 +248,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 				else if (c == 'b') // create borderwalls
 				{
 					Entity* ent = uSceneMgr->createEntity(getNewName(), Ogre::SceneManager::PT_CUBE);
-					ent->setMaterialName("ToonRockWall ");
+					ent->setMaterialName("ToonRockWall");
 					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
 					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing
 					mNode->attachObject(ent);
