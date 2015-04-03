@@ -30,7 +30,6 @@ Diablous::~Diablous(void)
 void Diablous::updateAnimations(Ogre::Real deltaTime){
 	if (idOfAnim != ANIM_NONE){
 		mAnims[idOfAnim]->addTime(deltaTime);
-		std::cout << mAnims[idOfAnim]->hasBlendMask() << std::endl;
 	}
 	//transitions
 	fadeAnimations(deltaTime);
