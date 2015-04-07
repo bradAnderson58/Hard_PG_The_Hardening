@@ -12,6 +12,8 @@ private:
 	double mHeight;
 	double mMass;
 	Agent* mTarget;		// use for targeted attackes, else null
+	Ogre::Light* mLight;
+
 
 	Ogre::SceneNode *blastNode;		// use for explosion area
 

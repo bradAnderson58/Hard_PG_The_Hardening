@@ -182,6 +182,8 @@ private:
 	Projectile* mFireball;
 	AoE* mFreeze;
 
+	Ogre::Light* mLight;
+
 	double mDamage;
 	double mDefense;
 

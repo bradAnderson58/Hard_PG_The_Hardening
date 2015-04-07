@@ -1,5 +1,6 @@
 #include "Projectile.h"
 #include "Timer.h"
+#include "loaderClass.h"
 
 #define FORWARDVEL 10.0
 
@@ -21,6 +22,12 @@ Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name,
 	mModelEntity->setMaterialName( "ToonFireBall" );
 	mModelEntity->setCastShadows(false);
 	mModelEntity->setVisible(false);
+
+	mLight = SceneManager->createLight(LoaderClass::getNewName());
+	mLight->setPowerScale(0.2);
+	mLight->setCastShadows(false);
+	mBodyNode->attachObject(mLight);
+	mLight->setVisible(false);
 
 }
 
@@ -61,6 +68,7 @@ Projectile::fire(Ogre::Real vx, Ogre::Real vy, Ogre::Real vz,
 {
 	active = true; // turns on the movement, which will call shoot
 	mModelEntity->setVisible(true);
+	mLight->setVisible(true);
 	// set up the initial state
 	mBodyNode->setPosition(pos);
 	this->vel.x = vx * FORWARDVEL;
@@ -111,6 +119,7 @@ Projectile::reload()
 	app->engine->play2D("../../media/fireballHit.wav");
 	active = false;
 	mModelEntity->setVisible(false);
+	mLight->setVisible(false);
 }
 
 bool

@@ -20,6 +20,7 @@ Priestess::Priestess(Ogre::SceneManager* SceneManager, std::string name, std::st
 	numAnimations =  5; //mModelEntity->getSkeleton()->getNumAnimations();
 	setupAnimations(); // turn this off if you can't find the animations
 
+	mModelEntity->setMaterialName("ToonPriestess");
 }
 
 Priestess::~Priestess(void)

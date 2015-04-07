@@ -60,6 +60,60 @@ material ToonNinja
 	}
 }
 
+material ToonDiablous
+{
+	// Material has one technique
+	technique
+	{
+		// This technique has one pass
+		pass
+		{
+			// Make this pass use the vertex shader defined above
+			vertex_program_ref ToonTexture_VS
+			{
+
+			}
+			// Make this pass use the pixel shader defined above
+			fragment_program_ref ToonTexture_PS
+			{
+
+			}
+			texture_unit
+			{
+				// This pass will use this texture as input
+				texture diablous_texture.png
+			}
+		}
+	}
+}
+
+material ToonPriestess
+{
+	// Material has one technique
+	technique
+	{
+		// This technique has one pass
+		pass
+		{
+			// Make this pass use the vertex shader defined above
+			vertex_program_ref ToonTexture_VS
+			{
+
+			}
+			// Make this pass use the pixel shader defined above
+			fragment_program_ref ToonTexture_PS
+			{
+
+			}
+			texture_unit
+			{
+				// This pass will use this texture as input
+				texture priest_texture.png
+			}
+		}
+	}
+}
+
 material ToonFireBall
 {
 	technique

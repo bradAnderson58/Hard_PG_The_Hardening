@@ -327,7 +327,8 @@ void LoaderClass::setupEnv(){
 	// want to create point lights from level editor...
 	Ogre::Light* mLight = uSceneMgr->createLight();
 	mLight->setType(Light::LT_POINT);
-	mLight->setPosition(-10, 80, 20);
+	//mLight->setPosition(-10, 80, 20);
+	mLight->setPosition(0,20,0);
 	mLight->setSpecularColour(ColourValue::White);
 	mLight->setDiffuseColour(ColourValue::White);
 

@@ -17,9 +17,9 @@ vec4 specularColor = gl_FrontMaterial.specular;
 vec3 eyePos = normalize(-vVertex);
 vec3 lightPos = gl_LightSource[0].position.xyz;
 
-vec3 Normal = vNormal; //normalize(vNormal);
+vec3 Normal = normalize(vNormal);
 vec3 EyeVert = normalize(eyePos - vVertex);
-vec3 LightVert = normalize(lightPos - vVertex);
+vec3 LightVert = normalize(vVertex - lightPos);
 vec3 EyeLight = normalize(LightVert+EyeVert);
 vec4 texture = texture2D(tex,gl_TexCoord[0].st);
 
@@ -39,6 +39,5 @@ vec4 texture = texture2D(tex,gl_TexCoord[0].st);
       float diffuse = max(dot(Normal,LightVert), 0.0);
       if( diffuse < 0.3 )
          gl_FragColor *= 0.8;
-
    }
 }

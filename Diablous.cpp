@@ -20,6 +20,7 @@ Diablous::Diablous(Ogre::SceneManager* SceneManager, std::string name, std::stri
 	numAnimations =  5;//mModelEntity->getSkeleton()->getNumAnimations() - 1; // minus 1 since their is an extra animation
 	setupAnimations(); // turn this off if you can't find the animations
 
+	mModelEntity->setMaterialName("ToonDiablous");
 }
 
 Diablous::~Diablous(void)

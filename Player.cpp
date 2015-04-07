@@ -87,12 +87,16 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 
 	srand(time(NULL));  //seed for random number generation
 
+	/* give our character a light to carry around
+	mLight = SceneManager->createLight(LoaderClass::getNewName());
+	mLight->setPowerScale(0.2);
+	mLight->setCastShadows(false);
+	mBodyNode->attachObject(mLight);*/
+
 	//intialize stats with update stats function
 	updateStats();
 	updateGUI = a->getGUICont();
 	//updateGUI->recordUpdator();
-	
-	std::cout << "Num Animations Ninja: " << mModelEntity->getSkeleton()->getNumAnimations() << std::endl;
 	
 	setupAnimations();
 }

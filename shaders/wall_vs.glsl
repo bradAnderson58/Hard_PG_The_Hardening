@@ -25,10 +25,11 @@ void main()
 
 	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 
-	ambient = vec3(0.1);//gl_FrontMaterial.ambient * gl_LightSource[0].ambient;
-	diffuse = vec3(0.8);//gl_FrontMaterial.diffuse * gl_LightSource[0].diffuse;
+	ambient = vec3(0.1);		//gl_FrontMaterial.ambient * gl_LightSource[0].ambient;
+	diffuse = vec3(0.8);		//gl_FrontMaterial.diffuse * gl_LightSource[0].diffuse;
 	specular = vec3(0.5);
 
+}
 /*
 	vec4 ecPos;
 	vec3 aux;
@@ -71,5 +72,3 @@ void main()
 	gl_Position = ftransform();
 
 */
-
-} 

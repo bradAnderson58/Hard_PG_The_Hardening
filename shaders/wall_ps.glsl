@@ -49,7 +49,7 @@ void main()
 	mat3 tbn = calcTBN(position.xyz, texCoord, normalize(normal));
 	vec3 N = tbn * normSample;
 
-	vec3 L = lightDir;
+	vec3 L = -lightDir;
 	vec3 E = eyeDir;
 	vec3 R = reflect(L, N);
 
