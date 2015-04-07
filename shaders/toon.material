@@ -6,10 +6,10 @@ vertex_program ToonTexture_VS glsl
 	source toonTex_vs.glsl
 	
 	// use this function for the vertex shader
-	entry_point main_toon_texture_vp
+	//entry_point main_toon_texture_vp
 	
 	// Compile to openGL format instead
-	profiles arbvp1 
+	//profiles arbvp1 
 
 	// This block saves us from manually setting parameters in code
 	default_params
@@ -27,10 +27,10 @@ fragment_program ToonTexture_PS glsl
 	source toonTex_ps.glsl 	// change this to a GLSL file
 	
 	// Use this function for the pixel shader
-	entry_point main_toon_texture_fp
+	//entry_point main_toon_texture_fp
 	
 	// Compile to openGL format instead
-	profiles arbfp1 
+	//profiles arbfp1 
 }
 
 material ToonNinja
@@ -82,23 +82,48 @@ material ToonFireBall
 	}
 }
 
+vertex_program wall_vs glsl
+{
+	// Look in this source file for shader code
+	source wall_vs.glsl
+
+
+
+}
+
+fragment_program wall_ps glsl
+{
+	// Look in this source file for shader code
+	source wall_ps.glsl
+
+	// This block saves us from manually setting parameters in code
+	default_params
+	{
+		//use for uniforms
+		param_named color_tex int 0
+		param_named normal_tex int 1
+		//throws an error if you declare this and don't use it
+	}
+	
+}
 material ToonRockWall
 {
 	technique
 	{
 		pass
 		{
-			vertex_program_ref ToonTexture_VS
+// Make this pass use the vertex shader defined above
+			vertex_program_ref wall_vs{}
+			// Make this pass use the pixel shader defined above
+			fragment_program_ref wall_ps{}
+			texture_unit
 			{
-
-			}
-			fragment_program_ref ToonTexture_PS
-			{
-
+				// This pass will use this texture as input
+				texture rockwall.tga
 			}
 			texture_unit
 			{
-				texture rockwall.tga
+				texture rockwall_NH.tga
 			}
 		}
 	}
