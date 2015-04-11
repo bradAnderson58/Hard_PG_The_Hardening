@@ -25,7 +25,7 @@ protected:
 
 public:
 	Spell(Ogre::SceneManager* SceneManager, std::string name, 
-		std::string filename, float height, float scale, GameApplication* app);
+		std::string filename, float height, float scale, GameApplication* app, Ogre::SceneNode* parent = NULL);
 	~Spell();
 
 	bool isActive() { return active; }

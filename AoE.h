@@ -27,7 +27,7 @@ public:
 
 	AoE(Ogre::SceneManager* SceneManager, std::string name, 
 		std::string filename, float height, float scale, 
-		GameApplication* app);
+		GameApplication* app, Ogre::SceneNode* parent = NULL);
 	~AoE();
 
 	void fire(Ogre::Vector3 pos);

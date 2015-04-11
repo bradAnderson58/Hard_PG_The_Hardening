@@ -23,6 +23,8 @@ private:
 	Grid* grid;							//for reading in level datas
 	Ogre::SceneManager* uSceneMgr;		//This will be nice for loading things
 
+	bool playerLoaded;				//only load the player once
+
 	//std::string getNewName();			//Kvothe
 };
 

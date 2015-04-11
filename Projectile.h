@@ -31,7 +31,7 @@ public:
 	
 	Projectile(Ogre::SceneManager* SceneManager, std::string name, 
 		std::string filename, float height, float scale, 
-		GameApplication* app);
+		GameApplication* app, Ogre::SceneNode* parent = NULL);
 	~Projectile();
 
 	void fire(Ogre::Real vx, Ogre::Real vy, Ogre::Real vz,

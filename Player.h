@@ -108,6 +108,9 @@ public:
 
 	NPC* findConversant(std::list<NPC*> npcs);
 
+	void reloaded(float x, float y, float z);
+	Ogre::String getName(){  return mBodyNode->getName(); }
+
 private:
 	bool fForward;		//how am I moving? Each flag indicates a direction
 

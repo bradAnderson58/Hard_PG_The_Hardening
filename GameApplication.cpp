@@ -171,12 +171,12 @@ GameApplication::toggleState(GameState s)
 		}
 		interactableObjs.clear();
 
-		delete playerPointer;
+		//delete playerPointer;
 		this->stopSound();
 		this->engine->play2D("../../media/music2.ogg", true);
 		loading->loadEnv("demolevel.txt");
 
-		gameState = PLAYING;
+		//gameState = PLAYING;
 	}
 	else
 		std::cout << "Not a valid state" << std::endl;
@@ -206,7 +206,7 @@ void GameApplication::destroyallChildren(Ogre::SceneNode* p){
 	Ogre::MeshManager::getSingleton().destroyAllResourcePools();  //try this?
 
 	mSceneMgr->destroyEntity("Floor");
-	mSceneMgr->destroyEntity("attackCube");
+	//mSceneMgr->destroyEntity("attackCube");
 
 	Ogre::SceneNode::ObjectIterator it = p->getAttachedObjectIterator();
 	while (it.hasMoreElements()){
@@ -221,7 +221,7 @@ void GameApplication::destroyallChildren(Ogre::SceneNode* p){
       Ogre::SceneNode* pChildNode = static_cast<Ogre::SceneNode*>(itChild.getNext());
       destroyallChildren( pChildNode );
    }*/
-
+   p->removeChild(playerPointer->getName());
    p->removeAndDestroyAllChildren();
 
 }

@@ -2,8 +2,8 @@
 #include "Timer.h"
 
 Spell::Spell(Ogre::SceneManager* SceneManager, std::string name, 
-	std::string filename, float height, float scale, GameApplication* app):
-	Agent(SceneManager, name, filename, height, scale, app)
+	std::string filename, float height, float scale, GameApplication* app, Ogre::SceneNode* parent):
+	Agent(SceneManager, name, filename, height, scale, app, parent)
 {
 	cooldown_timer = NULL;
 }

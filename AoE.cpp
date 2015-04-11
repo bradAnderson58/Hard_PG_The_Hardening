@@ -2,8 +2,8 @@
 #include "Timer.h"
 
 AoE::AoE(Ogre::SceneManager* SceneManager, std::string name, 
-	std::string filename, float height, float scale, GameApplication* app):
-	Spell(SceneManager, name, filename, height, scale, app)
+	std::string filename, float height, float scale, GameApplication* app, Ogre::SceneNode* parent):
+	Spell(SceneManager, name, filename, height, scale, app, parent)
 {
 	active = false;
 	mDmg = 2.0;
@@ -71,7 +71,7 @@ AoE::shoot(Ogre::Real deltaTime)
 {
 	double scaleAmt = deltaTime / (deltaTime * 0.98);
 	//std::cout << "scale by: " << scaleAmt << std::endl;
-	mBodyNode->scale(scaleAmt, 1.0, scaleAmt);
+	mBodyNode->scale(2, 1.0, 2);
 
 	// check to see if aoe is hitting anything
 	for (NPC *enemy : app->getNPCs())

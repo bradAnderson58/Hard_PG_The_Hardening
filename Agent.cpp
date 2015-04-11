@@ -5,7 +5,8 @@
 #define _USE_MATH_DEFINES   //for some reason
 #include <math.h>
 
-Agent::Agent(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a)
+Agent::Agent(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a,
+			 Ogre::SceneNode* parent)
 {
 	using namespace Ogre;
 
@@ -21,8 +22,11 @@ Agent::Agent(Ogre::SceneManager* SceneManager, std::string name, std::string fil
 	this->scale = scale;
 	this->app = a;  //this is the game app
 
-	mBodyNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(); // create a new scene node
-
+	if (parent == NULL){
+		mBodyNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(); // create a new scene node
+	}else{
+		mBodyNode = parent->createChildSceneNode();
+	}
 	//mModelNode is used to rotate model intependant of root node
 	mModelNode = mBodyNode->createChildSceneNode();
 	mModelEntity = mSceneMgr->createEntity(name, filename); // load the model

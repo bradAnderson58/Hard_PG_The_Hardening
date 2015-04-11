@@ -81,7 +81,8 @@ protected:
 	bool procedural;						// Is this character performing a procedural animation
     //////////////////////////////////////////////
 public:
-	Agent(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a);
+	Agent(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a,
+		Ogre::SceneNode* parent = NULL);
 	~Agent();
 	void setPosition(float x, float y, float z);
 

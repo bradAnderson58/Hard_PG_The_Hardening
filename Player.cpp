@@ -78,20 +78,14 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 
 	// some projectile to throw
 	mFireball = new Projectile(SceneManager, LoaderClass::getNewName(), "geosphere4500.mesh",
-		height, scale/6, a);                                                       //used to be named 'fireball'
+		height, 1, a, mBodyNode);                                                       //used to be named 'fireball'
 
 	// set up AoE field around character to activate for freeze attack
 	mFreeze = new AoE(SceneManager, LoaderClass::getNewName(), "geosphere4500.mesh", 
-		height, scale, a);															//used to be named 'freeze'
+		height, 1, a, mBodyNode);															//used to be named 'freeze'
 	mFreeze->setCoolDown(FREEZE_COOLDOWN);
 
 	srand(time(NULL));  //seed for random number generation
-
-	/* give our character a light to carry around
-	mLight = SceneManager->createLight(LoaderClass::getNewName());
-	mLight->setPowerScale(0.2);
-	mLight->setCastShadows(false);
-	mBodyNode->attachObject(mLight);*/
 
 	//intialize stats with update stats function
 	updateStats();
@@ -99,6 +93,14 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 	//updateGUI->recordUpdator();
 	
 	setupAnimations();
+}
+
+void Player::reloaded(float x, float y, float z){
+
+	mSceneMgr->getRootSceneNode()->addChild(mBodyNode);
+	setPosition(x,y,z);
+	
+
 }
 
 Player::~Player(void)

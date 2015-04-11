@@ -5,8 +5,8 @@
 #define FORWARDVEL 10.0
 
 Projectile::Projectile(Ogre::SceneManager* SceneManager, std::string name, 
-	std::string filename, float height, float scale, GameApplication* app):
-	Spell(SceneManager, name, filename, height, scale, app)
+	std::string filename, float height, float scale, GameApplication* app, Ogre::SceneNode* parent):
+	Spell(SceneManager, name, filename, height, scale, app, parent)
 {
 	// nodes, entities, and other fields handled through inheritance
 

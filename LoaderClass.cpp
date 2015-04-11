@@ -10,6 +10,8 @@ LoaderClass::LoaderClass(Ogre::SceneManager* mgr, GameApplication* a){
 	app = a;
 	a->stopSound();
 	a->engine->play2D("../../media/music1.ogg", true);
+	playerLoaded = false;
+
 	loadEnv("level001.txt");
 	setupEnv();
 }
@@ -149,12 +151,22 @@ void LoaderClass::loadEnv(std::string envTxt){
 				{
 					// Use subclasses instead!
 					if (c == 'n') {
-						agent = new Player(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app);
-						app->setPlayer( (Player*) agent );		//access this player
-						app->getPlayerPointer()->doUpdateGUI();
-						
-						agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
-						((Player*)agent)->setInitPos(((Player*)agent)->getPosition());		//casting magics
+
+						if (!playerLoaded){  //this is the first time loading, so we must make a new player
+
+							agent = new Player(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app);
+							app->setPlayer( (Player*) agent );		//access this player
+							app->getPlayerPointer()->doUpdateGUI();
+							playerLoaded = true;
+							agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
+							((Player*)agent)->setInitPos(((Player*)agent)->getPosition());		//casting magics
+
+						}else{
+
+							app->getPlayerPointer()->reloaded(grid->getPosition(i,j).x, 0.0, grid->getPosition(i,j).z);
+
+						}
+
 					}
 					else if (c == 'f'){
 						Rat* rat = new Rat(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, 1, NPC::BAD, NPC::GUARD);
@@ -266,20 +278,6 @@ void LoaderClass::loadEnv(std::string envTxt){
 					mNode->attachObject(ps);
 					mNode->setPosition(grid->getPosition(i,j).x, 0.0f, grid->getPosition(i,j).z);
 				}
-				/*else if (c == 't') // treeeeee
-				{
-					Entity* ent = uSceneMgr->createEntity(getNewName(), "Forest_Tree.mesh");
-					//ent->setMaterialName("Examples/RustySteel");
-					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
-					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
-					mNode->attachObject(ent);
-					mNode->scale(1.1f,3.2f,1.1f); // cube is 100 x 100
-					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
-					mNode->setPosition(grid->getPosition(i,j).x, 0.0f, grid->getPosition(i,j).z);
-					app->pushWalls(mNode->getPosition());
-					//mNode->showBoundingBox(true);
-					//app->pushWallEntity(ent);
-				}*/
 			}
 		}
 
@@ -305,6 +303,8 @@ void LoaderClass::loadEnv(std::string envTxt){
 	app->setMaxes((grid->getRows() - 1) /2 , (grid->getCols() - 1) / 2);
 
 	agent = NULL;	//this gets deleted elsewhere (is a player or an NPC)
+	app->getPlayerPointer()->getPosition();
+	app->toggleState(GameApplication::PLAYING);
 }
 
 void LoaderClass::setupEnv(){
