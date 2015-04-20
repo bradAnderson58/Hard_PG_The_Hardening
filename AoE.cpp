@@ -69,15 +69,12 @@ AoE::fire(Ogre::Vector3 pos)
 void
 AoE::shoot(Ogre::Real deltaTime)
 {
-	double scaleAmt = deltaTime / (deltaTime * 0.98);
 	//std::cout << "scale by: " << scaleAmt << std::endl;
-	mBodyNode->scale(2, 1.0, 2);
+	mBodyNode->scale(scaleBy);
 
 	// check to see if aoe is hitting anything
 	for (NPC *enemy : app->getNPCs())
-	{
 		checkCollision(enemy);
-	}
 
 	// grown to max size, reset it
 	if (mBodyNode->getScale()[0] >= 0.1)

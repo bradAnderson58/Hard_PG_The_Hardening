@@ -97,6 +97,12 @@ Projectile::shoot(Ogre::Real deltaTime)
 	this->mBodyNode->roll(Ogre::Degree(2));
 	this->mBodyNode->yaw(Ogre::Degree(2));
 
+	if (mModelEntity->isVisible())
+	{
+		std::cout << "look Boss!" << std::endl;
+		std::cout << "scale of it.. " << mBodyNode->getScale() << std::endl;
+	}
+
 	// if a fireball hits something, explode it and reload
 	for (NPC *enemy : app->getNPCs())
 	{

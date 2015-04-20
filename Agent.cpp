@@ -23,10 +23,13 @@ Agent::Agent(Ogre::SceneManager* SceneManager, std::string name, std::string fil
 	this->app = a;  //this is the game app
 
 	if (parent == NULL){
-		mBodyNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(); // create a new scene node
+		mSoulNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
 	}else{
-		mBodyNode = parent->createChildSceneNode();
+		mSoulNode = parent->createChildSceneNode();
 	}
+
+	mBodyNode = mSoulNode->createChildSceneNode();
+
 	//mModelNode is used to rotate model intependant of root node
 	mModelNode = mBodyNode->createChildSceneNode();
 	mModelEntity = mSceneMgr->createEntity(name, filename); // load the model

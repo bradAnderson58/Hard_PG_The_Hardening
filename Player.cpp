@@ -76,13 +76,14 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 
 	inventory.push_back(new UsableItems(UsableItems::WEAPON, 20, 0, 0, 0, 0, "The Allocator!", 5000));  //Super Awesome weapon for testing
 
+	// attach spells to soul node, so they do not move with the body
 	// some projectile to throw
 	mFireball = new Projectile(SceneManager, LoaderClass::getNewName(), "geosphere4500.mesh",
-		height, 1, a, mBodyNode);                                                       //used to be named 'fireball'
+		height, 0.01, a, mSoulNode);                                                       //used to be named 'fireball'
 
 	// set up AoE field around character to activate for freeze attack
 	mFreeze = new AoE(SceneManager, LoaderClass::getNewName(), "geosphere4500.mesh", 
-		height, 1, a, mBodyNode);															//used to be named 'freeze'
+		height, 0.01, a, mSoulNode);															//used to be named 'freeze'
 	mFreeze->setCoolDown(FREEZE_COOLDOWN);
 
 	srand(time(NULL));  //seed for random number generation
@@ -97,7 +98,7 @@ Player::Player(Ogre::SceneManager* SceneManager, std::string name, std::string f
 
 void Player::reloaded(float x, float y, float z){
 
-	mSceneMgr->getRootSceneNode()->addChild(mBodyNode);
+	mSceneMgr->getRootSceneNode()->addChild(mSoulNode);
 	setPosition(x,y,z);
 	
 

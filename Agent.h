@@ -12,7 +12,9 @@ class Agent
 {
 protected:
 	Ogre::SceneManager* mSceneMgr;		// pointer to scene graph
-	Ogre::SceneNode* mBodyNode;			// Root node for class
+	Ogre::SceneNode* mSoulNode;			// root node, use this in level loading
+										// attach anything you don't want to move with the body to the soul
+	Ogre::SceneNode* mBodyNode;			// node camera and entity
 	Ogre::SceneNode* mModelNode;		// Node for model
 	Ogre::Entity* mModelEntity;
 
