@@ -213,19 +213,32 @@ void LoaderClass::loadEnv(std::string envTxt){
 				else	// Load objects - non-agents will go in here
 				{
 					Environment* obj;
+					bool reg = true;  //dont push placements
 					if (c == 's'){  //test our shield barrel
 						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::LOOT);
 					}
 					else if (c == 'd'){  //I'm a door
 						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::DOOR);
 					}
+					else if (c == 'L'){
+						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::LOCKED_DOOR);
+						app->setLocked(obj);
+					}
 					else if (c == 'p'){  //I'm a pushable object
 						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::MOVEABLE);
 					}
+					else if (c == 'P'){ //pad for penguin
+						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::PLACEMENT);
+						app->pushPlacement(obj);
+						reg = false;
+						obj->setPosition(grid->getPosition(i, j).x, -5.2, grid->getPosition(i, j).z);
+					}
 
 					//set position and put in list of interactable objects
-					obj->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
-					app->pushEnvObj(obj);
+					if (reg){
+						obj->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
+						app->pushEnvObj(obj);
+					}
 				}
 					
 			}

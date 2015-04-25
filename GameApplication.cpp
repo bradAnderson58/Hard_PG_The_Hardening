@@ -87,6 +87,25 @@ GameApplication::addTime(Ogre::Real deltaTime)
 			}
 			if (!something) gameCont->setInteractible(NULL);   //nothing closeby is interactible
 		}
+
+		//check our door puzzle stuff
+		if (!placements.empty()){
+			bool allGood = true;
+
+			//if all the placements are correct, open the door
+			for (Environment* puzz : placements){
+				puzz->checkPenguins();
+
+				if (!puzz->isCorrect()) allGood = false;
+			}
+
+			//if the puzzle is completed, locked becomes a regular door
+			if (allGood){
+				locked->setType(Environment::DOOR);
+			}else{
+				locked->setType(Environment::LOCKED_DOOR);
+			}
+		}
 		mGUICont->setHealth(playerPointer->getHealthNow()); //healthBar->setProgressPosition(playerPointer->getHealthNow()); //American Association of Highway Officials, Litigators, and Engineers 
 		mGUICont->setManaBar(playerPointer->getManaNow());  //manaBar->setProgressPosition(playerPointer->getManaNow());
 		//mGUICont->recordUpdator();
@@ -172,6 +191,11 @@ GameApplication::toggleState(GameState s)
 			delete thing;
 		}
 		interactableObjs.clear();
+
+		for (Environment* thing : placements){
+			delete thing;
+		}
+		placements.clear();
 
 		//delete playerPointer;
 		this->stopSound();

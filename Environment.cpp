@@ -1,7 +1,9 @@
 #include "Environment.h"
 #include "GameApplication.h"
 #include "GameController.h"
+#include "GUIController.h"
 #include "Player.h"
+#include "Event.h"
 
 Environment::Environment(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale,
 						 GameApplication* a, EnvType tp)
@@ -10,6 +12,7 @@ Environment::Environment(Ogre::SceneManager* SceneManager, std::string name, std
 	
 	mSceneMgr = SceneManager; // keep a pointer to where this agent will be
 	mType = tp;
+	correct = false;
 
 	if (mSceneMgr == NULL)
 	{
@@ -29,9 +32,10 @@ Environment::Environment(Ogre::SceneManager* SceneManager, std::string name, std
 	mBodyNode->scale(scale,scale,scale); // Scale the figure
 
 	//Loot has an inner usable item to pass when picked up
-	if (mType == LOOT){
-		//inner = new UsableItems(UsableItems::SHIELD, 0, 5, 0, 0, 0, "Barrel Shield", 5); //this will not be hardcoded in the future
-		//inner->setImgFile("default.png");
+	if (mType == LOCKED_DOOR){
+		std::vector<std::string> pass;
+		pass.push_back("Door is Locked!");
+		popup = new Event(app, pass, true);
 	}
 	animate = false;
 	passable = false;
@@ -72,6 +76,10 @@ Environment::EnvType Environment::handleInteraction(Player* pl){
 	if (mType == DOOR){
 		app->engine->play2D("../../media/door.wav");
 		animate = true;
+	}
+	if (mType == LOCKED_DOOR){
+		app->toggleState(GameApplication::DIALOG);
+		app->getGUICont()->setDialogEvent(popup);
 	}
 	if (mType == MOVEABLE){
 		if (!pl->isCarrying()){
@@ -114,4 +122,19 @@ void Environment::update(Ogre::Real dt){
 		}
 	}
 
+}
+
+void Environment::checkPenguins(){
+	
+	bool thisCheck = false;
+	//check each item to see if its on top of us
+	for (Environment* peng : app->getEnvObj()){
+		if (peng->getPosition().distance(mBodyNode->getPosition()) < 7.5){
+			if (peng->mType == MOVEABLE){
+				correct = true;
+				thisCheck = true;
+			}
+		}
+	}
+	if (thisCheck == false) correct = false;
 }

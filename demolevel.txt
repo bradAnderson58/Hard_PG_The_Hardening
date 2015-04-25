@@ -3,6 +3,8 @@ Examples/GrassFloor
 
 Objects
 d cube.mesh 0.5 0.2 0.1
+L cube.mesh 0.5 0.2 0.1
+P cube.mesh 0.5 0.2 0.1
 p penguin.mesh 0.5 0.2 0.1
 t tudorhouse.mesh 27.0 0.0 0.05
 s Barrel.mesh 2.5 0.0 1
@@ -15,14 +17,14 @@ f fish.mesh 0.0 2
 World
 bbbbbbbbbbbbbbbbbbbbbbbbb
 boooowoooooooooowooooooob
-bopfowooooNooooowoopoooob
+bopfowooooNooooowoopopoob
 boooowoooooooooowooooooob
 boooowoooooooooowooooooob
 boooowoooooooooowooooooob
 boooowoooooooooowooooooob
-bwwdwwwwwwwdwwwwwwwwwwwdb
-boooooowooooooowoooooooob
-boooooowooooooowooofoooob
+bwwdwwwwwwwLwwwwwwwwwwwdb
+boooooowoPoooPowoooooooob
+boooooowoooPooowooofoooob
 boofooodoonoooodoooofooob
 boooooowooooooowoooooooob
 boooooowooooooowoooooooob

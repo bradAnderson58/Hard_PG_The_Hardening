@@ -34,6 +34,8 @@ private:
 	std::list<Ogre::Light*> lightList;	// lights for the level
 
 	std::vector<Environment*> interactableObjs;   //these are objects that we can interact with in some way
+	std::vector<Environment*> placements;	//for unlocking door
+	Environment* locked;
 	int level;
 
 	//Boundaries of the world
@@ -49,6 +51,8 @@ public:
 
 	LoaderClass* loading;  //Do loading with this shits
 	void destroyAllThings();  //for level loading sirs
+
+	void setLocked(Environment* l){ locked = l; }
 
 	enum GameState
 	{
@@ -93,6 +97,7 @@ public:
 	void pushBorder(Ogre::Vector3 wall){ borderWalls.push_back(wall); }
 	void pushWalls(Ogre::Vector3 wall){ wallList.push_back(wall); }
 	void pushEnvObj(Environment* obj){ interactableObjs.push_back(obj); }
+	void pushPlacement(Environment* thing){ placements.push_back(thing); }
 	//void pushWallEntity(Ogre::Entity* e) {wallEntities.push_back(e); }
 
 	void removeNulls(Environment* env);  //Use this to remove null objects from lists

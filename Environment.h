@@ -10,6 +10,7 @@
 class GameApplication;
 class UsableItems;
 class Player;
+class Event;
 
 class Environment : public Objects{
 private:
@@ -18,6 +19,9 @@ private:
 	Ogre::SceneManager* mSceneMgr;  //need this
 	float height;
 	float scale;
+
+	Event* popup;
+	bool correct;
 
 	GameApplication* app;
 	Ogre::SceneNode* mBodyNode;  //this is the object
@@ -34,7 +38,9 @@ public:
 	{
 		LOOT,
 		DOOR,
+		LOCKED_DOOR,
 		MOVEABLE,
+		PLACEMENT,
 		CHEST
 	};
 
@@ -61,6 +67,10 @@ public:
 	bool isAnimating(){ return animate; }
 	bool isPassable(){ return passable; }
 	void update(Ogre::Real dt);				//update door animation
+
+	void checkPenguins();  //check if we have a penguin on us
+	bool isCorrect(){ return correct; }
+	void setType(EnvType et) { mType = et; }
 
 };
 
