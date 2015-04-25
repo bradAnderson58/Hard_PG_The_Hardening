@@ -83,6 +83,8 @@ public:
 	void setPants(UsableItems* pants);
 	void setNeck(UsableItems* neck);
 
+	int getLevel(){return level;}  //return level
+
 	//get Attributes for player
 	int getStrength(){ return strengthAtt; }
 	int getDex(){ return dexterityAtt; }

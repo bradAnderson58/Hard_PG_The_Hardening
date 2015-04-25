@@ -30,7 +30,7 @@ Environment::Environment(Ogre::SceneManager* SceneManager, std::string name, std
 
 	//Loot has an inner usable item to pass when picked up
 	if (mType == LOOT){
-		inner = new UsableItems(UsableItems::SHIELD, 0, 5, 0, 0, 0, "Barrel Shield", 5); //this will not be hardcoded in the future
+		//inner = new UsableItems(UsableItems::SHIELD, 0, 5, 0, 0, 0, "Barrel Shield", 5); //this will not be hardcoded in the future
 		//inner->setImgFile("default.png");
 	}
 	animate = false;
@@ -66,6 +66,7 @@ Environment::EnvType Environment::handleInteraction(Player* pl){
 
 	//based on type
 	if (mType == LOOT){
+		inner = new UsableItems(pl);
 		pl->pushInventory(inner);
 	}
 	if (mType == DOOR){

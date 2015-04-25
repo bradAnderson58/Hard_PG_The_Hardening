@@ -3,6 +3,7 @@
 #include "loaderClass.h"
 #include "Environment.h"
 #include "GUIController.h"
+#include "UsableItems.h"
 #include <fstream>
 #include <sstream>
 #include <map>
@@ -17,6 +18,7 @@ GameApplication::GameApplication(void):
 	gameState = MAINSCREEN;
 	level = 0;
 	engine = irrklang::createIrrKlangDevice();
+
 	//engine->play2D("../../media/getout.ogg", true);
 	//engine->stopAllSounds();
 }
