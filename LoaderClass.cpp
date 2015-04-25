@@ -287,6 +287,38 @@ void LoaderClass::loadEnv(std::string envTxt){
 	sgNode->build();
 	mTree->removeAndDestroyAllChildren();
 
+	while  (!inputfile.eof() && buf != "Lights")	// read until light positions
+		inputfile >> buf;
+
+	// generate lights
+	// 1 - point light, 2 - ambient, 3 - spotlight, 4 - directional
+	std::list<Ogre::Light*> lights = app->getLightList();
+	for (int i = 0; i < z; i++)			// down (row)
+	{
+		for (int j = 0; j < x; j++)		// across (column)
+		{
+			inputfile >> c;			// read one char at a time
+			buf = c + '\0';			// convert char to string
+
+			if (c == '1')	// point light
+			{
+				std::cout << "building point light.." << std::endl;
+				Ogre::Vector3 pos = Ogre::Vector3(	grid->getPosition(i,j).x, 
+													80.0f, 
+													grid->getPosition(i,j).z );
+
+				Ogre::Light* mLight = uSceneMgr->createLight();
+				mLight->setType(Light::LT_POINT);
+				mLight->setPosition(pos);
+				mLight->setSpecularColour(ColourValue::White);
+				mLight->setDiffuseColour(ColourValue::White);
+				mLight->setPowerScale(0.05);
+
+				lights.push_back(mLight);
+			}
+		}
+	}
+
 	// delete all of the readEntities in the objs map
 	rent = objs["s"]; // just so we can see what is going on in memory
 	
@@ -321,16 +353,22 @@ void LoaderClass::setupEnv(){
 	//mCameraMan->setStyle(OgreBites::CS_FREELOOK); // CS_FREELOOK, CS_ORBIT, CS_MANUAL
 
 	// use small amount of ambient lighting
-	uSceneMgr->setAmbientLight(ColourValue(0.5f, 0.5f, 0.5f));
+	//uSceneMgr->setAmbientLight(ColourValue(0.2f, 0.1f, 0.1f));
 
 	// add a bright light above the scene
 	// want to create point lights from level editor...
-	Ogre::Light* mLight = uSceneMgr->createLight();
-	mLight->setType(Light::LT_POINT);
-	//mLight->setPosition(-10, 80, 20);
-	mLight->setPosition(0,20,0);
-	mLight->setSpecularColour(ColourValue::White);
-	mLight->setDiffuseColour(ColourValue::White);
+	// if no other lights, make a default one
+	if(app->getLightList().empty())
+	{
+		std::cout << "Building the default light." << std::endl;
+
+		Ogre::Light* mLight = uSceneMgr->createLight();
+		mLight->setType(Light::LT_POINT);
+		//mLight->setPosition(-10, 80, 20);
+		mLight->setPosition(0,20,0);
+		mLight->setSpecularColour(ColourValue::White);
+		mLight->setDiffuseColour(ColourValue::White);
+	}
 
 	uSceneMgr->setSkyDome(true, "Examples/CloudySky", 5, 8); // pretty sky
 }

@@ -58,6 +58,7 @@ AoE::fire(Ogre::Vector3 pos)
 		active = true;
 		mModelEntity->setVisible(true);
 		mBodyNode->setPosition(pos);
+		app->engine->play2D("../../media/ice.wav");
 	}
 	else 
 	{

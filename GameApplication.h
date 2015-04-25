@@ -31,6 +31,8 @@ private:
 	std::list<Ogre::Vector3> borderWalls;
 	//std::list<Ogre::Entity*> wallEntities;
 
+	std::list<Ogre::Light*> lightList;	// lights for the level
+
 	std::vector<Environment*> interactableObjs;   //these are objects that we can interact with in some way
 	int level;
 
@@ -79,6 +81,7 @@ public:
 	std::list<NPC*> getNPCs(){ return NPClist;}
 	std::list<NPC*> getGoodGuys(){ return goodNPCs; }
 	std::list<Ogre::Vector3> getWallList(){return wallList;}
+	std::list<Ogre::Light*> getLightList(){ return lightList; }
 	std::vector<Environment*> getEnvObj(){ return interactableObjs; }
 
 	//std::list<Ogre::Entity*> getWallEntities(){return wallEntities;}

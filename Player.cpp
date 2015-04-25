@@ -439,7 +439,6 @@ Player::shoot(skillID skill)
 	}
 	else if (skill == FREEZE && !mFreeze->isActive() && !doingStuff)
 	{
-		app->engine->play2D("../../media/ice.wav");
 		mFreeze->fire(getPosition());
 	}
 }
