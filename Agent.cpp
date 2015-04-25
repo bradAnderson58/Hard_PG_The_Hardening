@@ -34,6 +34,7 @@ Agent::Agent(Ogre::SceneManager* SceneManager, std::string name, std::string fil
 	mModelNode = mBodyNode->createChildSceneNode();
 	mModelEntity = mSceneMgr->createEntity(name, filename); // load the model
 	mModelNode->attachObject(mModelEntity);	// attach the model to the scene node
+	//mModelEntity->shad
 
 	mBodyNode->translate(0,height,0); // make the agent stand on the plane (almost)
 	mBodyNode->scale(scale,scale,scale); // Scale the figure

@@ -234,7 +234,8 @@ void LoaderClass::loadEnv(std::string envTxt){
 				if (c == 'w') // create a wall - this stays
 				{
 					Entity* ent = uSceneMgr->createEntity(getNewName(), Ogre::SceneManager::PT_CUBE);
-					ent->setMaterialName("ToonRockWall");
+					//ent->setMaterialName("ToonRockWall");
+					ent->setMaterialName("Examples/Rockwall");
 					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
 					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
 					mNode->attachObject(ent);
@@ -260,7 +261,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 				else if (c == 'b') // create borderwalls
 				{
 					Entity* ent = uSceneMgr->createEntity(getNewName(), Ogre::SceneManager::PT_CUBE);
-					ent->setMaterialName("ToonRockWall");
+					ent->setMaterialName("Examples/Rockwall");
 					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
 					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing
 					mNode->attachObject(ent);
@@ -293,6 +294,10 @@ void LoaderClass::loadEnv(std::string envTxt){
 	// generate lights
 	// 1 - point light, 2 - ambient, 3 - spotlight, 4 - directional
 	std::list<Ogre::Light*> lights = app->getLightList();
+
+	//clear all the old lights
+	uSceneMgr->destroyAllLights();
+
 	for (int i = 0; i < z; i++)			// down (row)
 	{
 		for (int j = 0; j < x; j++)		// across (column)
@@ -312,8 +317,8 @@ void LoaderClass::loadEnv(std::string envTxt){
 				mLight->setPosition(pos);
 				mLight->setSpecularColour(ColourValue::White);
 				mLight->setDiffuseColour(ColourValue::White);
-				mLight->setPowerScale(0.05);
-
+				mLight->setPowerScale(0.02);
+				mLight->setCastShadows(false);
 				lights.push_back(mLight);
 			}
 		}
@@ -368,6 +373,7 @@ void LoaderClass::setupEnv(){
 		mLight->setPosition(0,20,0);
 		mLight->setSpecularColour(ColourValue::White);
 		mLight->setDiffuseColour(ColourValue::White);
+		mLight->setCastShadows(false);
 	}
 
 	uSceneMgr->setSkyDome(true, "Examples/CloudySky", 5, 8); // pretty sky

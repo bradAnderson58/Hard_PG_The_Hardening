@@ -199,15 +199,14 @@ void GameApplication::endGame(char condition){
 
 void GameApplication::destroyallChildren(Ogre::SceneNode* p){
 
-	//WHat the fuck does all this do?
 	mSceneMgr->destroyStaticGeometry("StaticTree");
 	//mSceneMgr->destroyEntity("floor");
 
+	//Weird singleton thing for floor
 	Ogre::MeshManager::getSingleton().destroyAllResourcePools();  //try this?
-
 	mSceneMgr->destroyEntity("Floor");
-	//mSceneMgr->destroyEntity("attackCube");
 
+	//destroy everything in the scene node (this is why we pull the mSoulNode off the list)
 	Ogre::SceneNode::ObjectIterator it = p->getAttachedObjectIterator();
 	while (it.hasMoreElements()){
 		Ogre::MovableObject* o = static_cast<Ogre::MovableObject*>(it.getNext());
@@ -216,14 +215,16 @@ void GameApplication::destroyallChildren(Ogre::SceneNode* p){
 
    Ogre::SceneNode::ChildNodeIterator itChild = p->getChildIterator();
 
-   /*while ( itChild.hasMoreElements() )
-   {
-      Ogre::SceneNode* pChildNode = static_cast<Ogre::SceneNode*>(itChild.getNext());
-      destroyallChildren( pChildNode );
-   }*/
    p->removeChild(playerPointer->getName());
    p->removeAndDestroyAllChildren();
 
+   //do lights
+   for (Ogre::Light* deach : lightList){
+	   delete deach;
+   }
+   lightList.clear();
+
+   mSceneMgr->destroyAllLights();
 }
 
 void GameApplication::restartLevel(){
