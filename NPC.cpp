@@ -489,6 +489,7 @@ void NPC::moveTo(GridNode* n){
 	GridNode* pos = grid->getNode(xVal, zVal);
 
 	mDestination = pos->getPosition(grid->getRows(), grid->getCols());
+	mDestination[1] = height;
 	mDistance = 0.0;
 	Ogre::Vector3 temp;
 	path = app->getGrid()->aStar(pos,n);//get the optimal path

@@ -12,14 +12,9 @@ public:
 	Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, NPC::GoodBad t, NPC::States s);
 	~Rat();
 private:
-
-	enum AnimID
-	{
-		SWIM,
-		ANIM_NONE
-	};
 	
 	AnimID ratAnim;
+	AnimID idOfAnim;
 
 	void Rat::attackPlayer(Player* mainPlayer);
 	void getHurt(int d);
