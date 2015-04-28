@@ -29,6 +29,7 @@ public:
 		SEEK,
 		LOST,
 		SEARCH,
+		ATT,
 		NONE
 	};
 

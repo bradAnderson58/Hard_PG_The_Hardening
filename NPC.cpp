@@ -100,8 +100,9 @@ void NPC::updateBad(Ogre::Real deltaTime){
 			prevState = state;
 			state = LOST;
 		}
-		if (p->getPosition().distance(mBodyNode->getPosition()) < 10){
-			attackPlayer(p);
+		if (p->getPosition().distance(mBodyNode->getPosition()) < 7){
+			prevState = state;
+			state = ATT;
 		}
 		else if (p->getPosition().distance(mBodyNode->getPosition()) > (lookRange + 20)){
 			prevState = state;
@@ -180,8 +181,16 @@ void NPC::updateBad(Ogre::Real deltaTime){
 		mTimer = 0;
 	}
 
+	if (state == ATT){
+		mDirection = Ogre::Vector3::ZERO;
+		attackPlayer(app->getPlayerPointer());
+		prevState = state;
+		state = SEEK;
+	}
+	else{
+		updateLocomote(deltaTime);
+	}
 	checkHit();
-	updateLocomote(deltaTime);
 	updateAnimations(deltaTime);
 }
 
@@ -280,7 +289,7 @@ void NPC::checkHit(){
 		}
 	}
 	
-	if (p->getPosition().distance(mBodyNode->getPosition()) < 5){
+	if (p->getPosition().distance(mBodyNode->getPosition()) <= 5){
 		Ogre::Vector3 playerpos = p->getPosition();
 
 		if (playerpos[0] >= mBodyNode->getPosition()[0]){
