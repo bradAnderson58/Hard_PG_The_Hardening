@@ -12,7 +12,7 @@ s Barrel.mesh 2.5 0.0 1
 Characters
 n ninja.mesh 0.0 0.04
 N ninja.mesh 0.0 0.04
-f Cerberus.004.mesh 3.0 0.1
+f Cerberus.004.mesh 2.0 0.1
 
 World
 bbbbbbbbbbbbbbbbbbbbbbbbb

@@ -149,9 +149,13 @@ void NPC::updateBad(Ogre::Real deltaTime){
 	else if (state == DEAD){
 		prevState = state;
 		state = NONE;
-		mBodyNode->roll(Ogre::Degree(180));
+		mDirection = Ogre::Vector3::ZERO;
+		//mBodyNode->roll(Ogre::Degree(180));
 	}
 	else if (state == NONE){
+		//std::cout << "should be dead" << std::endl;
+		updateAnimations(deltaTime);
+		updateLocomote(deltaTime);
 		return;
 	}
 	else{
@@ -160,7 +164,7 @@ void NPC::updateBad(Ogre::Real deltaTime){
 	}
 
 
-	if (health <= 0 && !(state == DEAD || state == NONE)){
+	if (health <= 0 && (state != DEAD && state != NONE)){
 		state=DEAD;
 		setAnimation(DIE);
 	}
@@ -168,7 +172,7 @@ void NPC::updateBad(Ogre::Real deltaTime){
 	if (state != DEAD && lastHit <= 0){
 		canHit = true;
 	}
-	else if (state != DEAD){
+	else if (state != DEAD && state != NONE){
 		lastHit -= deltaTime;
 	}
 	else{//when velocity is zero set idle animations
@@ -428,9 +432,11 @@ NPC::getPushed(Ogre::Vector3 direction)
 }
 
 void NPC::getHurt(int d){
-	state = SEEK;
-	if (d > defense){
-		health -= (d - defense);
+	if (state != DEAD && state != NONE){
+		state = SEEK;
+		if (d > defense){
+			health -= (d - defense);
+		}
 	}
 }
 

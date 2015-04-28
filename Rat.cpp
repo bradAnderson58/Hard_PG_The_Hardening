@@ -10,8 +10,9 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 
 	defense = level * 1;
 
-	numAnimations = 5;
+	//numAnimations = 5;
 
+	std::cout << "numAnimations: " << numAnimations << std::endl;
 	canHit = true;
 	lastHit = 0;
 	startState = s;
@@ -113,6 +114,11 @@ void Rat::setupAnimations(){
 }
 
 void Rat::setAnimation(AnimID id, bool reset){
+	if (id == idOfAnim) return;
+	else if (id != DIE){
+		if ((idOfAnim == ATTACK) && !mAnims[idOfAnim]->hasEnded()) return;
+	}
+
 	if (idOfAnim >= 0 && idOfAnim < numAnimations)
 	{
 		// if we have an old animation, fade it out
@@ -121,6 +127,7 @@ void Rat::setAnimation(AnimID id, bool reset){
 	}
 
 	idOfAnim = id; 
+	std::cout << "id of Anim: " << idOfAnim << std::endl;
 
 	if (id != ANIM_NONE)
 	{
