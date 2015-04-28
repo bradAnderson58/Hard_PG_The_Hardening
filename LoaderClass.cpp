@@ -355,7 +355,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 				// set light with a range of 100, and its power decreases 
 				// farther away from it
 				// http://www.ogre3d.org/tikiwiki/tiki-index.php?page=-Point+Light+Attenuation
-				mLight->setAttenuation(100, 1.0, 0.045, 0.0075); 
+				mLight->setAttenuation(200, 1.0, 0.022, 0.0019); 
 				mLight->setCastShadows(false);
 				lights.push_back(mLight);
 			}
