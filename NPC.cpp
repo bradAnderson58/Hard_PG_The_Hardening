@@ -1,6 +1,7 @@
 #include "NPC.h"
 #include "GameApplication.h"
 #include "Event.h"
+#include "Environment.h"
 #define _USE_MATH_DEFINES 
 #include <math.h>
 
@@ -99,8 +100,9 @@ void NPC::updateBad(Ogre::Real deltaTime){
 			prevState = state;
 			state = LOST;
 		}
-		if (p->getPosition().distance(mBodyNode->getPosition()) < 10){
-			attackPlayer(p);
+		if (p->getPosition().distance(mBodyNode->getPosition()) < 7){
+			prevState = state;
+			state = ATT;
 		}
 		else if (p->getPosition().distance(mBodyNode->getPosition()) > (lookRange + 20)){
 			prevState = state;
@@ -149,9 +151,13 @@ void NPC::updateBad(Ogre::Real deltaTime){
 	else if (state == DEAD){
 		prevState = state;
 		state = NONE;
-		mBodyNode->roll(Ogre::Degree(180));
+		mDirection = Ogre::Vector3::ZERO;
+		//mBodyNode->roll(Ogre::Degree(180));
 	}
 	else if (state == NONE){
+		//std::cout << "should be dead" << std::endl;
+		updateAnimations(deltaTime);
+		updateLocomote(deltaTime);
 		return;
 	}
 	else{
@@ -160,7 +166,7 @@ void NPC::updateBad(Ogre::Real deltaTime){
 	}
 
 
-	if (health <= 0 && !(state == DEAD || state == NONE)){
+	if (health <= 0 && (state != DEAD && state != NONE)){
 		state=DEAD;
 		setAnimation(DIE);
 	}
@@ -168,15 +174,23 @@ void NPC::updateBad(Ogre::Real deltaTime){
 	if (state != DEAD && lastHit <= 0){
 		canHit = true;
 	}
-	else if (state != DEAD){
+	else if (state != DEAD && state != NONE){
 		lastHit -= deltaTime;
 	}
 	else{//when velocity is zero set idle animations
 		mTimer = 0;
 	}
 
+	if (state == ATT){
+		mDirection = Ogre::Vector3::ZERO;
+		attackPlayer(app->getPlayerPointer());
+		prevState = state;
+		state = SEEK;
+	}
+	else{
+		updateLocomote(deltaTime);
+	}
 	checkHit();
-	updateLocomote(deltaTime);
 	updateAnimations(deltaTime);
 }
 
@@ -275,7 +289,7 @@ void NPC::checkHit(){
 		}
 	}
 	
-	if (p->getPosition().distance(mBodyNode->getPosition()) < 2.5){
+	if (p->getPosition().distance(mBodyNode->getPosition()) <= 5){
 		Ogre::Vector3 playerpos = p->getPosition();
 
 		if (playerpos[0] >= mBodyNode->getPosition()[0]){
@@ -338,6 +352,35 @@ void NPC::checkHit(){
 				aX = r->getPosition()[0] + vX / magV * 8;
 				aY = r->getPosition()[2] + vY / magV * 8;
 				mBodyNode->setPosition(aX, getPosition()[1], aY);
+			}
+		}
+	}
+
+	std::vector<Environment*> objs = app->getEnvObj();
+
+	for (Environment* ob : objs){
+		if (!ob->isPassable()){
+			Ogre::Vector3 wPos = ob->getPosition();
+
+			//some magic numbers in hur son!
+			if ((myPos[0] >= (wPos[0] - 7) && myPos[0] <= (wPos[0] + 7)) && (myPos[2] >= (wPos[2] - 7) && myPos[2] <= (wPos[2] + 7))){
+				if(abs(myPos[0] - wPos[0]) < abs(myPos[2] - wPos[2])){
+					if (abs(myPos[2] - (wPos[2] +7 )) < abs(myPos[2]-(wPos[2] - 7))){
+						myPos[2] = wPos[2] + 7;
+					}
+					else{
+						myPos[2] = wPos[2] - 7;
+					}
+				}
+				else{
+					if (abs(myPos[0] - (wPos[0] + 7)) < abs(myPos[0] - (wPos[0] - 7))){
+						myPos[0] = wPos[0] + 7;
+					}
+					else{
+						myPos[0] = wPos[0] - 7;
+					}
+				}
+				mBodyNode->setPosition(myPos);
 			}
 		}
 	}
@@ -428,9 +471,11 @@ NPC::getPushed(Ogre::Vector3 direction)
 }
 
 void NPC::getHurt(int d){
-	state = SEEK;
-	if (d > defense){
-		health -= (d - defense);
+	if (state != DEAD && state != NONE){
+		state = SEEK;
+		if (d > defense){
+			health -= (d - defense);
+		}
 	}
 }
 
@@ -489,6 +534,7 @@ void NPC::moveTo(GridNode* n){
 	GridNode* pos = grid->getNode(xVal, zVal);
 
 	mDestination = pos->getPosition(grid->getRows(), grid->getCols());
+	mDestination[1] = height;
 	mDistance = 0.0;
 	Ogre::Vector3 temp;
 	path = app->getGrid()->aStar(pos,n);//get the optimal path

@@ -10,12 +10,15 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 
 	defense = level * 1;
 
+	//numAnimations = 5;
+
+	std::cout << "numAnimations: " << numAnimations << std::endl;
 	canHit = true;
 	lastHit = 0;
 	startState = s;
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
-
+	mModelNode->yaw(Ogre::Radian(Ogre::Degree(90)));
 	setupAnimations();
 
 }
@@ -45,8 +48,8 @@ void Rat::getHurt(int d){
 }
 
 void Rat::updateAnimations(Ogre::Real deltaTime){
-	if (ratAnim != ANIM_NONE){
-		mAnims[ratAnim]->addTime(deltaTime);
+	if (idOfAnim != ANIM_NONE){
+		mAnims[idOfAnim]->addTime(deltaTime);
 	}
 	//transitions
 	fadeAnimations(deltaTime);
@@ -55,7 +58,7 @@ void Rat::updateAnimations(Ogre::Real deltaTime){
 void Rat::fadeAnimations(Ogre::Real deltaTime){
 	using namespace Ogre;
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < numAnimations; i++)
 	{
 		if (mFadingIn[i])
 		{
@@ -87,34 +90,44 @@ void Rat::setupAnimations(){
 
 	// Name of the animations for this character - this will change with new assets
 	Ogre::String animNames[] =
-		{"swim"};
+		{"Idle","hit", "Attack", "Walk", "die"};
+
+	Ogre::AnimationStateSet *temp = mModelEntity->getAllAnimationStates();
 
 	// populate our animation list
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < numAnimations; i++)
 	{
 		mAnims[i] = mModelEntity->getAnimationState(animNames[i]);
 		
 		//Some animations are not looping
-		if (animNames[i] == "swim") mAnims[i]->setLoop(true);
+		if (animNames[i] == "Idle") mAnims[i]->setLoop(true);
+		else if (animNames[i] == "Walk") mAnims[i]->setLoop(true);
 		else mAnims[i]->setLoop(false);
+
 
 		mFadingIn[i] = false;
 		mFadingOut[i] = false;
 	}
 
 	// start off in the idle state (top and bottom together)
-	setAnimation(SWIM);
+	setAnimation(IDLE);
 }
 
 void Rat::setAnimation(AnimID id, bool reset){
-	if (ratAnim >= 0 && ratAnim < 1)
-	{
-		// if we have an old animation, fade it out
-		mFadingIn[ratAnim] = false;
-		mFadingOut[ratAnim] = true;
+	if (id == idOfAnim) return;
+	else if (id != DIE){
+		if ((idOfAnim == ATTACK) && !mAnims[idOfAnim]->hasEnded()) return;
 	}
 
-	ratAnim = id; 
+	if (idOfAnim >= 0 && idOfAnim < numAnimations)
+	{
+		// if we have an old animation, fade it out
+		mFadingIn[idOfAnim] = false;
+		mFadingOut[idOfAnim] = true;
+	}
+
+	idOfAnim = id; 
+	std::cout << "id of Anim: " << idOfAnim << std::endl;
 
 	if (id != ANIM_NONE)
 	{

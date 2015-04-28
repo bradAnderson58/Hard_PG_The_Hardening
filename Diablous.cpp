@@ -16,6 +16,7 @@ Diablous::Diablous(Ogre::SceneManager* SceneManager, std::string name, std::stri
 	startState = s;
 	lookDir = Ogre::Vector3(1,0,0);
 	//startPos = mBodyNode->getPosition();
+	mModelNode->yaw(Ogre::Radian(Ogre::Degree(90)));
 
 	numAnimations =  5;//mModelEntity->getSkeleton()->getNumAnimations() - 1; // minus 1 since their is an extra animation
 	setupAnimations(); // turn this off if you can't find the animations
@@ -95,9 +96,11 @@ void Diablous::setupAnimations(){
 void Diablous::setAnimation(AnimID id, bool reset){
 
 	if (id == idOfAnim) return;
-	else if (idOfAnim == ATTACK && !mAnims[idOfAnim]->hasEnded()) return;
+	else if (id != DIE){
+		if ((idOfAnim == ATTACK) && !mAnims[idOfAnim]->hasEnded()) return;
+	}
 
-	if (idOfAnim >= 0 && idOfAnim < 6)
+	if (idOfAnim >= 0 && idOfAnim < numAnimations)
 	{
 		// if we have an old animation, fade it out
 		mFadingIn[idOfAnim] = false;
