@@ -110,9 +110,20 @@ Projectile::shoot(Ogre::Real deltaTime)
 			reload();
 		}
 	}
+
+	// stop projectile if it hits a wall, the ground, or is outside the boundries
+	Ogre::Vector3 mPos = this->mBodyNode->getPosition();
+	Ogre::Vector3 maxPos = app->getGrid()->getMaxPos();
+	Ogre::Vector3 minPos = app->getGrid()->getMinPos();
+	std::cout << "Max pos: " << maxPos << "\nMin pos: " << minPos << std::endl;
+	std::cout << "Fireball position: " << mPos << std::endl;
 	//TODO: needs a particle effect on hits
-	if (this->mBodyNode->getPosition().y <= -0.5) // if it get close to the ground, stop
+	if (mPos.y <= -0.5) 
 		reload();	// finished reset
+	else if ( mPos.x > maxPos.x || mPos.x < minPos.x )	
+		reload();
+	else if ( mPos.z > maxPos.z || mPos.z < minPos.z )
+		reload();
 	else if(hitsWall())
 		reload();
 }

@@ -101,6 +101,8 @@ public:
 	GridNode* loadObject(std::string name, std::string filename, int row, int height, int col, float scale = 1); // load and place a model in a certain location.
 	
 	Ogre::Vector3 getPosition(int r, int c);	// return the position
+	Ogre::Vector3 getMaxPos() { return this->getPosition(nRows, nCols); }
+	Ogre::Vector3 getMinPos() { return this->getPosition(0	  , 0    ); }
 
 	int getRows() { return nRows; }   //needed for world bounds
 	int getCols() { return nCols; }

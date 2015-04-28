@@ -12,7 +12,7 @@ LoaderClass::LoaderClass(Ogre::SceneManager* mgr, GameApplication* a){
 	a->engine->play2D("../../media/music1.ogg", true);
 	playerLoaded = false;
 
-	loadEnv("level001.txt");
+	loadEnv("forestLevel.txt");
 	setupEnv();
 }
 
@@ -292,6 +292,28 @@ void LoaderClass::loadEnv(std::string envTxt){
 					mNode->attachObject(ps);
 					mNode->setPosition(grid->getPosition(i,j).x, 0.0f, grid->getPosition(i,j).z);
 				}
+				else if (c == 'T' ) // trees
+				{
+					Entity* ent = uSceneMgr->createEntity(getNewName(), "treebrown_002.mesh");
+					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
+					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
+					mNode->attachObject(ent);
+					mNode->scale(2.5f,3.5f,2.5f);
+					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
+					mNode->setPosition(grid->getPosition(i,j).x, 4.0f, grid->getPosition(i,j).z);
+					app->pushWalls(mNode->getPosition()); // treat trees as walls
+				}
+				else if (c == 'A') 
+				{
+					Entity* ent = uSceneMgr->createEntity(getNewName(), "arbol_otono.mesh");
+					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
+					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
+					mNode->attachObject(ent);
+					mNode->scale(1.5f,2.5f,1.5f);
+					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
+					mNode->setPosition(grid->getPosition(i,j).x, 1.5f, grid->getPosition(i,j).z);
+					app->pushWalls(mNode->getPosition()); // treat trees as walls
+				}
 			}
 		}
 
@@ -304,12 +326,12 @@ void LoaderClass::loadEnv(std::string envTxt){
 	while  (!inputfile.eof() && buf != "Lights")	// read until light positions
 		inputfile >> buf;
 
+	//clear all the old lights
+	uSceneMgr->destroyAllLights();
+
 	// generate lights
 	// 1 - point light, 2 - ambient, 3 - spotlight, 4 - directional
 	std::list<Ogre::Light*> lights = app->getLightList();
-
-	//clear all the old lights
-	uSceneMgr->destroyAllLights();
 
 	for (int i = 0; i < z; i++)			// down (row)
 	{
@@ -322,7 +344,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 			{
 				std::cout << "building point light.." << std::endl;
 				Ogre::Vector3 pos = Ogre::Vector3(	grid->getPosition(i,j).x, 
-													80.0f, 
+													20.0f, 
 													grid->getPosition(i,j).z );
 
 				Ogre::Light* mLight = uSceneMgr->createLight();
@@ -330,7 +352,10 @@ void LoaderClass::loadEnv(std::string envTxt){
 				mLight->setPosition(pos);
 				mLight->setSpecularColour(ColourValue::White);
 				mLight->setDiffuseColour(ColourValue::White);
-				mLight->setPowerScale(0.02);
+				// set light with a range of 100, and its power decreases 
+				// farther away from it
+				// http://www.ogre3d.org/tikiwiki/tiki-index.php?page=-Point+Light+Attenuation
+				mLight->setAttenuation(100, 1.0, 0.045, 0.0075); 
 				mLight->setCastShadows(false);
 				lights.push_back(mLight);
 			}
@@ -376,18 +401,34 @@ void LoaderClass::setupEnv(){
 	// add a bright light above the scene
 	// want to create point lights from level editor...
 	// if no other lights, make a default one
-	if(app->getLightList().empty())
-	{
-		std::cout << "Building the default light." << std::endl;
+	//if(app->getLightList().empty())
+	//{
+	//	std::cout << "Building the default light." << std::endl;
 
-		Ogre::Light* mLight = uSceneMgr->createLight();
-		mLight->setType(Light::LT_POINT);
-		//mLight->setPosition(-10, 80, 20);
-		mLight->setPosition(0,20,0);
-		mLight->setSpecularColour(ColourValue::White);
-		mLight->setDiffuseColour(ColourValue::White);
-		mLight->setCastShadows(false);
-	}
+	//	Ogre::Light* mLight = uSceneMgr->createLight();
+	//	mLight->setType(Light::LT_POINT);
+	//	//mLight->setPosition(-10, 80, 20);
+	//	mLight->setPosition(0,20,0);
+	//	mLight->setSpecularColour(ColourValue::White);
+	//	mLight->setDiffuseColour(ColourValue::White);
+	//	mLight->setCastShadows(false);
+	//}
 
-	uSceneMgr->setSkyDome(true, "Examples/CloudySky", 5, 8); // pretty sky
+	// give the player a small light
+	Player* p = app->getPlayerPointer();
+
+	Ogre::Light* mLight = uSceneMgr->createLight();
+	mLight->setType(Light::LT_POINT);
+	mLight->setPosition(p->getPosition());
+	mLight->setSpecularColour(ColourValue::White);
+	mLight->setDiffuseColour(ColourValue::White);
+	mLight->setAttenuation(100, 1.0, 0.045, 0.0075); 
+	mLight->setCastShadows(false);
+
+	// attach light to character
+	Ogre::SceneNode* lantternNode = p->getMBodyNode()->createChildSceneNode();
+	lantternNode->attachObject(mLight);
+
+	// sky/background
+	uSceneMgr->setSkyDome(true, "Examples/EveningSkyBox", 5, 8);
 }
