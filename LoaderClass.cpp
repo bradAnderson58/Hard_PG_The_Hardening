@@ -12,7 +12,7 @@ LoaderClass::LoaderClass(Ogre::SceneManager* mgr, GameApplication* a){
 	a->engine->play2D("../../media/music1.ogg", true);
 	playerLoaded = false;
 
-	loadEnv("level001.txt");
+	loadEnv("forestLevel.txt");
 	setupEnv();
 }
 
@@ -291,6 +291,28 @@ void LoaderClass::loadEnv(std::string envTxt){
 					Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
 					mNode->attachObject(ps);
 					mNode->setPosition(grid->getPosition(i,j).x, 0.0f, grid->getPosition(i,j).z);
+				}
+				else if (c == 'T' ) // trees
+				{
+					Entity* ent = uSceneMgr->createEntity(getNewName(), "treebrown_002.mesh");
+					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
+					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
+					mNode->attachObject(ent);
+					mNode->scale(2.5f,3.5f,2.5f);
+					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
+					mNode->setPosition(grid->getPosition(i,j).x, 4.0f, grid->getPosition(i,j).z);
+					app->pushWalls(mNode->getPosition()); // treat trees as walls
+				}
+				else if (c == 'A') 
+				{
+					Entity* ent = uSceneMgr->createEntity(getNewName(), "arbol_otono.mesh");
+					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
+					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
+					mNode->attachObject(ent);
+					mNode->scale(1.5f,2.5f,1.5f);
+					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
+					mNode->setPosition(grid->getPosition(i,j).x, 1.5f, grid->getPosition(i,j).z);
+					app->pushWalls(mNode->getPosition()); // treat trees as walls
 				}
 			}
 		}

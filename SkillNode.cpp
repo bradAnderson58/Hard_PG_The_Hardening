@@ -1,18 +1,32 @@
 #include "SkillNode.h"
 
 SkillNode::SkillNode(MyGUI::Gui* mGUI, int left, int top, int size, 
-					 std::string name, Player::skillID skill, SkillNode* prev)
+					 std::string name, Player::skillID skill, SkillNode* prev,
+					 std::string img)
 {
 	mPrev = prev;
 
 	mSkill = skill;
 
-	mIcon = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
-		left, top, size, size, MyGUI::Align::Default, "Main", name);
-	mIcon->setImageTexture("thumb_cel.png");
-	// this is assuming a set image size...
-    mIcon->setImageCoord(MyGUI::IntCoord(0, 0, 128,128));
-    mIcon->setImageTile(MyGUI::IntSize(128, 128));
+	if (img == "")
+	{
+		mIcon = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
+			left, top, size, size, MyGUI::Align::Default, "Main", name);
+		mIcon->setImageTexture("thumb_cel.png");
+		// this is assuming a set image size...
+		mIcon->setImageCoord(MyGUI::IntCoord(0, 0, 128,128));
+		mIcon->setImageTile(MyGUI::IntSize(128, 128));
+	}
+	else
+	{
+		mIcon = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
+			left, top, size, size, MyGUI::Align::Default, "Main", name);
+		mIcon->setImageTexture(img);
+		// this is assuming a set image size...
+		mIcon->setImageCoord(MyGUI::IntCoord(0, 0, 56, 56));
+		mIcon->setImageTile(MyGUI::IntSize(56, 56));
+	}
+
 	mIcon->eventMouseButtonClick += MyGUI::newDelegate(this, &SkillNode::buttonHit);
 
 	selected = false;

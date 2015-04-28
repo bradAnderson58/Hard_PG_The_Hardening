@@ -10,7 +10,8 @@ class SkillNode
 {
 public:
 	SkillNode(MyGUI::Gui* mGUI, int left, int top, int size, 
-		std::string name, Player::skillID skill, SkillNode* prev);
+		std::string name, Player::skillID skill, SkillNode* prev,
+		std::string img);
 	virtual ~SkillNode(void);
 
 	void show(bool visible);
