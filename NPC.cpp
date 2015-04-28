@@ -110,6 +110,7 @@ void NPC::updateBad(Ogre::Real deltaTime){
 		}
 	}
 	else if(state == LOST){
+		setAnimation(WALK);
 		if (lastPlayerPos.distance(mBodyNode->getPosition()) < 5){
 			prevState = state;
 			state = startState;
@@ -129,6 +130,7 @@ void NPC::updateBad(Ogre::Real deltaTime){
 		}
 	}
 	else if (state == SEARCH){
+		setAnimation(WALK);
 		if (mWalkList.empty() && mDistance <= -5.0){
 			if (prevState == LOST){
 				Ogre::Vector3 temp = lastPlayerPos + ((app->getGrid()->getCols() * 5)) - 5;
@@ -508,6 +510,7 @@ void NPC::searchMove(Ogre::Real deltaTime){
 
 		}
 	}
+	mDirection[1] = 0;
 	mDistance -= mDirection.length();
 }
 
