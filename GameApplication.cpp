@@ -177,7 +177,7 @@ GameApplication::toggleState(GameState s)
 	{
 		gameState = s;
 		destroyallChildren(mSceneMgr->getRootSceneNode());
-
+		wallList.clear();
 		//clean up this memory
 		for (NPC* npc : NPClist){
 			delete npc;
