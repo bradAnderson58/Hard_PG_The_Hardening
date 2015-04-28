@@ -5,6 +5,7 @@
 #include <OgreSceneManager.h>
 
 class Agent;
+class Player;
 class GameApplication;
 class Grid;
 
@@ -25,7 +26,8 @@ private:
 
 	bool playerLoaded;				//only load the player once
 
-	//std::string getNewName();			//Kvothe
+	//std::string getNewName();			//Kvothe the bloodless
+	void LoaderClass::genPlayerLight(Player* p);
 };
 
 #endif

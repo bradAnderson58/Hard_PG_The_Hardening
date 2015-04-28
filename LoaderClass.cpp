@@ -55,6 +55,9 @@ void LoaderClass::loadEnv(std::string envTxt){
 		bool agent;
 	};
 
+	//clear all the old and default lights
+	uSceneMgr->destroyAllLights();
+
 	//PlaySound(music.c_str(), NULL, SND_FILENAME|SND_ASYNC);  //Game sound
 
 	ifstream inputfile;		// Holds a pointer into the file
@@ -160,11 +163,11 @@ void LoaderClass::loadEnv(std::string envTxt){
 							playerLoaded = true;
 							agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 							((Player*)agent)->setInitPos(((Player*)agent)->getPosition());		//casting magics
-
+							genPlayerLight((Player*)agent);
 						}else{
-
-							app->getPlayerPointer()->reloaded(grid->getPosition(i,j).x, 0.0, grid->getPosition(i,j).z);
-
+							Player* p = app->getPlayerPointer();
+							p->reloaded(grid->getPosition(i,j).x, 0.0, grid->getPosition(i,j).z);
+							genPlayerLight(p);
 						}
 
 					}
@@ -326,9 +329,6 @@ void LoaderClass::loadEnv(std::string envTxt){
 	while  (!inputfile.eof() && buf != "Lights")	// read until light positions
 		inputfile >> buf;
 
-	//clear all the old lights
-	uSceneMgr->destroyAllLights();
-
 	// generate lights
 	// 1 - point light, 2 - ambient, 3 - spotlight, 4 - directional
 	std::list<Ogre::Light*> lights = app->getLightList();
@@ -378,7 +378,6 @@ void LoaderClass::loadEnv(std::string envTxt){
 	app->setMaxes((grid->getRows() - 1) /2 , (grid->getCols() - 1) / 2);
 
 	agent = NULL;	//this gets deleted elsewhere (is a player or an NPC)
-	app->getPlayerPointer()->getPosition();
 	app->toggleState(GameApplication::PLAYING);
 }
 
@@ -414,9 +413,15 @@ void LoaderClass::setupEnv(){
 	//	mLight->setCastShadows(false);
 	//}
 
-	// give the player a small light
-	Player* p = app->getPlayerPointer();
+	// sky/background
+	uSceneMgr->setSkyDome(true, "Examples/EveningSkyBox", 5, 8);
+}
 
+void LoaderClass::genPlayerLight(Player* p)
+{
+	using namespace Ogre;
+
+	// give the player a small light
 	Ogre::Light* mLight = uSceneMgr->createLight();
 	mLight->setType(Light::LT_POINT);
 	mLight->setPosition(p->getPosition());
@@ -426,9 +431,7 @@ void LoaderClass::setupEnv(){
 	mLight->setCastShadows(false);
 
 	// attach light to character
-	Ogre::SceneNode* lantternNode = p->getMBodyNode()->createChildSceneNode();
-	lantternNode->attachObject(mLight);
-
-	// sky/background
-	uSceneMgr->setSkyDome(true, "Examples/EveningSkyBox", 5, 8);
+	//Ogre::SceneNode* lantternNode = p->getMBodyNode()->createChildSceneNode();
+	//lantternNode->attachObject(mLight);
+	p->getMBodyNode()->attachObject(mLight);
 }
