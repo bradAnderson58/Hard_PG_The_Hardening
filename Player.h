@@ -113,6 +113,9 @@ public:
 	void reloaded(float x, float y, float z);
 	Ogre::String getName(){  return mSoulNode->getName(); }
 
+	void setLight(Ogre::Light* l) { mLight = l; }
+	Ogre::Light* getLight() { return mLight; }
+
 private:
 	bool fForward;		//how am I moving? Each flag indicates a direction
 
