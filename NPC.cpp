@@ -1,6 +1,7 @@
 #include "NPC.h"
 #include "GameApplication.h"
 #include "Event.h"
+#include "Environment.h"
 #define _USE_MATH_DEFINES 
 #include <math.h>
 
@@ -279,7 +280,7 @@ void NPC::checkHit(){
 		}
 	}
 	
-	if (p->getPosition().distance(mBodyNode->getPosition()) < 2.5){
+	if (p->getPosition().distance(mBodyNode->getPosition()) < 5){
 		Ogre::Vector3 playerpos = p->getPosition();
 
 		if (playerpos[0] >= mBodyNode->getPosition()[0]){
@@ -342,6 +343,35 @@ void NPC::checkHit(){
 				aX = r->getPosition()[0] + vX / magV * 8;
 				aY = r->getPosition()[2] + vY / magV * 8;
 				mBodyNode->setPosition(aX, getPosition()[1], aY);
+			}
+		}
+	}
+
+	std::vector<Environment*> objs = app->getEnvObj();
+
+	for (Environment* ob : objs){
+		if (!ob->isPassable()){
+			Ogre::Vector3 wPos = ob->getPosition();
+
+			//some magic numbers in hur son!
+			if ((myPos[0] >= (wPos[0] - 7) && myPos[0] <= (wPos[0] + 7)) && (myPos[2] >= (wPos[2] - 7) && myPos[2] <= (wPos[2] + 7))){
+				if(abs(myPos[0] - wPos[0]) < abs(myPos[2] - wPos[2])){
+					if (abs(myPos[2] - (wPos[2] +7 )) < abs(myPos[2]-(wPos[2] - 7))){
+						myPos[2] = wPos[2] + 7;
+					}
+					else{
+						myPos[2] = wPos[2] - 7;
+					}
+				}
+				else{
+					if (abs(myPos[0] - (wPos[0] + 7)) < abs(myPos[0] - (wPos[0] - 7))){
+						myPos[0] = wPos[0] + 7;
+					}
+					else{
+						myPos[0] = wPos[0] - 7;
+					}
+				}
+				mBodyNode->setPosition(myPos);
 			}
 		}
 	}
