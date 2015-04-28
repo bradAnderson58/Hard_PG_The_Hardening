@@ -7,32 +7,32 @@ s Barrel.mesh 2.5 0.0 1
 Characters
 n ninja.mesh 0.0 0.04
 N ninja.mesh 0.0 0.04
-f fish.mesh 0.0 2
+f Cerberus.004.mesh 2.0 0.1
 
 World
 TTTTTTTTTTTTTTTTTTTTTTTTT
+AsoooooooTooooooooooooooA
+AoooooofoTooooooooooooooA
+ToofoooooTooooooooooooooA
+ATTAoAToooToooooooooooooT
+AooooooooooooofoooooooooT
+ToooooooooooooooooooofooT
+ToooooooooooToofooooooooT
+AoooooTooooooooooooTooooA
 AoooooooooooooooooooooooA
+AoooofooTooooTooooooooooA
 AoooooooooooooooooooooooA
-ToooooooooooooooooooooooA
-AooAoAooooooooooooooooooT
-AoooooooooooooooooooooooT
-ToooooooooooooooooooooooT
-ToooooooooooooooooooooooT
-AoooooooooooooooooooooooA
-AoooooooooooooooooooooooA
-AoooooooooooooooooooooooA
-AoooooooooooooooooooooooA
-ToooooooooooToooooooooooA
-AoooooooooooTTooooooooooA
-ToooooooooooooToooooooooT
-AooTooooooooooooooooooooA
-AoooooooooooooooooooooooA
-AoooooooooooooooooooooooA
-AToToooooToTooooooooooooT
-TooooTooToooooooooooToooA
-AooooTooooooooooooooooooA
-AonoooooooooooToooooooooA
-AoooooooooToooooooooooooA
+ToooooooooooTAooooToToooA
+AoooToooooooTTooooooooooA
+ToooooooToooooToooooooooT
+AooToooAooooooooooooooooA
+AoooooooofoooooooooTooooA
+AooooTTooooooTooAoooooooA
+AToToooooToTooooToooooooT
+TooooTooToooooooToooToooA
+AooooTfooooAooooooooooooA
+AonoooooooooooTooTooooooA
+AoooooooooTooooooofoTTooA
 AoooooooooToooooooooooooA
 AAAAAAATAAAAAAAAATAAAAAAA
 
