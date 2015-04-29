@@ -48,6 +48,9 @@ private:
 
 	void addTime(Ogre::Real deltaTime);		// update the game state
 
+	std::string levels[5];  //hold level names for loading
+	int loadInd;
+
 public:	
 
 	LoaderClass* loading;  //Do loading with this shits

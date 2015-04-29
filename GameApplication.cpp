@@ -19,6 +19,11 @@ GameApplication::GameApplication(void):
 	level = 0;
 	engine = irrklang::createIrrKlangDevice();
 
+	//for level loading
+	loadInd = 0;
+	levels[0] = "demolevel.txt";
+	levels[1] = "maze.txt";
+	levels[2] = "level001.txt";
 	//engine->play2D("../../media/getout.ogg", true);
 	//engine->stopAllSounds();
 }
@@ -197,7 +202,9 @@ GameApplication::toggleState(GameState s)
 		//delete playerPointer;
 		this->stopSound();
 		this->engine->play2D("../../media/music2.ogg", true);
-		loading->loadEnv("demolevel.txt");
+
+		loading->loadEnv(levels[loadInd]);
+		++loadInd;
 
 		//gameState = PLAYING;
 	}

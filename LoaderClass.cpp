@@ -242,6 +242,8 @@ void LoaderClass::loadEnv(std::string envTxt){
 						app->pushPlacement(obj);
 						reg = false;
 						obj->setPosition(grid->getPosition(i, j).x, -5.2, grid->getPosition(i, j).z);
+					}else if (c == 'a'){  //transport to next level
+						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::TRANSPORT);
 					}
 
 					//set position and put in list of interactable objects

@@ -91,6 +91,9 @@ Environment::EnvType Environment::handleInteraction(Player* pl){
 			passable = false;
 		}
 	}
+	if (mType == TRANSPORT){
+		app->toggleState(GameApplication::LOADING);
+	}
 
 	return mType;
 }

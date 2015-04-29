@@ -5,9 +5,10 @@ Objects
 d cube.mesh 0.5 0.2 0.1
 L cube.mesh 0.5 0.2 0.1
 P cube.mesh 0.5 0.2 0.1
+a cube.mesh 0.5 0.2 0.1
 p penguin.mesh 0.5 0.2 0.1
 t tudorhouse.mesh 27.0 0.0 0.05
-s Barrel.mesh 2.5 0.0 1
+s Chest.mesh 2.5 0.0 1
 
 Characters
 n ninja.mesh 0.0 0.04
@@ -18,7 +19,7 @@ S Skeleton.mesh 4.0 1.0
 World
 bbbbbbbbbbbbbbbbbbbbbbbbb
 boooowoooooooooowooooooob
-bopfowooooNooooowoopopoob
+bopfowooooNoaooowoopopoob
 boooowoooooooooowooooooob
 boooowoooooooooowooooooob
 boooowoooooooooowooooooob
@@ -26,7 +27,7 @@ boooowoooooooooowooooooob
 bwwdwwwwwwwLwwwwwwwwwwwdb
 boooooowoPoooPowoooooooob
 boooooowoooPooowooofoooob
-boofooodoonoooodoooofooob
+boofooodooooooodoooofooob
 boooooowooooooowoooooooob
 boooooowooooooowoooooooob
 bwwwwwwwooooooowoooooooob
@@ -37,7 +38,7 @@ boooooowooooooowooowoooob
 bwwwwwwwoooSooowoooooooob
 boooooowooooooowoofooooob
 booosoodooooooowooowoofob
-boooooowooooooowoooofooob
+bonoooowooooooowoooofooob
 booosoowooooooowoooooooob
 boooooowooooooowoooooooob
 bbbbbbbbbbbbbbbbbbbbbbbbb
