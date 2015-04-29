@@ -37,6 +37,11 @@ Environment::Environment(Ogre::SceneManager* SceneManager, std::string name, std
 		pass.push_back("Door is Locked!");
 		popup = new Event(app, pass, true);
 	}
+	else if (mType == KEY){
+		std::vector<std::string> pass;
+		pass.push_back("Found the Key!");
+		popup = new Event(app, pass, true);
+	}
 	animate = false;
 	passable = false;
 	amountDown = 0;
@@ -93,6 +98,11 @@ Environment::EnvType Environment::handleInteraction(Player* pl){
 	}
 	if (mType == TRANSPORT){
 		app->toggleState(GameApplication::LOADING);
+	}
+	if (mType == KEY){
+		app->getLocked()->setType(Environment::DOOR);
+		app->toggleState(GameApplication::DIALOG);
+		app->getGUICont()->setDialogEvent(popup);
 	}
 
 	return mType;

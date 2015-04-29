@@ -42,7 +42,8 @@ public:
 		MOVEABLE,
 		PLACEMENT,
 		CHEST,
-		TRANSPORT
+		TRANSPORT,
+		KEY
 	};
 
 	Environment(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale,

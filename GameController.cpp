@@ -147,7 +147,8 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 			else
 			{
 				//interact with
-				if (Environment::LOOT == interactWith->handleInteraction(player))
+				Environment::EnvType check = interactWith->handleInteraction(player);
+				if (Environment::LOOT == check || Environment::KEY == check)
 				{
 					app->removeNulls(interactWith);
 					interactWith = NULL;

@@ -245,6 +245,9 @@ void LoaderClass::loadEnv(std::string envTxt){
 					}else if (c == 'a'){  //transport to next level
 						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::TRANSPORT);
 					}
+					else if (c == 'k'){  //key for locked door in maze
+						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::KEY);
+					}
 
 					//set position and put in list of interactable objects
 					if (reg){
