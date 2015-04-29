@@ -11,9 +11,9 @@ f Cerberus.004.mesh 2.0 0.1
 
 World
 TTTTTTTTTTTTTTTTTTTTTTTTT
-AsoooooooTooooooooooooooA
-AoooooofoTooooooooooooooA
-ToofoooooTooooooooooooooA
+AsoooooooTooooooiiioooooA
+AoooooofoTooooooitioooooA
+ToofoooooTooooooioioooooA
 ATTAoAToooToooooooooooooT
 AooooooooooooofoooooooooT
 ToooooooooooooooooooofooT

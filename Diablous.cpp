@@ -18,6 +18,8 @@ Diablous::Diablous(Ogre::SceneManager* SceneManager, std::string name, std::stri
 	//startPos = mBodyNode->getPosition();
 	mModelNode->yaw(Ogre::Radian(Ogre::Degree(90)));
 
+	health *= 2;
+
 	numAnimations =  5;//mModelEntity->getSkeleton()->getNumAnimations() - 1; // minus 1 since their is an extra animation
 	setupAnimations(); // turn this off if you can't find the animations
 
@@ -107,7 +109,7 @@ void Diablous::setAnimation(AnimID id, bool reset){
 	}
 
 	idOfAnim = id; 
-
+	if (idOfAnim == ATTACK) mAnims[idOfAnim]->setTimePosition(0);
 	if (id != ANIM_NONE)
 	{
 		// if we have a new animation, enable it and fade it in

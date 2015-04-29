@@ -324,6 +324,17 @@ void LoaderClass::loadEnv(std::string envTxt){
 					mNode->setPosition(grid->getPosition(i,j).x, 1.5f, grid->getPosition(i,j).z);
 					app->pushWalls(mNode->getPosition()); // treat trees as walls
 				}
+				else if( c == 't'){
+					Entity* ent = uSceneMgr->createEntity(getNewName(), "tudorhouse.mesh");
+					//Ogre::SceneNode* mNode = uSceneMgr->getRootSceneNode()->createChildSceneNode();
+					Ogre::SceneNode* mNode = uSceneMgr->getSceneNode("nTree")->createChildSceneNode(); // static thing, replace prev line with this
+					mNode->attachObject(ent);
+					mNode->scale(0.05, 0.05, 0.05);
+					//mNode->translate(0, 27, 0);
+					grid->getNode(i,j)->setOccupied();  // indicate that agents can't pass through
+					mNode->setPosition(grid->getPosition(i,j).x, 27.0f, grid->getPosition(i,j).z);
+					app->pushWalls(mNode->getPosition()); // treat trees as walls
+				}
 			}
 		}
 

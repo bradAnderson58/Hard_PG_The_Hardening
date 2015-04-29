@@ -128,6 +128,7 @@ Projectile::reload()
 	app->engine->play2D("../../media/fireballHit.wav");
 	active = false;
 	mModelEntity->setVisible(false);
+	mBodyNode->setPosition(0,100,0);
 	//mLight->setVisible(false);
 }
 
