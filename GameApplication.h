@@ -57,6 +57,7 @@ public:
 	void destroyAllThings();  //for level loading sirs
 
 	void setLocked(Environment* l){ locked = l; }
+	Environment* getLocked(){ return locked; }
 
 	enum GameState
 	{
