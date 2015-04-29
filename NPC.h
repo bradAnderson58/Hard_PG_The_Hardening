@@ -22,15 +22,15 @@ public:
 	};
 
 	enum States{
-		WANDER,
-		GUARD,
-		FLEE,
-		DEAD,
-		SEEK,
-		LOST,
-		SEARCH,
-		ATT,
-		NONE
+		WANDER,		//0
+		GUARD,		//1
+		FLEE,		//2
+		DEAD,		//3
+		SEEK,		//4
+		LOST,		//5
+		SEARCH,		//6
+		ATT,		//7
+		NONE		//8
 	};
 
 	enum AnimID

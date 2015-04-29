@@ -55,6 +55,7 @@ void NPC::updateGood(Ogre::Real deltaTime){
 
 void NPC::updateBad(Ogre::Real deltaTime){
 	// each state can be used as input to get the next animation - B note
+	
 	Player* p = app->getPlayerPointer();
 	if (state == GUARD){
 		setAnimation(IDLE);
@@ -123,13 +124,15 @@ void NPC::updateBad(Ogre::Real deltaTime){
 				prevState = state;
 				state = SEEK;
 			}
-			prevState = state;
-			state = SEARCH;
+			else{
+				prevState = state;
+				state = SEARCH;
+			}
 		}
 	}
 	else if (state == SEARCH){
 		setAnimation(WALK);
-		if (mWalkList.empty()){
+		if (mWalkList.empty() && mDistance <= -5.0){
 			if (prevState == LOST){
 				GridNode* dest = app->getGrid()->getContainedNode(lastPlayerPos);
 				moveTo(dest);
@@ -138,11 +141,26 @@ void NPC::updateBad(Ogre::Real deltaTime){
 				GridNode* dest = app->getGrid()->getContainedNode(startPos);
 				moveTo(dest);
 			}
+			else{
+				state = startState;
+				prevState = SEARCH;
+			}
 		}
 		if (checkInFront()){
 			mWalkList.clear();
+			state = SEEK;
+			prevState = SEARCH;
 		}
-		searchMove(deltaTime);
+		else{
+			if (mWalkList.empty() && startPos.distance(getPosition()) < .01 && mDestination.positionEquals(startPos, .001)){
+				state = startState;
+				prevState = SEARCH;
+				mDistance = -6.0f;
+			}
+			else{
+				searchMove(deltaTime);
+			}
+		}
 	}
 	else if (state == DEAD){
 		prevState = state;
@@ -486,8 +504,10 @@ void NPC::searchMove(Ogre::Real deltaTime){
 	if (mDistance <= 0){
 		mBodyNode->setPosition(mDestination);
 		if (!nextLocation()){
-			state = prevState;
-			prevState = SEARCH;
+			mDistance = -5.0;
+			mWalkList.clear();
+			state = SEARCH;
+			prevState = startState;
 			mDirection = Ogre::Vector3::ZERO;
 		}
 		else{
