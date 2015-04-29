@@ -36,12 +36,12 @@ InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController*
 
 	//this is the cooresponding equipped item to the selected item
 	equippedStats = mGUI->createWidget<MyGUI::ListBox>("ListBox",
-						mLeft - 225, mTop + 75, 200, 100, MyGUI::Align::Default, "Main", "currentStats");
+						mLeft - 265, mTop + 75, 240, 100, MyGUI::Align::Default, "Main", "currentStats");
 	//equippedStats->addItem("Currently Equipped: ");
 
 	//this is the currently highlighted item
 	selectedStats = mGUI->createWidget<MyGUI::ListBox>("ListBox",
-						mLeft - 225, mTop + 250, 200, 100, MyGUI::Align::Default, "Main", "selectedStats");
+						mLeft - 265, mTop + 250, 240, 100, MyGUI::Align::Default, "Main", "selectedStats");
 	//selectedStats->addItem("Selected Item: ");
 
 	mTop += 300;

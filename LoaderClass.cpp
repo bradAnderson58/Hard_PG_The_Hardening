@@ -224,7 +224,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 				{
 					Environment* obj;
 					bool reg = true;  //dont push placements
-					if (c == 's'){  //test our shield barrel
+					if (c == 's'){  //this is a chest
 						obj = new Environment(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, Environment::LOOT);
 					}
 					else if (c == 'd'){  //I'm a door
