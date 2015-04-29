@@ -103,7 +103,6 @@ void Priestess::setAnimation(AnimID id, bool reset){
 	}
 
 	idOfAnim = id; 
-	std::cout << "id of Anim: " << idOfAnim << std::endl;
 
 	if (id != ANIM_NONE)
 	{

@@ -38,7 +38,6 @@ DialogView::update(GameApplication* app)
 {
 	if (mEvent->isFinished())
 	{
-		std::cout << "finished dialog" << std::endl;
 		app->toggleState(GameApplication::PLAYING);
 		if (mEvent->isRepeatable())
 			mEvent->reset();
@@ -46,7 +45,6 @@ DialogView::update(GameApplication* app)
 	else if (lineRead)
 	{
 		updateText(mEvent->nextLine());
-		std::cout << "updating next line of dialog" << std::endl;
 	}
 }
 
@@ -65,7 +63,6 @@ DialogView::updateText(std::string s)
 	mDialogBox->setCaption(s);
 	lineRead = false;
 	//add a transition animation for updating text?
-	std::cout << "Dialog: " << mDialogBox->getCaption() << std::endl;
 }
 
 void

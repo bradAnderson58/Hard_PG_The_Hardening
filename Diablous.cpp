@@ -86,7 +86,6 @@ void Diablous::setupAnimations(){
 
 		mFadingIn[i] = false;
 		mFadingOut[i] = false;
-		std::cout << i << std::endl;
 	}
 
 	// start off in the idle state (top and bottom together)
@@ -108,7 +107,6 @@ void Diablous::setAnimation(AnimID id, bool reset){
 	}
 
 	idOfAnim = id; 
-	std::cout << "id of Anim: " << idOfAnim << std::endl;
 
 	if (id != ANIM_NONE)
 	{

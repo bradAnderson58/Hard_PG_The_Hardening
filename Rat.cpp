@@ -12,7 +12,6 @@ Rat::Rat(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 
 	//numAnimations = 5;
 
-	std::cout << "numAnimations: " << numAnimations << std::endl;
 	canHit = true;
 	lastHit = 0;
 	startState = s;
@@ -127,7 +126,6 @@ void Rat::setAnimation(AnimID id, bool reset){
 	}
 
 	idOfAnim = id; 
-	std::cout << "id of Anim: " << idOfAnim << std::endl;
 
 	if (id != ANIM_NONE)
 	{

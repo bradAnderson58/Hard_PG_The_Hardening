@@ -126,17 +126,7 @@ void GUIController::openMenu(bool visible)
 	inventoryB->setVisible(visible);
 	charRecordB->setVisible(visible);
 	exitB->setVisible(visible);
-	if (visible)
-	{
-		std::cout << "This is the main Menu, do this things:" << std::endl;
-		std::cout << "Enter Inventory" << std::endl;
-		std::cout << "Enter Character Record" << std::endl;
-		std::cout << "Return to Game" << std::endl;
-	}
-	else
-	{
-		std::cout << "close menu" << std::endl;
-	}
+	
 }
 
 //open inventory menu

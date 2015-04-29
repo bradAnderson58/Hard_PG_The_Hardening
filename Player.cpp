@@ -431,7 +431,6 @@ Player::shoot(skillID skill)
 		buttonAnimation(OIS::KC_F, true);
 		doingStuff = true;
 
-		std::cout << mDirection[0] << " " << mDirection[1] << " " << mDirection[2] << std::endl;
 		Ogre::Vector3 temp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * mDirection;
 
 		mFireball->fire(temp[0], temp[1]+10.0, temp[2],
@@ -566,7 +565,6 @@ void Player::switchEquipment(int ind){
 
 	//Replace the correct equipment
 	if (typ == UsableItems::WEAPON){
-		std::cout << "Switching Weapons" << std::endl;
 		if (equippedWpn != NULL) inventory.push_back(equippedWpn);
 		equippedWpn = temp;
 	}
@@ -632,7 +630,6 @@ Player::findConversant(std::list<NPC*> npcs)
 				mBodyNode->getPosition()[2] - conversant->getPosition()[2]);
 			if (xDistance <= 5 && zDistance <= 5)
 			{
-				std::cout << "Found someone to talk to." << std::endl;
 				return conversant;
 			}
 		}

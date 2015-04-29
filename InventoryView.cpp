@@ -137,7 +137,6 @@ InventoryView::swap(Cell* a, Cell* b)
 	}
 	else if (itemA && !itemB)
 	{
-		std::cout << "Executed this line" << std::endl;
 		b->setItem(itemA);
 		a->setItem(NULL);
 	}
@@ -158,7 +157,6 @@ InventoryView::updateInventory(Player* p)
 	std::vector<UsableItems*> tempvec = p->getInventory();
 	int mSize = tempvec.size();
 	int iter = 0;
-	std::cout << mSize << " " << iter << std::endl;
 	// update inventory view
 	for(int i = 0; i < 4; i++){
 		for(int j = 0; j < 5; j++){
@@ -167,7 +165,6 @@ InventoryView::updateInventory(Player* p)
 				iter++;
 			}else{
 				inventoryGrid[i][j]->setItem(NULL);
-				std::cout << "Sent NULL " << std::endl;
 			}
 		}
 	}
@@ -225,7 +222,6 @@ void InventoryView::updateStatFields(){
 
 	//if we've selected an empty slot
 	if (newItem == NULL) {
-		std::cout << "This is null" << std::endl;
 		selectedStats->addItem("Currently Selected: ");
 		selectedStats->addItem("Empty");
 		equippedStats->addItem("Currently Equipped:");

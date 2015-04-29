@@ -164,9 +164,6 @@ GameApplication::toggleState(GameState s)
 		playerPointer->setMovement(false);	// movement locks up when you pause during movement
 		mGUICont->showPointer();
 		mGUICont->openMenu(true);
-		for (UsableItems* thing : playerPointer->getInventory()){
-			//std::cout << thing->getName() << " for testing - press Y to equip " << thing->getStat(UsableItems::DAMAGE) << std::endl;
-		}
 	}
 	else if (s == DEAD_STATE)
 	{
@@ -204,8 +201,7 @@ GameApplication::toggleState(GameState s)
 
 		//gameState = PLAYING;
 	}
-	else
-		std::cout << "Not a valid state" << std::endl;
+	
 }
 
 void GameApplication::createGUI(void)
@@ -321,13 +317,7 @@ void GameApplication::removeNulls(Environment* env){
 	if (pos < interactableObjs.size()){
 		interactableObjs.erase (interactableObjs.begin()+pos);  //erase this element from the list
 		delete env;												//clean up memory
-	}else{
-		std::cout << "Object Not Found, something went wrong" << std::endl;
 	}
 	
-	/*for (Environment* thing : interactableObjs){
-		if (thing == env){
-
-		}
-	}*/
+	
 }

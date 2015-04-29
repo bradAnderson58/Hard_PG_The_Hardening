@@ -24,14 +24,12 @@ Event::addDialog(std::string text)
 std::string
 Event::nextLine()
 {
-	std::cout << "getting line in event" << std::endl;
 	if (line != event_dialog.end())
 	{
 		std::string text = (*line);
 		line++;
 		return text;
 	}
-	std::cout << "that was the last line of dialog." << std::endl;
 	finish = true;
 	return "end dialog";
 }

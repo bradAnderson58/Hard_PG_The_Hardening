@@ -70,7 +70,6 @@ AoE::fire(Ogre::Vector3 pos)
 void
 AoE::shoot(Ogre::Real deltaTime)
 {
-	//std::cout << "scale by: " << scaleAmt << std::endl;
 	mBodyNode->scale(scaleBy);
 
 	// check to see if aoe is hitting anything

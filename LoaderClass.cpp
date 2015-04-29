@@ -349,7 +349,6 @@ void LoaderClass::loadEnv(std::string envTxt){
 
 			if (c == '1')	// point light
 			{
-				std::cout << "building point light.." << std::endl;
 				Ogre::Vector3 pos = Ogre::Vector3(	grid->getPosition(i,j).x, 
 													20.0f, 
 													grid->getPosition(i,j).z );
@@ -409,7 +408,6 @@ void LoaderClass::setupEnv(){
 	// if no other lights, make a default one
 	//if(app->getLightList().empty())
 	//{
-	//	std::cout << "Building the default light." << std::endl;
 
 	//	Ogre::Light* mLight = uSceneMgr->createLight();
 	//	mLight->setType(Light::LT_POINT);

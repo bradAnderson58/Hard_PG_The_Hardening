@@ -54,7 +54,6 @@ Cell::setItem(UsableItems* item)
 {
 	if (item){
 
-		std::cout << "Got an item " << item->getImgFile() << std::endl; 
 
 		mItem = item;
 
@@ -64,7 +63,6 @@ Cell::setItem(UsableItems* item)
 		mImgBox->setImageTile(MyGUI::IntSize(128, 128));
 	}
 	else{
-		std::cout << "Didnt have an item" << std::endl;
 		mItem = NULL;  //no longer point at anything
 		mImgBox->setImageTexture("emptySlot.png");
 	}

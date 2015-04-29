@@ -52,7 +52,6 @@ SkillNode::click()
 	{
 		selected = true;
 		mIcon->setAlpha(1.00);
-		std::cout << "Activate " << mIcon->getName() << std::endl;
 	}
 }
 

@@ -174,11 +174,9 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 	
 	}
 	else if (arg.key == OIS::KC_Q){
-		std::cout << "Q was hit" << std::endl;
 	}
 	else if (arg.key == OIS::KC_L){
 		//test level loading system
-		std::cout <<"Here" << std::endl;
 		app->toggleState(GameApplication::LOADING);
 
 		//app->destroyallChildren(app->getSceneMgr()->getRootSceneNode()); //getSceneMgr()->getRootSceneNode()->getAttachedObjectIterator();
@@ -313,7 +311,6 @@ bool GameController::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButton
 //Xbox Controller button functions
 bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 
-	std::cout << button << std::endl;
 
 	if (app->getGameState() == GameApplication::PLAYING){
 		//A button is 0
@@ -399,7 +396,6 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 
 bool GameController::buttonReleased( const OIS::JoyStickEvent &arg, int button ){
 
-	std::cout << button << std::endl;
 
 	//Blocking codes
 	if (button == 1){
