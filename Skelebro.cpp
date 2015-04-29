@@ -112,15 +112,11 @@ void Skelebro::update(Ogre::Real deltaTime){
 		setAnimation(WALK);
 		if (mWalkList.empty() && mDistance <= -5.0){
 			if (prevState == LOST){
-				Ogre::Vector3 temp = lastPlayerPos + ((app->getGrid()->getCols() * 5)) - 5;
-				temp[1] = 0;
-				GridNode* dest = app->getGrid()->getNode((int)temp[2] / 10, (int)temp[0] / 10);
+				GridNode* dest = app->getGrid()->getContainedNode(lastPlayerPos);
 				moveTo(dest);
 			}
 			else if(prevState == GUARD){
-				Ogre::Vector3 temp = startPos + (app->getGrid()->getCols() * 5) - 5;
-				temp[1] = 0;
-				GridNode* dest = app->getGrid()->getNode((int)temp[2] / 10, (int)temp[0] / 10);
+				GridNode* dest = app->getGrid()->getContainedNode(startPos);
 				moveTo(dest);
 			}
 		}
@@ -133,10 +129,8 @@ void Skelebro::update(Ogre::Real deltaTime){
 		prevState = state;
 		state = NONE;
 		mDirection = Ogre::Vector3::ZERO;
-		//mBodyNode->roll(Ogre::Degree(180));
 	}
 	else if (state == NONE){
-		//std::cout << "should be dead" << std::endl;
 		updateAnimations(deltaTime);
 		updateLocomote(deltaTime);
 		deadTimer += deltaTime;
@@ -264,7 +258,6 @@ void Skelebro::setAnimation(SkelAnimID id, bool reset){
 	}
 
 	idOfAnim = id; 
-	std::cout << "id of Anim: " << idOfAnim << std::endl;
 
 	if (id != ANIM_NONE)
 	{

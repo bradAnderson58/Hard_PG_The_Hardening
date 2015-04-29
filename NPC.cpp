@@ -74,7 +74,6 @@ void NPC::updateBad(Ogre::Real deltaTime){
 			mDirection = Ogre::Vector3::ZERO;
 		}
 		else{
-			mDistance = -6.0;
 			prevState = state;
 			state = SEARCH;
 		}
@@ -124,24 +123,19 @@ void NPC::updateBad(Ogre::Real deltaTime){
 				prevState = state;
 				state = SEEK;
 			}
-			mDistance = -6.0;
 			prevState = state;
 			state = SEARCH;
 		}
 	}
 	else if (state == SEARCH){
 		setAnimation(WALK);
-		if (mWalkList.empty() && mDistance <= -5.0){
+		if (mWalkList.empty()){
 			if (prevState == LOST){
-				Ogre::Vector3 temp = lastPlayerPos + ((app->getGrid()->getCols() * 5)) - 5;
-				temp[1] = 0;
-				GridNode* dest = app->getGrid()->getNode((int)temp[2] / 10, (int)temp[0] / 10);
+				GridNode* dest = app->getGrid()->getContainedNode(lastPlayerPos);
 				moveTo(dest);
 			}
 			else if(prevState == GUARD){
-				Ogre::Vector3 temp = startPos + (app->getGrid()->getCols() * 5) - 5;
-				temp[1] = 0;
-				GridNode* dest = app->getGrid()->getNode((int)temp[2] / 10, (int)temp[0] / 10);
+				GridNode* dest = app->getGrid()->getContainedNode(startPos);
 				moveTo(dest);
 			}
 		}
@@ -157,7 +151,6 @@ void NPC::updateBad(Ogre::Real deltaTime){
 		//mBodyNode->roll(Ogre::Degree(180));
 	}
 	else if (state == NONE){
-		//std::cout << "should be dead" << std::endl;
 		updateAnimations(deltaTime);
 		updateLocomote(deltaTime);
 		return;
@@ -463,12 +456,11 @@ void NPC::flee(){
 	steer += mDirection*/							//if you wanna make it impossible to catch the guy;
 }
 
-// recoil effet
+// recoil effect
 void
 NPC::getPushed(Ogre::Vector3 direction)
 {
 	Ogre::Vector3 push_force = Ogre::Vector3(2.0, 1.0, 2.0);
-	std::cout << "Back Fiend!" << std::endl;
 	mBodyNode->translate(direction * push_force);
 }
 
@@ -491,19 +483,19 @@ NPC::nextLocation()
 }
 
 void NPC::searchMove(Ogre::Real deltaTime){
-	if (mDistance <= 0.0f){
+	if (mDistance <= 0){
 		mBodyNode->setPosition(mDestination);
 		if (!nextLocation()){
 			state = prevState;
 			prevState = SEARCH;
+			mDirection = Ogre::Vector3::ZERO;
 		}
 		else{
 			mDestination = mWalkList.front();  // this gets the front of the deque
 			mWalkList.pop_front();             // this removes the front of the deque
 			
-			
 			Ogre::Vector3 mPos = getPosition();
-			mDirection = mDestination - mPos;// getPosition();
+			mDirection = mDestination - mPos; // getPosition();
 			mDirection[1] = 0;
 			mDistance = mDirection.normalise();
 			mDirection *= mWalkSpeed;
@@ -529,27 +521,34 @@ void NPC::moveTo(GridNode* n){
 	std::list<GridNode*>::iterator pathIter;
 	Grid* grid = app->getGrid();
 	Ogre::Vector3 myPos = mBodyNode->getPosition();
-	myPos[0] += ((grid->getRows()) * 5) + 5;
-	myPos[2] += ((grid->getCols()) * 5) + 5;
-	int zVal = (int)(Ogre::Math::Floor(myPos[0])) / 10;
-	int xVal = (int)(Ogre::Math::Floor(myPos[2])) / 10;
+	Ogre::Vector3 temp; 
 
-	GridNode* pos = grid->getNode(xVal, zVal);
+	GridNode* pos = grid->getContainedNode(myPos);
+	if (pos != NULL){
+		int rows = grid->getRows();
+		int cols = grid->getCols();
 
-	mDestination = pos->getPosition(grid->getRows(), grid->getCols());
-	mDestination[1] = height;
-	mDistance = 0.0;
-	Ogre::Vector3 temp;
-	path = app->getGrid()->aStar(pos,n);//get the optimal path
-	if (!path.empty()){
-		for(pathIter = path.begin(); pathIter != path.end(); pathIter++){//put the path at the end of the current walkList to prevent jumping in space
-			temp = (*pathIter)->getPosition(app->getGrid()->getRows(), app->getGrid()->getCols());
-			temp[1] = height;//assign the height of the destination so OGRE doesn't rotate
-			mWalkList.push_back(temp);
+		mDestination = pos->getPosition(rows, cols);
+		mDestination[1] = height;
+		mDistance = 0.0;
+
+		path = app->getGrid()->aStar(pos,n);//get the optimal path
+
+		mWalkList.push_back(mDestination);//push first node onto the list
+		mDirection = mDestination - myPos;//set first direction and speed
+		mDirection[1] = 0;
+		mDistance = mDirection.normalise();
+		mDirection *= mWalkSpeed;
+
+		if (!path.empty()){
+			for(pathIter = path.begin(); pathIter != path.end(); pathIter++){//put the path at the end of the current walkList to prevent jumping in space
+				temp = (*pathIter)->getPosition(rows, cols);
+				temp[1] = height;//assign the height of the destination so OGRE doesn't rotate
+				mWalkList.push_back(temp);
+			}
+			pos = n; //set position of the agent to goal for when its done moving
 		}
-		pos = n; //set position of the agent to goal for when its done moving
 	}
-
 
 }
 
