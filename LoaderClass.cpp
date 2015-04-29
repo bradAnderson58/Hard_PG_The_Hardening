@@ -178,6 +178,12 @@ void LoaderClass::loadEnv(std::string envTxt){
 						app->pushNPCs(rat);
 						//enemy code will go here	
 					}
+					else if (c == 'S'){
+						Skelebro* skele = new Skelebro(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, 1, NPC::BAD, NPC::GUARD);
+						skele->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
+						skele->setStartPos();
+						app->pushNPCs(skele);
+					}
 					// add a flying demon
 					else if (c == 'D') 
 					{

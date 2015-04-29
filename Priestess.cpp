@@ -86,7 +86,7 @@ void Priestess::setupAnimations(){
 		mFadingIn[i] = false;
 		mFadingOut[i] = false;
 	}
-	setAnimation(DIE);
+	setAnimation(IDLE);
 }
 
 void Priestess::setAnimation(AnimID id, bool reset){

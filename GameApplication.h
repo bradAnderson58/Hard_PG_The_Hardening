@@ -10,6 +10,7 @@
 #include "Rat.h"
 #include "Diablous.h"
 #include "Priestess.h"
+#include "Skelebro.h"
 #include <irrKlang.h>
 
 class Grid;  //okay whatever
