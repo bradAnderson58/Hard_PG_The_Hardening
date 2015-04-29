@@ -3,6 +3,7 @@ Examples/GrassFloor
 
 Objects
 s Barrel.mesh 2.5 0.0 1
+a cube.mesh 0.5 0.2 0.1
 
 Characters
 n ninja.mesh 0.0 0.04
@@ -13,7 +14,7 @@ World
 TTTTTTTTTTTTTTTTTTTTTTTTT
 AsoooooooTooooooiiioooooA
 AoooooofoTooooooitioooooA
-ToofoooooTooooooioioooooA
+ToofoooooTooooooiaioooooA
 ATTAoAToooToooooooooooooT
 AooooooooooooofoooooooooT
 ToooooooooooooooooooofooT
