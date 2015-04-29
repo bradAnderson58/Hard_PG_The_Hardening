@@ -15,6 +15,7 @@ Priestess::Priestess(Ogre::SceneManager* SceneManager, std::string name, std::st
 	lastHit = 0;
 	startState = s;
 	lookDir = Ogre::Vector3(1,0,0);
+	health *= 2;
 	//startPos = mBodyNode->getPosition();
 	mModelNode->yaw(Ogre::Radian(Ogre::Degree(90)));
 
@@ -103,7 +104,7 @@ void Priestess::setAnimation(AnimID id, bool reset){
 	}
 
 	idOfAnim = id; 
-
+	if (idOfAnim == ATTACK) mAnims[idOfAnim]->setTimePosition(0);
 	if (id != ANIM_NONE)
 	{
 		// if we have a new animation, enable it and fade it in
