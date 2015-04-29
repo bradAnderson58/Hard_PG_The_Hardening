@@ -479,3 +479,16 @@ Grid::aStar(GridNode* start, GridNode* goal){
 	return rList; //return an empty list if no solution was found
 	
 }
+
+GridNode* Grid::getContainedNode(Ogre::Vector3 pos){
+	Ogre::Vector3 temp;
+	for (int i = 0; i < nRows; i++){
+		for (int j = 0; j < nCols; j++){
+			temp = getPosition(i,j);
+			if ((pos[0] >= temp[0]-5 && pos[0] <= temp[0]+5) && (pos[2] >= temp[2]-5 && pos[2] <= temp[2]+5)){
+				return getNode(i,j);
+			}
+		}
+	}
+	return NULL;
+}

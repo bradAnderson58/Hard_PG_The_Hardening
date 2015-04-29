@@ -93,6 +93,7 @@ public:
 	GridNode* getSWNode(GridNode* n);
 	std::list<GridNode*> getNeighbors(GridNode* n);
 
+	GridNode* getContainedNode(Ogre::Vector3 pos);
 	int getDistance(GridNode* node1, GridNode* node2);  // get Manhattan distance between between two nodes
 	
 	void printToFile();				// Print a grid to a file.  Good for debugging
