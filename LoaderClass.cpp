@@ -161,13 +161,14 @@ void LoaderClass::loadEnv(std::string envTxt){
 							app->setPlayer( (Player*) agent );		//access this player
 							app->getPlayerPointer()->doUpdateGUI();
 							playerLoaded = true;
+							genPlayerLight((Player*)agent);
 							agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 							((Player*)agent)->setInitPos(((Player*)agent)->getPosition());		//casting magics
-							genPlayerLight((Player*)agent);
+							
 						}else{
 							Player* p = app->getPlayerPointer();
-							p->reloaded(grid->getPosition(i,j).x, 0.0, grid->getPosition(i,j).z);
 							genPlayerLight(p);
+							p->reloaded(grid->getPosition(i,j).x, 0.0, grid->getPosition(i,j).z);
 						}
 
 					}
@@ -361,7 +362,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 				// set light with a range of 100, and its power decreases 
 				// farther away from it
 				// http://www.ogre3d.org/tikiwiki/tiki-index.php?page=-Point+Light+Attenuation
-				mLight->setAttenuation(200, 1.0, 0.022, 0.0019); 
+				mLight->setAttenuation(200, 0.5, 0.022, 0.0019); 
 				mLight->setCastShadows(false);
 				lights.push_back(mLight);
 			}
@@ -430,10 +431,9 @@ void LoaderClass::genPlayerLight(Player* p)
 	// give the player a small light
 	Ogre::Light* mLight = uSceneMgr->createLight();
 	mLight->setType(Light::LT_POINT);
-	mLight->setPosition(p->getPosition());
 	mLight->setSpecularColour(ColourValue::White);
 	mLight->setDiffuseColour(ColourValue::White);
-	mLight->setAttenuation(100, 1.0, 0.045, 0.0075); 
+	mLight->setAttenuation(100, 0.5, 0.045, 0.0075); 
 	mLight->setCastShadows(false);
 
 	// attach light to character
