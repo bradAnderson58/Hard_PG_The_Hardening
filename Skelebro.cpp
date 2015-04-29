@@ -248,7 +248,7 @@ void Skelebro::setupAnimations(){
 
 void Skelebro::setAnimation(SkelAnimID id, bool reset){
 	if (id == idOfAnim) return;
-	if ((idOfAnim == ATTACK) && !mAnims[idOfAnim]->hasEnded()) return;
+	if ((idOfAnim == SkelAnimID::ATTACK) && !mAnims[idOfAnim]->hasEnded()) return;
 
 	if (idOfAnim >= 0 && idOfAnim < numAnimations)
 	{
@@ -258,7 +258,7 @@ void Skelebro::setAnimation(SkelAnimID id, bool reset){
 	}
 
 	idOfAnim = id; 
-
+	if (idOfAnim == ATTACK) mAnims[idOfAnim]->setTimePosition(0);
 	if (id != ANIM_NONE)
 	{
 		// if we have a new animation, enable it and fade it in
