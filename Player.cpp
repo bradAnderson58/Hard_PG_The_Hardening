@@ -186,8 +186,8 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 		}
 	}
 	//border wall coordinates
-	float maxX = app->getXmax() * 10 -5;
-	float maxZ = app->getZmax() * 10 -5;
+	float maxX = app->getZmax() * 10 -5;
+	float maxZ = app->getXmax() * 10 -5;
 
 	Ogre::Vector3 newPos = translator + getPosition();
 	//doing collisions with border walls - this will need to be expanded for all walls and objects

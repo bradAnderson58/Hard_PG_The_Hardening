@@ -15,7 +15,7 @@ P priestess.mesh 5.0 0.5
 
 World
 bbbbbbbbbbb
-btoooooootb
+booooooooob
 booooooooob
 boooooDooob
 booooooooob
@@ -23,7 +23,7 @@ boooonoooob
 booooooooob
 booPoooooob
 booooooooob
-btoooooootb
+booooooooob
 bbbbbbbbbbb
 
 Lights

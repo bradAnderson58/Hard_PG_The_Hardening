@@ -255,8 +255,8 @@ void NPC::checkHit(){
 	if (mDirection != Ogre::Vector3::ZERO){//if the velocity isnt zero set up animations
 		mTimer = 0;
 
-		float xBound = (app->getXmax() * 10) - 5;
-		float zBound = (app->getZmax() * 10) - 5;
+		float xBound = (app->getZmax() * 10) - 5;
+		float zBound = (app->getXmax() * 10) - 5;
 		Ogre::Vector3 myPos = mBodyNode->getPosition();
 
 		if (myPos.x <= -xBound){
