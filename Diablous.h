@@ -30,9 +30,11 @@ protected:
 	void fadeAnimations(Ogre::Real deltaTime);				// blend from one animation to another
 	void updateAnimations(Ogre::Real deltaTime);			// update the animation frame
 	void setAnimation(AnimID id, bool reset = false);
+	void update(Ogre::Real deltaTime);
 
 private:
 	AnimID idOfAnim;
+	
 };
 
 #endif
