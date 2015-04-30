@@ -158,17 +158,22 @@ void LoaderClass::loadEnv(std::string envTxt){
 						if (!playerLoaded){  //this is the first time loading, so we must make a new player
 
 							agent = new Player(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app);
-							app->setPlayer( (Player*) agent );		//access this player
+							Player* p = (Player*)agent;	// cast as Player*
+							app->setPlayer( p );		//access this player
 							app->getPlayerPointer()->doUpdateGUI();
 							playerLoaded = true;
-							genPlayerLight((Player*)agent);
-							agent->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
-							((Player*)agent)->setInitPos(((Player*)agent)->getPosition());		//casting magics
+							genPlayerLight(p);
+							p->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
+							p->setInitPos(p->getPosition());		//casting.. magics
+							//Ogre::Vector3 adjPos = p->getPosition() + Ogre::Vector3(0, 20, 0);
+							p->getLight()->setPosition(0,20,0);	// adjust light up a bit
 							
 						}else{
 							Player* p = app->getPlayerPointer();
 							genPlayerLight(p);
 							p->reloaded(grid->getPosition(i,j).x, 0.0, grid->getPosition(i,j).z);
+							//Ogre::Vector3 adjPos = p->getPosition() + Ogre::Vector3(0, 20, 0);
+							p->getLight()->setPosition(0,20,0);	// adjust light up a bit
 						}
 
 					}
@@ -447,8 +452,10 @@ void LoaderClass::genPlayerLight(Player* p)
 	mLight->setType(Light::LT_POINT);
 	mLight->setSpecularColour(ColourValue::White);
 	mLight->setDiffuseColour(ColourValue::White);
-	mLight->setAttenuation(100, 0.5, 0.045, 0.0075); 
+	mLight->setAttenuation(200, 0.8, 0.045, 0.0075); 
 	mLight->setCastShadows(false);
+
+	p->setLight(mLight);	// save pointer for adjust position later.
 
 	// attach light to character
 	//Ogre::SceneNode* lantternNode = p->getMBodyNode()->createChildSceneNode();
