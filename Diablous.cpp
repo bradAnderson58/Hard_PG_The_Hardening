@@ -10,6 +10,11 @@ Diablous::Diablous(Ogre::SceneManager* SceneManager, std::string name, std::stri
 	mBodyNode->setPosition(mBodyNode->getPosition()[0], 0, mBodyNode->getPosition()[2]);
 
 	defense = level * 1;
+	damage *= 2;
+	health *= 1.5;
+	mWalkSpeed *= 1.5;
+	crit *= 2;
+
 
 	canHit = true;
 	lastHit = 0;
@@ -30,6 +35,15 @@ Diablous::~Diablous(void)
 {
 	
 }
+void Diablous::update(Ogre::Real deltaTime){
+	if (state == SEEK){
+		if (app->getPlayerPointer()->getPosition().distance(getPosition()) < 10){
+			state = ATT;
+		}
+	}
+	NPC::update(deltaTime);
+}
+
 
 void Diablous::updateAnimations(Ogre::Real deltaTime){
 	if (idOfAnim != ANIM_NONE){

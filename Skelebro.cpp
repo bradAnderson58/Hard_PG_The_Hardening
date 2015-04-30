@@ -10,7 +10,9 @@ Skelebro::Skelebro(Ogre::SceneManager* SceneManager, std::string name, std::stri
 	mBodyNode->setPosition(mBodyNode->getPosition()[0], 0, mBodyNode->getPosition()[2]);
 
 	defense = level * 1;
-
+	damage *= 1.5;
+	health *= 1.5;
+	mWalkSpeed *= 1.5;
 	canHit = true;
 	lastHit = 0;
 	startState = s;
@@ -53,7 +55,6 @@ void Skelebro::update(Ogre::Real deltaTime){
 			mDirection = Ogre::Vector3::ZERO;
 		}
 		else{
-			mDistance = -6.0;
 			prevState = state;
 			state = SEARCH;
 		}
@@ -103,9 +104,10 @@ void Skelebro::update(Ogre::Real deltaTime){
 				prevState = state;
 				state = SEEK;
 			}
-			mDistance = -6.0;
-			prevState = state;
-			state = SEARCH;
+			else{
+				prevState = state;
+				state = SEARCH;
+			}
 		}
 	}
 	else if (state == SEARCH){
@@ -119,11 +121,26 @@ void Skelebro::update(Ogre::Real deltaTime){
 				GridNode* dest = app->getGrid()->getContainedNode(startPos);
 				moveTo(dest);
 			}
+			else{
+				state = startState;
+				prevState = SEARCH;
+			}
 		}
 		if (checkInFront()){
 			mWalkList.clear();
+			state = SEEK;
+			prevState = SEARCH;
 		}
-		searchMove(deltaTime);
+		else{
+			if (mWalkList.empty() && startPos.distance(getPosition()) < .01 && mDestination.positionEquals(startPos, .001)){
+				state = startState;
+				prevState = SEARCH;
+				mDistance = -6.0f;
+			}
+			else{
+				searchMove(deltaTime);
+			}
+		}
 	}
 	else if (state == DEAD){
 		prevState = state;

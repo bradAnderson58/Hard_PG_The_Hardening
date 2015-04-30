@@ -11,6 +11,11 @@ Priestess::Priestess(Ogre::SceneManager* SceneManager, std::string name, std::st
 
 	defense = level * 1;
 
+	damage *= 2;
+	health *= 1.5;
+	mWalkSpeed *= 1.5;
+	crit *= 2;
+
 	canHit = true;
 	lastHit = 0;
 	startState = s;

@@ -78,6 +78,7 @@ public:
 	//setter for player shits
 	void setPlayer(Player* p);
 
+	int getLoadInd(){return loadInd;}
 	//For world bounds getters / setters
 	float getXmax() { return xMax; }
 	float getZmax() { return zMax; }

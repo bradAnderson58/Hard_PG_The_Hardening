@@ -173,14 +173,14 @@ void LoaderClass::loadEnv(std::string envTxt){
 
 					}
 					else if (c == 'f'){
-						Rat* rat = new Rat(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, 1, NPC::BAD, NPC::GUARD);
+						Rat* rat = new Rat(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, app->getLoadInd() + 1, NPC::BAD, NPC::GUARD);
 						rat->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						rat->setStartPos();
 						app->pushNPCs(rat);
 						//enemy code will go here	
 					}
 					else if (c == 'S'){
-						Skelebro* skele = new Skelebro(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, 1, NPC::BAD, NPC::GUARD);
+						Skelebro* skele = new Skelebro(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, app->getLoadInd() + 1, NPC::BAD, NPC::GUARD);
 						skele->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						skele->setStartPos();
 						app->pushNPCs(skele);
@@ -190,7 +190,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 					{
 						// need each type of enemy to be a child of (<bad>NPC), to give their own animation states
 						Diablous* flyingDemon = new Diablous(this->uSceneMgr, getNewName(), rent->filename, 
-							rent->y, rent->scale, app, 1, NPC::BAD, NPC::GUARD);
+							rent->y, rent->scale, app, app->getLoadInd() + 1, NPC::BAD, NPC::GUARD);
 						flyingDemon->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						flyingDemon->setStartPos();
 						app->pushNPCs(flyingDemon);
@@ -198,7 +198,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 					else if (c == 'P')
 					{
 						Priestess* priest_chick = new Priestess(this->uSceneMgr, getNewName(), rent->filename, 
-							rent->y, rent->scale, app, 1, NPC::BAD, NPC::GUARD);
+							rent->y, rent->scale, app, app->getLoadInd() + 1, NPC::BAD, NPC::GUARD);
 						priest_chick->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						priest_chick->setStartPos();
 						app->pushNPCs(priest_chick);
@@ -206,7 +206,7 @@ void LoaderClass::loadEnv(std::string envTxt){
 					// added another Ninja to test dialog interaction
 					else if (c == 'N')	
 					{
-						NPC* npcNinja = new NPC(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, 1, NPC::GOOD, NPC::NONE);
+						NPC* npcNinja = new NPC(this->uSceneMgr, getNewName(), rent->filename, rent->y, rent->scale, app, app->getLoadInd() + 1, NPC::GOOD, NPC::NONE);
 						npcNinja->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 						npcNinja->setStartPos();
 
