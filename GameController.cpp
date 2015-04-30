@@ -394,6 +394,11 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 	else if (app->getGameState() == GameApplication::DIALOG){
 		if (button == 0)  mGUICont->cycleDialog();
 	}
+
+	//restart via controller
+	else if (app->getGameState() == GameApplication::ENDIT){
+		if (button == 0) mGUICont->xBoxSelect();
+	}
 	return true;
 }
 

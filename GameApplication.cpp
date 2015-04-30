@@ -20,10 +20,11 @@ GameApplication::GameApplication(void):
 	engine = irrklang::createIrrKlangDevice();
 
 	//for level loading
-	loadInd = 0;
-	levels[0] = "demolevel.txt";
-	levels[1] = "maze.txt";
-	levels[2] = "level001.txt";
+	loadInd = 1;
+	levels[0] = "forestLevel.txt";
+	levels[1] = "demolevel.txt";
+	levels[2] = "maze.txt";
+	levels[3] = "level001.txt";
 	//engine->play2D("../../media/getout.ogg", true);
 	//engine->stopAllSounds();
 }
@@ -208,6 +209,10 @@ GameApplication::toggleState(GameState s)
 
 		//gameState = PLAYING;
 	}
+	else if (s == ENDIT){
+		gameState = s;
+		mGUICont->showRestart(true);
+	}
 	
 }
 
@@ -242,75 +247,33 @@ void GameApplication::destroyallChildren(Ogre::SceneNode* p){
 		p->getCreator()->destroyMovableObject(o);
 	}
 
-   Ogre::SceneNode::ChildNodeIterator itChild = p->getChildIterator();
+	Ogre::SceneNode::ChildNodeIterator itChild = p->getChildIterator();
 
-   p->removeChild(playerPointer->getName());
-   p->removeAndDestroyAllChildren();
+	//if we are restarting, we will destroy all the player shits as well
+	if (playerPointer != NULL) p->removeChild(playerPointer->getName());
+	p->removeAndDestroyAllChildren();
 
-   //do lights
-   for (Ogre::Light* deach : lightList){
+	//do lights
+	for (Ogre::Light* deach : lightList){
 	   delete deach;
-   }
-   lightList.clear();
+	}
+	lightList.clear();
 
-   mSceneMgr->destroyAllLights();
+	mSceneMgr->destroyAllLights();
 }
 
-void GameApplication::restartLevel(){
-	
-	//Keep for reference
-	/*
-	housePointer->setPosition(houseInitPos);
-	yoshPointer->restart();
-	houseHealth = 1.0;
-	gameState = true;
-	houseHealth = 1.0f;
-	gameOver = false;
-	mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER);
-	houseHUD->setProgress(houseHealth);
-	mTrayMgr->hideCursor();
-	*/
+void GameApplication::restartGame(){
+
+	//reload the very first level
+	delete playerPointer;
+	playerPointer = NULL;
+	loadInd = 0;
+	toggleState(LOADING);
+	//mGUICont->showRestart(false);
 }
 
 void GameApplication::nextLevel(){
 
-	//keep for reference
-
-	/*
-	Ogre::Vector3 housePos;
-	if (level == 1){
-		housePos = grid->getPosition(3, 11);
-		housePos[1] = 27;
-		housePointer->setPosition(housePos);
-		Ogre::Vector3 yoshPos = grid->getPosition(5, 11);
-		yoshPointer->setPosition(yoshPos[0], 0, yoshPos[2]);
-	}
-	else if (level == 2){
-		housePos = grid->getPosition(11, 11);
-		housePos[1] = 27;
-		housePointer->setPosition(housePos);
-		Ogre::Vector3 yoshPos = grid->getPosition(13, 11);
-		yoshPointer->setPosition(yoshPos[0], 0, yoshPos[2]);
-	}
-	else{
-		int row = rand()%18+1;
-		int col = rand()%18+1;
-		housePos = grid->getPosition(row, col);
-		housePos[1] = 27;
-		housePointer->setPosition(housePos);
-		Ogre::Vector3 yoshPos = grid->getPosition(row+2, col);
-		yoshPointer->setPosition(yoshPos[0], 0, yoshPos[2]);
-	}
-	Ogre::Vector3 robPos;
-	
-	houseHealth = 1.0;
-	gameState = true;
-	houseHealth = 1.0f;
-	gameOver = false;
-	mTrayMgr->destroyAllWidgetsInTray(OgreBites::TL_CENTER);
-	houseHUD->setProgress(houseHealth);
-	mTrayMgr->hideCursor();
-	*/
 }
 
 void GameApplication::setPlayer(Player* p){

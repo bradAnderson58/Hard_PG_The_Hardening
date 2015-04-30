@@ -50,6 +50,7 @@ public:
 	void setCurrentActive(bool up);		//either moves up or down
 
 	void xBoxSelect();					//for menu stuffs with controller
+	void showRestart(bool n);
 
 private:
 
@@ -66,6 +67,7 @@ private:
 	MyGUI::ButtonPtr inventoryB;		// button to access inventory from pause menu
 	MyGUI::ButtonPtr charRecordB;		// button to acces character records from pause menu
 	MyGUI::ButtonPtr exitB;				// button to exit from pause menu
+	MyGUI::ButtonPtr restartB;			//restart on die
 	InventoryView* inventory;			// inventory window for gear and items
 	CharacterRecord* charRecord;		// character records (stats, quests, ect...)
 	DialogView* dialog;					// view for dialog events

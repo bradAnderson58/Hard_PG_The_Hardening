@@ -69,6 +69,10 @@ GUIController::GUIController(GameApplication* a)
 	exitB = mGUI->createWidget<MyGUI::Button>("Button", 
 		wMiddlish, hMiddlish+100, 200, 50, MyGUI::Align::Default, "Main", "exit");
 	exitB->setCaption("Exit Game");
+
+	restartB = mGUI->createWidget<MyGUI::Button>("Button",
+		wMiddlish, hMiddlish+50, 200, 50, MyGUI::Align::Default, "Main", "restart");
+	restartB->setCaption("DIED Restart");
 	
 	// character record window
 	charRecord = new CharacterRecord(mGUI, wMiddlish, hMiddlish, this);
@@ -83,7 +87,7 @@ GUIController::GUIController(GameApplication* a)
 	inventoryB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit); // CLASS_POINTER is pointer to instance of a CLASS_NAME (usually '''this''')
 	charRecordB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit);
 	exitB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit);
-
+	restartB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit);
 	// hide guis to reveal later
 	questWin->setVisible(false);
 	playerImage->setVisible(false);
@@ -92,6 +96,8 @@ GUIController::GUIController(GameApplication* a)
 	inventoryB->setVisible(false);
 	charRecordB->setVisible(false);
 	exitB->setVisible(false);
+
+	restartB->setVisible(false);
 
 	charRecord->open(false);
 	inventory->show(false);
@@ -116,6 +122,18 @@ void GUIController::buttonHit(MyGUI::WidgetPtr _sender)
 		openCharRecord(true);
 	else if (_sender->getName() == "exit")
 		app->setShutDown(true);   //app shutdown
+	else if (_sender->getName() == "restart"){
+		showRestart(false);
+		app->restartGame();
+	}
+}
+
+void GUIController::showRestart(bool n){
+	restartB->setVisible(n);
+	if (n) mGUI->showPointer();
+	else{
+		mGUI->hidePointer();
+	}
 }
 
 //open in-game menu screen
@@ -220,6 +238,11 @@ void GUIController::setCurrentActive(bool up){
 
 //manually call buttonhit on the active button
 void GUIController::xBoxSelect(){
+
+	if (app->getGameState() == GameApplication::ENDIT){
+		buttonHit(restartB);
+		return;
+	}
 
 	if (inventory->mVisible){
 		int index = inventory->swapWrapper();
