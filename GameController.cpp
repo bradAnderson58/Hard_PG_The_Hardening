@@ -180,17 +180,6 @@ bool GameController::keyPressed( const OIS::KeyEvent &arg )
 		//test level loading system
 		app->toggleState(GameApplication::LOADING);
 
-		//app->destroyallChildren(app->getSceneMgr()->getRootSceneNode()); //getSceneMgr()->getRootSceneNode()->getAttachedObjectIterator();
-
-
-
-		//app->getSceneMgr()->getRootSceneNode()->detachAllObjects();					//everything except scenmanager and root are gone
-		//app->getSceneMgr()->getRootSceneNode()->removeAndDestroyAllChildren();
-
-		//app->loading->loadEnv("demolevel.txt");
-
-		//app->toggleState(GameApplication::PLAYING);
-
 	}
 
 	MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), arg.text);
@@ -317,6 +306,14 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 		//A button is 0
 		if (button == 0){
 
+			//Dialog code
+			conversant = player->findConversant(app->getGoodGuys());
+			if (conversant && conversant->getEvent())
+			{
+				app->toggleState(GameApplication::DIALOG);
+				mGUICont->setDialogEvent(conversant->getEvent());
+			}
+
 			if (interactWith == NULL){
 				if(!player->doingStuff){
 					player->changeSpeed(.6);  //jump should be slower
@@ -325,7 +322,8 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 				}
 			}else{
 				//interact with
-				if (Environment::LOOT == interactWith->handleInteraction(player)){
+				Environment::EnvType check = interactWith->handleInteraction(player);
+				if (Environment::LOOT == check || Environment::KEY == check){
 					app->removeNulls(interactWith);
 					interactWith = NULL;
 				}
@@ -350,8 +348,7 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 		}
 		//Y button is 3
 		else if (button == 3){
-			//This is just Hari-Kari code for testing purposes
-			player->getHurt(5);
+			player->shoot(Player::FIREBALL);  //special attack
 		}
 		//Start button is 7
 		else if (button == 7){
@@ -391,6 +388,11 @@ bool GameController::buttonPressed( const OIS::JoyStickEvent &arg, int button ){
 			player->switchEquipment(0);
 		}
 
+	}
+	
+	//dialog scrolling
+	else if (app->getGameState() == GameApplication::DIALOG){
+		if (button == 0)  mGUICont->cycleDialog();
 	}
 	return true;
 }
