@@ -14,12 +14,12 @@ CharacterRecord::CharacterRecord(MyGUI::Gui* mGUI, int left, int top, GUIControl
 	mWindow->setProperty("Text", "Test the Text?");
 	mWindow->setMovable(false);
 
-	//set up character face
+	//set up character img
 	charFace = mGUI->createWidget<MyGUI::ImageBox>("ImageBox",
 		left - 25, top - 200, 300, 250, MyGUI::Align::Default, "Main", "charface");
-	charFace->setImageTexture("thumb_cel.png");
-	charFace->setImageCoord(MyGUI::IntCoord(0, 0, 128, 128));
-    charFace->setImageTile(MyGUI::IntSize(128, 128));
+	charFace->setImageTexture("sreenShotToonNinja.png");
+	charFace->setImageCoord(MyGUI::IntCoord(0, 0, 274, 457));
+    charFace->setImageTile(MyGUI::IntSize(274, 457));
 	
 	//text boxes
 	vStats = mGUI->createWidget<MyGUI::ListBox>("ListBox",

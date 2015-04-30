@@ -19,6 +19,7 @@ SkillNode::SkillNode(MyGUI::Gui* mGUI, int left, int top, int size,
 	}
 	else
 	{
+		std::cout << "Balls. " << std::endl;
 		mIcon = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
 			left, top, size, size, MyGUI::Align::Default, "Main", name);
 		mIcon->setImageTexture(img);

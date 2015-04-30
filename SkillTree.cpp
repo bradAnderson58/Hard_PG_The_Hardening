@@ -17,22 +17,22 @@ SkillTree::SkillTree(MyGUI::Gui* mGUI, int left, int top)
 	SkillNode* shockBox;
 
 	absorbBox = new SkillNode(mGUI, mCenter, mTop, TREENODESIZE, 
-		"absorb", Player::ABSORB, NULL, "");
+		"absorb", Player::ABSORB, NULL, "plague.png");
 
 	int leftBranch = mCenter - 50;
 	bashBox = new SkillNode(mGUI, leftBranch, mTop+50, TREENODESIZE, 
-		"bash", Player::BASH, absorbBox, "");
+		"bash", Player::BASH, absorbBox, "earth-2.png");
 	hamstringBox = new SkillNode(mGUI, leftBranch, mTop+100, TREENODESIZE, 
-		"hamstring", Player::HAMSTRING, bashBox, "");
+		"hamstring", Player::HAMSTRING, bashBox, "dagger-3.png");
 	massiveBlowBox = new SkillNode(mGUI, leftBranch, mTop+150, TREENODESIZE, 
-		"massiveblow", Player::MASSIVEBLOW, hamstringBox, "");
+		"massiveblow", Player::MASSIVEBLOW, hamstringBox, "dragon-blade-3.png");
 
 	fireballBox = new SkillNode(mGUI, mCenter+50, mTop+50, TREENODESIZE, 
-		"fireball", Player::FIREBALL, absorbBox, "explosion-3.png");
+		"fireball", Player::FIREBALL, absorbBox, "meteor.png");
 	freezeBox = new SkillNode(mGUI, mCenter+50, mTop+100, TREENODESIZE, 
-		"freeze", Player::FREEZE, fireballBox, "");
+		"freeze", Player::FREEZE, fireballBox, "blizzard-2.png");
 	shockBox = new SkillNode(mGUI, mCenter+100, mTop+100, TREENODESIZE, 
-		"shock", Player::SHOCK, fireballBox, "");
+		"shock", Player::SHOCK, fireballBox, "thunder-3.png");
 
 	skills[0] = absorbBox;
 	skills[1] = bashBox;
