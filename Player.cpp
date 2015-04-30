@@ -588,6 +588,9 @@ void Player::switchEquipment(int ind){
 		if (equippedShield != NULL) inventory.push_back(equippedShield);
 		equippedShield = temp;
 	}
+	else if (typ == UsableItems::POTION){
+		healthNow = healthStat;
+	}
 	else {std::cout << "ERROR INVALID ITEM TYPE" << std::endl;}
 
 	//apply changes for new weapons

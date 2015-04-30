@@ -50,7 +50,7 @@ InventoryView::InventoryView(MyGUI::Gui* mGUI, int left, int top, GUIController*
 	{
 		for(int j = 0; j < 5; j++)
 		{
-			// creates a bunch of empty cells, with ogre heads for now
+			// creates a bunch of empty cells
 			std::string name = static_cast<std::ostringstream*>( &(std::ostringstream() << number) )->str();
 			inventoryGrid[i][j] = new Cell(mGUI, mLeft, mTop, INVCELLSIZE, name);
 			inventoryGrid[i][j]->getImageBox()->setAlpha(0.70);
@@ -110,7 +110,10 @@ InventoryView::show(bool visible)
 
 int InventoryView::swapWrapper(){
 	
-	swap(selectCell, equippedCell);
+	if (selectCell->getItem()->getType() == UsableItems::POTION) std::cout << "Potion" << std::endl;
+	else swap(selectCell, equippedCell);
+
+
 	return (selectedRow * 5) + selectedCol;
 }
 
@@ -271,6 +274,9 @@ void InventoryView::updateStatFields(){
 				break;
 			case UsableItems::NECKLACE :
 				equippedCell = necklace;
+				break;
+			case UsableItems::POTION :
+				equippedCell = NULL;
 				break;
 		}
 
