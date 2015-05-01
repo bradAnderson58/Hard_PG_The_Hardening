@@ -108,6 +108,8 @@ Player::~Player(void)
 {
 	delete mFireball;
 	delete mFreeze;
+	mSceneMgr->destroyEntity("attackCube");
+	
 }
 
 void Player::doUpdateGUI(){
@@ -267,6 +269,10 @@ void Player::updateAnimations(Ogre::Real deltaTime){
 		if (mAnims[playerAnim]->hasEnded() && playerAnim != BLOCK && playerAnim != DEATH_ONE){
 			doingStuff = false;   //no longer doing stuff
 			speed = 2;
+		}
+		//stop looping death bug
+		else if (mAnims[playerAnim]->hasEnded() && playerAnim == DEATH_ONE){
+			app->toggleState(GameApplication::ENDIT);
 		}
 	}
 	//transitions

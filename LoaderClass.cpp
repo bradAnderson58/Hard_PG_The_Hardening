@@ -38,6 +38,8 @@ void LoaderClass::loadEnv(std::string envTxt){
 	using namespace Ogre;	// use both namespaces
 	using namespace std;
 
+	if (envTxt == "forestLevel.txt") playerLoaded = false;
+
 	StaticGeometry* sgNode;		//used to make walls static objects for faster rendering
 	Ogre::SceneNode* mNode;			//
 	Ogre::SceneNode* mTran;			//

@@ -56,6 +56,8 @@ public:
 	LoaderClass* loading;  //Do loading with this shits
 	void destroyAllThings();  //for level loading sirs
 
+	void restartGame();
+
 	void setLocked(Environment* l){ locked = l; }
 	Environment* getLocked(){ return locked; }
 
@@ -69,7 +71,8 @@ public:
 		INVENTORY,
 		CHAR_RECORD,
 		DEAD_STATE,
-		LOADING
+		LOADING,
+		ENDIT
 	};	//game states
 
     GameApplication(void);
