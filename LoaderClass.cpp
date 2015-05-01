@@ -166,14 +166,14 @@ void LoaderClass::loadEnv(std::string envTxt){
 							p->setPosition(grid->getPosition(i,j).x, 0, grid->getPosition(i,j).z);
 							p->setInitPos(p->getPosition());		//casting.. magics
 							//Ogre::Vector3 adjPos = p->getPosition() + Ogre::Vector3(0, 20, 0);
-							p->getLight()->setPosition(0,20,0);	// adjust light up a bit
+							p->getLight()->setPosition(0,10,0);	// adjust light up a bit
 							
 						}else{
 							Player* p = app->getPlayerPointer();
 							genPlayerLight(p);
 							p->reloaded(grid->getPosition(i,j).x, 0.0, grid->getPosition(i,j).z);
 							//Ogre::Vector3 adjPos = p->getPosition() + Ogre::Vector3(0, 20, 0);
-							p->getLight()->setPosition(0,20,0);	// adjust light up a bit
+							p->getLight()->setPosition(0,10,0);	// adjust light up a bit
 						}
 
 					}
