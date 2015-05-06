@@ -60,7 +60,7 @@ private:
 	Ogre::RenderWindow* mWindow;	//this is pointer to the ogre window
 
 	// gui stuff decl's
-	MyGUI::WindowPtr questWin;			// Window to contain quest text/debug info
+	//MyGUI::WindowPtr questWin;			// Window to contain quest text/debug info
 	MyGUI::ImageBox* playerImage;		// image representing player status
 	MyGUI::ProgressPtr healthBar;		// progress bar to track health
 	MyGUI::ProgressPtr manaBar;			// progress bar to track mana

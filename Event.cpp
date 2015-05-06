@@ -31,7 +31,7 @@ Event::nextLine()
 		return text;
 	}
 	finish = true;
-	return "end dialog";
+	return (*event_dialog.begin());
 }
 
 // run the event!
