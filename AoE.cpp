@@ -60,10 +60,6 @@ AoE::fire(Ogre::Vector3 pos)
 		mBodyNode->setPosition(pos);
 		app->engine->play2D("../../media/ice.wav");
 	}
-	else 
-	{
-		std::cout << "Cooling down: " << cooldown_timer->timeLeft_seconds() << "seconds" << std::endl;
-	}
 }
 
 // scale the area of effect larger until it reaches max radius

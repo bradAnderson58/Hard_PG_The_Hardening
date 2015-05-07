@@ -110,7 +110,7 @@ InventoryView::show(bool visible)
 
 int InventoryView::swapWrapper(){
 	
-	if (selectCell->getItem()->getType() == UsableItems::POTION) std::cout << "Potion" << std::endl;
+	if (selectCell->getItem()->getType() == UsableItems::POTION) ;  //lol terrible
 	else swap(selectCell, equippedCell);
 
 

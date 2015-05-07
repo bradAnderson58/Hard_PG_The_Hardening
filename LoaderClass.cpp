@@ -64,12 +64,12 @@ void LoaderClass::loadEnv(std::string envTxt){
 
 	ifstream inputfile;		// Holds a pointer into the file
 
-	string path = __FILE__; //gets the current cpp file's path with the cpp file   --THIS NEEDS TO BE REDONE FOR RELEASE
-	path = path.substr(0,1+path.find_last_of('\\')); //removes filename to leave path
+	string path = "C:/CS426/Hard PG/Hard_PG_The_Hardening/"; //gets the current cpp file's path with the cpp file   --THIS NEEDS TO BE REDONE FOR RELEASE
+	//path = path.substr(0,1+path.find_last_of('\\')); //removes filename to leave path
 	path+= envTxt; //if txt file is in the same directory as cpp file
 	inputfile.open(path);
 
-	//inputfile.open("D:/CS425-2012/Lecture 8/GameEngine-loadLevel/level001.txt"); //explicit path in Release?
+	//inputfile.open("C:/CS425-2012/Lecture 8/GameEngine-loadLevel/level001.txt"); //explicit path in Release?
 	if (!inputfile.is_open()) // oops. there was a problem opening the file
 	{
 		cout << "ERROR, FILE COULD NOT BE OPENED" << std::endl;	// Hmm. No output?
