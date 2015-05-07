@@ -19,7 +19,7 @@ S Skeleton.mesh 4.0 1.0
 World
 bbbbbbbbbbbbbbbbbbbbbbbbb
 boooowoooooooooowooooooob
-bopfowooooNoaooowoopopoob
+bopfowooooooaooowoopopoob
 boooowoooooooooowooooooob
 boooowoooooooooowooooooob
 boooowoooooooooowooooooob
