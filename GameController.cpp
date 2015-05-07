@@ -240,7 +240,7 @@ void GameController::keyHandler(OIS::KeyCode keyd, bool down){
 		rots = std::atan2(vy, vx);
 		player->playerRot(rots);
 		player->setMovement(true);
-		player->setVelocity(.3);
+		player->setVelocity(30.0);    //was .3
 	}
 }
 

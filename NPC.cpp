@@ -8,6 +8,7 @@
 #define CIRCLE_DIST 5;
 #define CIRCLE_RAD 10;
 #define ANGLE_CHANGE .1;
+#define MULT_MAG 75.0;
 
 NPC::NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filename, float height, float scale, GameApplication* a, int l, GoodBad t, States s):
 	Agent(SceneManager, name, filename, height, scale, a)
@@ -29,6 +30,8 @@ NPC::NPC(Ogre::SceneManager* SceneManager, std::string name, std::string filenam
 
 	lookAngle = Ogre::Real(30);
 	lookRange = 40;
+
+	mDistance = -5.0;
 
 	mEvent = NULL;
 
@@ -82,6 +85,7 @@ void NPC::updateBad(Ogre::Real deltaTime){
 	else if (state == WANDER){
 		setAnimation(WALK);
 		wander();
+		mDirection *= deltaTime * MULT_MAG;
 		if (checkInFront()){
 			prevState = state;
 			state = SEEK;
@@ -90,11 +94,12 @@ void NPC::updateBad(Ogre::Real deltaTime){
 	else if (state == FLEE){
 		setAnimation(WALK);
 		flee();
-		
+		mDirection *= deltaTime * MULT_MAG;
 	}
 	else if (state == SEEK){
 		setAnimation(WALK);
 		seek();
+		mDirection *= deltaTime * MULT_MAG;
 		lastPlayerPos = p->getPosition();
 		if (!checkInFront()){
 			prevState = state;
@@ -166,6 +171,7 @@ void NPC::updateBad(Ogre::Real deltaTime){
 		prevState = state;
 		state = NONE;
 		mDirection = Ogre::Vector3::ZERO;
+		mDirection *= deltaTime * MULT_MAG;
 		//mBodyNode->roll(Ogre::Degree(180));
 	}
 	else if (state == NONE){
@@ -176,8 +182,8 @@ void NPC::updateBad(Ogre::Real deltaTime){
 	else{
 		lookDir = mDirection;
 		mDirection = Ogre::Vector3::ZERO;
+		mDirection *= deltaTime * MULT_MAG;
 	}
-
 
 	if (health <= 0 && (state != DEAD && state != NONE)){
 		state=DEAD;
@@ -518,8 +524,7 @@ void NPC::searchMove(Ogre::Real deltaTime){
 			mDirection = mDestination - mPos; // getPosition();
 			mDirection[1] = 0;
 			mDistance = mDirection.normalise();
-			mDirection *= mWalkSpeed;
-
+			mDirection *= mWalkSpeed * deltaTime * MULT_MAG;
 		}
 	}
 	mDirection[1] = 0;
@@ -567,6 +572,9 @@ void NPC::moveTo(GridNode* n){
 				mWalkList.push_back(temp);
 			}
 			pos = n; //set position of the agent to goal for when its done moving
+			temp = n->getPosition(rows,cols);
+			temp[1] = height;
+			mWalkList.push_back(temp);
 		}
 	}
 

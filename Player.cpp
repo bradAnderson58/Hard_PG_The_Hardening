@@ -176,7 +176,7 @@ void Player::updateLocomote(Ogre::Real deltaTime){
 	Ogre::Vector3 side = q*mDirection;
 
 	//set translation based on controller input
-	if (fForward) translator += (side * -mPlayerVel);
+	if (fForward) translator += (side * -mPlayerVel * deltaTime);
 	if (fRot) mNullCamera->yaw(Ogre::Degree(mRotator));
 
 	//Set Yoshimi Animation based on movement (if not already doing stuff)

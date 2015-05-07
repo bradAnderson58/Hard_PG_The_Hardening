@@ -19,6 +19,8 @@ This source file is part of the
 #define _USE_MATH_DEFINES   
 #include <math.h>
 
+#define M_DELT 4.0f
+
 //-------------------------------------------------------------------------------------
 BaseApplication::BaseApplication(void)
     : mRoot(0),
@@ -221,6 +223,10 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	//Fix for 1.9
 	//Need to capture/update input devices
 	gameCont->captureAll();
+
+	//std::cout << evt.timeSinceLastFrame << std::cout;
+
+	//if (evt.timeSinceLastFrame < M_DELT) this->addTime(M_DELT);
 
 	this->addTime(evt.timeSinceLastFrame);
 

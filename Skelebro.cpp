@@ -3,6 +3,8 @@
 #define _USE_MATH_DEFINES 
 #include <math.h>
 
+#define MULT_MAG 90.0;
+
 Skelebro::Skelebro(Ogre::SceneManager* SceneManager, std::string name, std::string filename, 
 	float height, float scale, GameApplication* a, int l, NPC::GoodBad t, NPC::States s):
 	NPC(SceneManager, name, filename, height, scale, a, l, t,s)
@@ -62,6 +64,7 @@ void Skelebro::update(Ogre::Real deltaTime){
 	else if (state == WANDER){
 		setAnimation(WALK);
 		wander();
+		mDirection *= deltaTime * MULT_MAG;
 		if (checkInFront()){
 			prevState = state;
 			state = SEEK;
@@ -70,11 +73,12 @@ void Skelebro::update(Ogre::Real deltaTime){
 	else if (state == FLEE){
 		setAnimation(WALK);
 		flee();
-		
+		mDirection *= deltaTime * MULT_MAG;
 	}
 	else if (state == SEEK){
 		setAnimation(WALK);
 		seek();
+		mDirection *= deltaTime * MULT_MAG;
 		lastPlayerPos = p->getPosition();
 		if (!checkInFront()){
 			prevState = state;
@@ -162,7 +166,6 @@ void Skelebro::update(Ogre::Real deltaTime){
 		lookDir = mDirection;
 		mDirection = Ogre::Vector3::ZERO;
 	}
-
 
 	if (health <= 0 && (state != DEAD && state != NONE)){
 		state=DEAD;
