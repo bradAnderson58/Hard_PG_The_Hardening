@@ -6,6 +6,7 @@ Event::Event(GameApplication* app, std::vector<std::string> dialog, bool repeata
 	line = event_dialog.begin();
 	repeat = repeatable;
 	finish = false;
+	first = true;
 }
 
 Event::~Event(void)
@@ -24,14 +25,21 @@ Event::addDialog(std::string text)
 std::string
 Event::nextLine()
 {
-	if (line != event_dialog.end())
+	if (line != event_dialog.end() && (event_dialog.size() != 1 || first))
 	{
+		first = false;
 		std::string text = (*line);
 		line++;
 		return text;
 	}
+	else{
+		if (isRepeatable()){
+			finish = true;
+			return *event_dialog.begin();
+		}
+	}
 	finish = true;
-	return (*event_dialog.begin());
+	return "";
 }
 
 // run the event!
@@ -48,11 +56,16 @@ void
 Event::reset()
 {
 	line = event_dialog.begin();
-	finish = false;
 }
 
 bool
 Event::isFinished()
 {
 	return finish;
+}
+
+void
+Event::setFinished(bool b)
+{
+	this->finish = b;
 }
