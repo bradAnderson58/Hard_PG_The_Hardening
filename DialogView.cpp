@@ -40,11 +40,15 @@ DialogView::update(GameApplication* app)
 	{
 		app->toggleState(GameApplication::PLAYING);
 		if (mEvent->isRepeatable())
+		{
 			mEvent->reset();
+			mEvent->setFinished(false);
+		}
 	}
 	else if (lineRead)
 	{
-		updateText(mEvent->nextLine());
+		std::string x = mEvent->nextLine();
+		updateText(x);
 	}
 }
 

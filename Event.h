@@ -15,6 +15,7 @@ public:
 
 	void addDialog(std::string text);			// add a line of dialog
 	std::string nextLine();						// get next line of dialog
+	void setFinished(bool b);
 	bool isFinished();
 	bool isRepeatable() { return repeat; }
 	void run();									// run the event
@@ -24,6 +25,7 @@ private:
 	std::vector<std::string> event_dialog;		// Dialogs to be printed by event
 	std::vector<std::string>::iterator line;	// next line of dialog
 
+	bool first;
 	bool repeat;								// if repeat is false, git rid of once ran
 	bool finish;
 
