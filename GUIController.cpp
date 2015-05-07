@@ -33,9 +33,9 @@ GUIController::GUIController(GameApplication* a)
 	hMiddlish = wHeight/3+50;
 
 	//This is for the quest log - stylize later
-	questWin = mGUI->createWidget<MyGUI::Window>("WindowC", 
-		0, 0, 200, 100, MyGUI::Align::Default, "Main", "quest");
-	questWin->setCaption("Quest/Debug Window?");
+	//questWin = mGUI->createWidget<MyGUI::Window>("WindowC", 
+	//	0, 0, 200, 100, MyGUI::Align::Default, "Main", "quest");
+	//questWin->setCaption("Quest/Debug Window?");
 
 	// supposed to display ogre head, working
 	playerImage = mGUI->createWidget<MyGUI::ImageBox>("ImageBox", 
@@ -89,7 +89,7 @@ GUIController::GUIController(GameApplication* a)
 	exitB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit);
 	restartB->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIController::buttonHit);
 	// hide guis to reveal later
-	questWin->setVisible(false);
+	//questWin->setVisible(false);
 	playerImage->setVisible(false);
 	healthBar->setVisible(false);
 	manaBar->setVisible(false);
@@ -188,7 +188,7 @@ GUIController::updateDialog()
 void GUIController::revealHUD(double health, double mana){
 
 	// reveal HUD and set up gui things
-	questWin->setVisible(true);
+	//questWin->setVisible(true);
 	playerImage->setVisible(true);
 
 	healthBar->setProgressRange(health);
