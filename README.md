@@ -14,25 +14,27 @@ This game was built using Ogre graphics library and MyGUI API, and irrklang soun
 
 Control your player with either the xBox controller or mouse and keyboard
 
+
 ## Controller:
 
-Move:  				Left Stick
-Rotate Camera: 		Right Stick
-Attack:				X Button
-Block:				B Button
-Jump / Interact: 	A Button
-Spellcasting:		Y Button
-Open Menu:			Start Button
-Close Menu:			Select Button
+Move:  				Left Stick  
+Rotate Camera: 		Right Stick  
+Attack:				X Button  
+Block:				B Button  
+Jump / Interact: 	A Button  
+Spellcasting:		Y Button  
+Open Menu:			Start Button  
+Close Menu:			Select Button  
+
 
 ## Mouse and Keyboard:
 
-Move: 				WASD
-Rotate Camera:		Mouse
-Attack:				Left Mouse
-Block:				Right Mouse
-Jump / Interact:	Spacebar
-Spellcasting:		F Key
-Open Menu:			F1 Key
-Close Menu:			F1 Key
+Move: 				WASD  
+Rotate Camera:		Mouse  
+Attack:				Left Mouse  
+Block:				Right Mouse  
+Jump / Interact:	Spacebar  
+Spellcasting:		F Key  
+Open Menu:			F1 Key  
+Close Menu:			F1 Key  
 
