@@ -24,3 +24,15 @@ Jump / Interact: 	A Button
 Spellcasting:		Y Button
 Open Menu:			Start Button
 Close Menu:			Select Button
+
+## Mouse and Keyboard:
+
+Move: 				WASD
+Rotate Camera:		Mouse
+Attack:				Left Mouse
+Block:				Right Mouse
+Jump / Interact:	Spacebar
+Spellcasting:		F Key
+Open Menu:			F1 Key
+Close Menu:			F1 Key
+
